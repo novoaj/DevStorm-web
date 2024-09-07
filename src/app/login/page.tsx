@@ -15,6 +15,7 @@ const LoginPage: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        // post to backend?
         // Add your login logic here
     };
 

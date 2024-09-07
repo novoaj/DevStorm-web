@@ -1,3 +1,4 @@
+import Navigation from "./components/navigation";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -16,7 +17,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body  style={{background: "linear-gradient(50deg, rgba(33,42,49,1) 0%, rgba(46,57,68,1) 80%, rgba(18,78,102,1) 100%)"}}>
+        <Navigation/>
+        {children}
+      </body>
     </html>
   );
 }
