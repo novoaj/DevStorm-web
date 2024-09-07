@@ -1,15 +1,22 @@
 'use client'
 import React, { useState } from 'react';
+import Link from "next/link";
 
 const RegisterPage: React.FC = () => {
-    const [formData, setFormData] = useState({
-        username: '',
-        email: '',
-        password: '',
-    });
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [password2, setPassword2] = useState('');
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(e.target.value);
+    };
+
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value);
+    };
+
+    const handlePassword2Change = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword2(e.target.value);
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -19,53 +26,60 @@ const RegisterPage: React.FC = () => {
 
     return (
         <div className="flex justify-center items-center h-screen">
-            <form className="w-1/3 p-6 bg-white rounded shadow" onSubmit={handleSubmit}>
-                <h2 className="text-2xl font-bold mb-6">Register</h2>
+            <form className="bg-primary-100 border border-slate-500 text-slate-100 shadow-md rounded px-8 pt-6 pb-8 mb-4 w-1/3" onSubmit={handleSubmit}>
+                <div>
+                    <h3 className="flex justify-center items-center text-3xl mb-5">Register</h3>
+                </div>
                 <div className="mb-4">
-                    <label htmlFor="username" className="block mb-2 font-medium">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                         Username
                     </label>
                     <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        value={formData.username}
-                        onChange={handleChange}
-                        className="w-full p-2 border border-gray-300 rounded"
-                    />
-                </div>
-                <div className="mb-4">
-                    <label htmlFor="email" className="block mb-2 font-medium">
-                        Email
-                    </label>
-                    <input
-                        type="email"
+                        className="shadow bg-primary-100 appearance-none border border-slate-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="w-full p-2 border border-gray-300 rounded"
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={handleEmailChange}
                     />
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="password" className="block mb-2 font-medium">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
                         Password
                     </label>
                     <input
-                        type="password"
+                        className="shadow bg-primary-100 appearance-none border border-slate-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        className="w-full p-2 border border-gray-300 rounded"
+                        type="password"
+                        placeholder="Enter your password"
+                        value={password}
+                        onChange={handlePasswordChange}
                     />
                 </div>
-                <button
-                    type="submit"
-                    className="w-full py-2 px-4 bg-blue-500 text-white font-bold rounded hover:bg-blue-600"
-                >
-                    Register
-                </button>
+                <div className="mb-6">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                        Re-enter password
+                    </label>
+                    <input
+                        className="shadow bg-primary-100 appearance-none border border-slate-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="password"
+                        type="password"
+                        placeholder="Enter your password"
+                        value={password2}
+                        onChange={handlePassword2Change}
+                    />
+                </div>
+                <div className="flex items-center justify-between">
+                    <button
+                        className="bg-secondary-100 hover:bg-secondary-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+                        type="submit"
+                    >
+                        Register
+                    </button>
+                </div>
+                <div className="flex items-center mt-10">
+                    <p>Already have an account? <Link className="text-blue-400" href="/login">Login</Link></p>
+                </div>
             </form>
         </div>
     );
