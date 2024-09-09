@@ -1,13 +1,14 @@
 'use client'
 import React, { useState } from 'react';
 import Link from "next/link";
+import axios from "axios";
 
 const LoginPage: React.FC = () => {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value);
+    const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setUsername(e.target.value);
     };
 
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,7 +17,19 @@ const LoginPage: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        let url = "http://127.0.0.1:5000/user"
+        // TODO handle null/blank strings
         // post to backend?
+        // axios.post(url, {
+        //     username: username,
+        //     password: password
+        // })
+        // .then((response) => {
+        //     console.log(response);
+        // })
+        // .catch((error) => {
+        //     console.log(error);
+        // })
         // Add your login logic here
     };
 
@@ -27,16 +40,16 @@ const LoginPage: React.FC = () => {
                     <h3 className="flex justify-center items-center text-3xl mb-5">Login</h3>
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
                         Username
                     </label>
                     <input
                         className="shadow bg-primary-100 appearance-none border border-slate-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="email"
-                        type="email"
-                        placeholder="Enter your email"
-                        value={email}
-                        onChange={handleEmailChange}
+                        id="username"
+                        type="text"
+                        placeholder="Enter your username"
+                        value={username}
+                        onChange={handleUsernameChange}
                     />
                 </div>
                 <div className="mb-6">

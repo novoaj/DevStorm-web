@@ -22,6 +22,7 @@ const config: Config = {
           100: "#124E66",
           200: "#295f75"
         },
+        bluegray: "#748D92",
         gray: "#D3D9D4"
       }
     },
