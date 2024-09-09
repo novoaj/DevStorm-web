@@ -17,19 +17,25 @@ const LoginPage: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        let url = "http://127.0.0.1:5000/user"
+        let url = "http://127.0.0.1:5000/login"
         // TODO handle null/blank strings
         // post to backend?
-        // axios.post(url, {
-        //     username: username,
-        //     password: password
-        // })
-        // .then((response) => {
-        //     console.log(response);
-        // })
-        // .catch((error) => {
-        //     console.log(error);
-        // })
+        axios.post(url, {
+            username: username,
+            password: password
+        })
+        .then((response) => {
+            console.log(response);
+            if (response.status === 200) {
+                console.log("logged in")
+                // TODO additional logic for storing login details
+            }else if (response.status >= 400){
+                console.log("error logging in")
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        })
         // Add your login logic here
     };
 
