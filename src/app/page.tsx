@@ -6,6 +6,7 @@ import IndustrySelection from "./components/IndustrySelection";
 import Results from "./components/Results";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import axios from "axios";
 // https://fkhadra.github.io/react-toastify/introduction/
 
 interface UserSelections {
@@ -71,18 +72,30 @@ export default function Home() {
   const handleSubmit = () => {
     // Logic for submitting user selections
     console.log("Submitting selections:", userSelections);
-    // TODO: logic with server
-    toast.info('Selections submitted successfully!', {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-    handleNext();
+
+    let url = "127.0.0.1:5000/prompt";
+    axios.post(url, {
+      role: userSelections.roles.map(role => role.value),
+      technology: userSelections.tech.map(tech => tech.value),
+      industries: userSelections.industries.map(industry => industry.value)
+    })
+    .then((response) => {
+      console.log(response);
+      toast.info('Selections submitted successfully!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      handleNext();
+    })
+    .catch((err) => {
+      console.log(err);
+    })    
   };
 
   const handleDownloadResults = () => {
