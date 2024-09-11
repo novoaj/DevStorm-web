@@ -5,7 +5,7 @@ import ToolsSelection from "./components/ToolsSelection";
 import IndustrySelection from "./components/IndustrySelection";
 import Results from "./components/Results";
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
+import 'react-toastify/ReactToastify.min.css';
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 // https://fkhadra.github.io/react-toastify/introduction/
@@ -160,10 +160,19 @@ export default function Home() {
       });
     })    
   };
-
+  // https://stackoverflow.com/questions/44656610/download-a-string-as-txt-file-in-react
+  const downloadTxtFile = (text : string) => {
+    const element = document.createElement("a");
+    const file = new Blob([text], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = "myFile.txt";
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+  }
   const handleDownloadResults = () => {
     // Logic to download results
     console.log("Downloading results...");
+    downloadTxtFile(results);
     toast.info('Results downloaded successfully!', {
       position: "top-right",
       autoClose: 5000,
@@ -175,7 +184,11 @@ export default function Home() {
       theme: "light",
     });
   };
-
+  const backToHome = () => {
+    // resets state variables, brings user back to getStarted
+    setCurrentStep(0);
+    setIsStarted(false);
+  }
   const handleNext = () => {
     console.log(userSelections);
     if (currentStep === 0 && userSelections.roles.length === 0){
@@ -235,14 +248,22 @@ export default function Home() {
                   </button>
                 </div>
               ) : (
-                <div className="justify-end">
-                  <button
-                    onClick={handleDownloadResults}
-                    className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 pl-3 pr-3 pt-1 pb-1 rounded"
-                  >
-                    Download Results
-                  </button>
-                </div>
+                <>
+                  <div className="ml-3 mr-3">
+                    <button disabled={currentStep == 0} onClick={backToHome} className="justify-self-start bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 pl-3 pr-3 pt-1 pb-1 rounded">
+                    Reset
+                    </button>
+                  </div>
+                  <div className="justify-end">
+                    <button
+                      onClick={handleDownloadResults}
+                      className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 pl-3 pr-3 pt-1 pb-1 rounded"
+                    >
+                      Download Results
+                    </button>
+                  </div>
+                </>
+                
               )}
               
             </div>

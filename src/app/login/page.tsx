@@ -4,7 +4,7 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
+import 'react-toastify/ReactToastify.min.css';
 
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState('');
