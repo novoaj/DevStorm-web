@@ -118,7 +118,6 @@ export default function Home() {
     // Logic for submitting user selections
     let url = "http://127.0.0.1:5000/prompt";
     let token = localStorage.getItem("access");
-    // console.log(token);
     axios.post(url, {
       role: userSelections.roles.map(role => role.value),
       technology: userSelections.tech.map(tech => tech.value),
@@ -130,9 +129,7 @@ export default function Home() {
     })
     .then((response) => {
       if (response.status === 200){
-        console.log(response);
         let obj = JSON.parse(response.data.response)
-        console.log(obj);
         setResults(obj);
         toast.info('Selections submitted successfully!', {
           position: "top-right",
@@ -182,7 +179,6 @@ export default function Home() {
   }
   const handleDownloadResults = () => {
     // Logic to download results
-    console.log("Downloading results...");
     let results_str = results.project_title + "\n\n" + results.description + "\n\n" + results.steps.map((step, index) => `${index + 1}) ${step}`).join("\n");
     downloadTxtFile(results_str);
     toast.info('Results downloaded successfully!', {
@@ -202,7 +198,6 @@ export default function Home() {
     setIsStarted(false);
   }
   const handleNext = () => {
-    console.log(userSelections);
     if (currentStep === 0 && userSelections.roles.length === 0){
       makeSelectionNoti();
       return;
