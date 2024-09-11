@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter} from "next/navigation";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
+import 'react-toastify/ReactToastify.min.css';
 
 const RegisterPage: React.FC = () => {
     const [username, setUsername] = useState('');

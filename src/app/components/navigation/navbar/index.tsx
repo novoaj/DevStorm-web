@@ -5,6 +5,7 @@ import Logo from "./Logo";
 import Button from "./Button";
 import {jwtDecode} from "jwt-decode";
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/ReactToastify.min.css';
 import {useRouter, usePathname} from "next/navigation";
 
 const Navbar = ({ toggle }: { toggle: () => void }) => {
