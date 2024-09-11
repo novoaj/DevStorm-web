@@ -7,6 +7,7 @@ import Results from "./components/Results";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 // https://fkhadra.github.io/react-toastify/introduction/
 
 interface UserSelections {
@@ -17,7 +18,7 @@ interface UserSelections {
 
 export default function Home() {
   // get started button that leads user to linear progression of 
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  // const [isLoggedIn, setIsLoggedIn] = useState(true); // TODO use context
   const [isStarted, setIsStarted] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [userSelections, setUserSelections] = useState<UserSelections>({
@@ -25,6 +26,7 @@ export default function Home() {
     tech: [],
     industries: [],
   })
+  const [results, setResults] = useState<string>("");
   // if not logged in, get started isn't reachable and prompt them to log in
   const setUserChoices = (category : keyof UserSelections, choices : Array<{ value: string; label: string }>) => {
     setUserSelections((prevSelections) => ({
@@ -41,19 +43,52 @@ export default function Home() {
         /> },
     { title: "Choose Tools/Tech", content: 
       <ToolsSelection 
-        userChoices={userSelections.roles}
+        userChoices={userSelections.tech}
         onChoiceChange={(choices) => setUserChoices("tech", choices)}
       /> },
     { title: "Select Industries/Interests", content: 
       <IndustrySelection 
-        userChoices={userSelections.roles}
+        userChoices={userSelections.industries}
         onChoiceChange={(choices) => setUserChoices("industries", choices)}
       /> },
-    { title: "Generate Results", content: <Results /> },
+    { title: "Generate Results", content: <Results results={results} /> },
   ];
+  const tokenIsExpired = (token: string | null) => {
+    if (token === null){
+      return true;
+    }
+    let decoded = jwtDecode(token)
+    if (decoded?.exp && decoded.exp < Date.now() / 1000) {
+      localStorage.removeItem("access");
+      return true;
+    }
+    return false;
+  }
+  const isLoggedIn = () => {
+    // check if access token exists, is access token expired?
+    let token = localStorage.getItem("access")
+    if(tokenIsExpired(token)) {
+      return false;
+    }
+    return true;
+  }
 
   const handleGetStarted = () => {
-    setIsStarted(true);
+    if (isLoggedIn()) {
+      setIsStarted(true);
+    }else{
+      toast.info('Need to login before accessing this feature', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        // transition: Bounce,
+        });
+    }
   }
 
   const makeSelectionNoti = () => {
@@ -69,19 +104,51 @@ export default function Home() {
       // transition: Bounce,
       });
   }
+  
   const handleSubmit = () => {
     // Logic for submitting user selections
-    console.log("Submitting selections:", userSelections);
-
-    let url = "127.0.0.1:5000/prompt";
+    let url = "http://127.0.0.1:5000/prompt";
+    let token = localStorage.getItem("access");
+    console.log(token);
     axios.post(url, {
       role: userSelections.roles.map(role => role.value),
       technology: userSelections.tech.map(tech => tech.value),
-      industries: userSelections.industries.map(industry => industry.value)
+      industries: userSelections.industries.map(industry => industry.value),
+    }, {
+      headers: {
+        "Authorization" : `Bearer ${token}`
+      }
     })
     .then((response) => {
-      console.log(response);
-      toast.info('Selections submitted successfully!', {
+      if (response.status === 200){
+        console.log(response);
+        setResults(response.data.response);
+        toast.info('Selections submitted successfully!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        handleNext();
+      }else{
+        toast.error('Error generating results!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    })
+    .catch((err) => {
+      toast.error('Error generating results!', {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -91,10 +158,6 @@ export default function Home() {
         progress: undefined,
         theme: "light",
       });
-      handleNext();
-    })
-    .catch((err) => {
-      console.log(err);
     })    
   };
 
@@ -142,7 +205,7 @@ export default function Home() {
         {isStarted ?
         <>
           <div className="mt-10 h-fit bg-primary-100 border border-slate-500 text-slate-100 shadow-md rounded ">
-            {isLoggedIn && steps[currentStep] && (
+            {(localStorage.getItem("access") !== null) && steps[currentStep] && (
               <div className="w-full mb-10 h-80 p-5">
                 <h2 className="text-2xl font-semibold">{steps[currentStep].title}</h2>
                 {steps[currentStep].content}

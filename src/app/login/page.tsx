@@ -2,10 +2,14 @@
 import React, { useState } from 'react';
 import Link from "next/link";
 import axios from "axios";
+import { useRouter } from 'next/navigation';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const router = useRouter();
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value);
@@ -25,22 +29,53 @@ const LoginPage: React.FC = () => {
             password: password
         })
         .then((response) => {
-            console.log(response);
             if (response.status === 200) {
-                console.log("logged in")
                 // TODO additional logic for storing login details
+                localStorage.setItem("access", response.data.access_token);
+                toast.success('Successful Login!', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                router.push("/");
+                
             }else if (response.status >= 400){
                 console.log("error logging in")
+                toast.warning('Login failed, make sure your username and password is correct', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
             }
         })
         .catch((error) => {
-            console.log(error);
+            toast.warning('Login failed. Make sure your username and password is correct.', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
         })
         // Add your login logic here
     };
 
     return (
         <div className="flex justify-center items-center h-screen">
+            <ToastContainer/>
             <form className="bg-primary-100 border border-slate-500 text-slate-100 shadow-md rounded px-8 pt-6 pb-8 mb-4 lg:w-1/3 md:w-1/2 s:w-10/12 xs:w-10/12" onSubmit={handleSubmit}>
                 <div>
                     <h3 className="flex justify-center items-center text-3xl mb-5">Login</h3>
