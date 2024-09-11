@@ -1,5 +1,7 @@
-## Brainstorming app for tech students looking for projects
+## Brainstorming app for tech students
 Backend can be found here: https://github.com/ryoptimus/flaskapi
+
+This app is for tech students looking for project ideas based on the industries and technologies that interest them.
 
 Technologies Used:
 - React
