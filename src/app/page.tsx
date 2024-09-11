@@ -116,7 +116,7 @@ export default function Home() {
   
   const handleSubmit = () => {
     // Logic for submitting user selections
-    let url = "http://127.0.0.1:5000/prompt";
+    let url = "http://127.0.0.1:5000/api/prompt";
     let token = localStorage.getItem("access");
     axios.post(url, {
       role: userSelections.roles.map(role => role.value),
