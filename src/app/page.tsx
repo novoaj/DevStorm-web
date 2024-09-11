@@ -175,7 +175,11 @@ export default function Home() {
       theme: "light",
     });
   };
-
+  const backToHome = () => {
+    // resets state variables, brings user back to getStarted
+    setCurrentStep(0);
+    setIsStarted(false);
+  }
   const handleNext = () => {
     console.log(userSelections);
     if (currentStep === 0 && userSelections.roles.length === 0){
@@ -235,14 +239,22 @@ export default function Home() {
                   </button>
                 </div>
               ) : (
-                <div className="justify-end">
-                  <button
-                    onClick={handleDownloadResults}
-                    className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 pl-3 pr-3 pt-1 pb-1 rounded"
-                  >
-                    Download Results
-                  </button>
-                </div>
+                <>
+                  <div className="ml-3 mr-3">
+                    <button disabled={currentStep == 0} onClick={backToHome} className="justify-self-start bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 pl-3 pr-3 pt-1 pb-1 rounded">
+                    Reset
+                    </button>
+                  </div>
+                  <div className="justify-end">
+                    <button
+                      onClick={handleDownloadResults}
+                      className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 pl-3 pr-3 pt-1 pb-1 rounded"
+                    >
+                      Download Results
+                    </button>
+                  </div>
+                </>
+                
               )}
               
             </div>
