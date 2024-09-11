@@ -5,7 +5,7 @@ import ToolsSelection from "./components/ToolsSelection";
 import IndustrySelection from "./components/IndustrySelection";
 import Results from "./components/Results";
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/ReactToastify.min.css';
+import "react-toastify/dist/ReactToastify.css"; 
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 // https://fkhadra.github.io/react-toastify/introduction/
@@ -14,6 +14,11 @@ interface UserSelections {
   roles: Array<{ value: string; label: string }>;
   tech: Array<{ value: string; label: string }>;
   industries: Array<{ value: string; label: string }>;
+}
+interface ResultsType {
+  project_title: string,
+  description: string,
+  steps: Array<string>
 }
 
 export default function Home() {
@@ -26,7 +31,11 @@ export default function Home() {
     tech: [],
     industries: [],
   })
-  const [results, setResults] = useState<string>("");
+  const [results, setResults] = useState<ResultsType>({
+    project_title: "",
+    description: "",
+    steps: [],
+  });
   // if not logged in, get started isn't reachable and prompt them to log in
   const setUserChoices = (category : keyof UserSelections, choices : Array<{ value: string; label: string }>) => {
     setUserSelections((prevSelections) => ({
@@ -109,7 +118,7 @@ export default function Home() {
     // Logic for submitting user selections
     let url = "http://127.0.0.1:5000/prompt";
     let token = localStorage.getItem("access");
-    console.log(token);
+    // console.log(token);
     axios.post(url, {
       role: userSelections.roles.map(role => role.value),
       technology: userSelections.tech.map(tech => tech.value),
@@ -122,7 +131,9 @@ export default function Home() {
     .then((response) => {
       if (response.status === 200){
         console.log(response);
-        setResults(response.data.response);
+        let obj = JSON.parse(response.data.response)
+        console.log(obj);
+        setResults(obj);
         toast.info('Selections submitted successfully!', {
           position: "top-right",
           autoClose: 5000,
@@ -172,7 +183,8 @@ export default function Home() {
   const handleDownloadResults = () => {
     // Logic to download results
     console.log("Downloading results...");
-    downloadTxtFile(results);
+    let results_str = results.project_title + "\n\n" + results.description + "\n\n" + results.steps.map((step, index) => `${index + 1}) ${step}`).join("\n");
+    downloadTxtFile(results_str);
     toast.info('Results downloaded successfully!', {
       position: "top-right",
       autoClose: 5000,
@@ -219,12 +231,12 @@ export default function Home() {
         <>
           <div className="mt-10 h-fit bg-primary-100 border border-slate-500 text-slate-100 shadow-md rounded ">
             {(localStorage.getItem("access") !== null) && steps[currentStep] && (
-              <div className="w-full mb-10 h-80 p-5">
+              <div className=" w-full mb-10 h-fit p-5">
                 <h2 className="text-2xl font-semibold">{steps[currentStep].title}</h2>
                 {steps[currentStep].content}
               </div>
             )}
-            <div className="flex content-baseline justify-end m-3 p-3">
+            <div className="flex content-baseline justify-end m-2 p-3">
               {currentStep < 2 ? 
                 (<>
                   <div className="ml-3 mr-3">
