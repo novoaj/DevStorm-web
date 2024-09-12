@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
-import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/ReactToastify.min.css';
+import { toast } from 'sonner';
 
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -33,41 +32,20 @@ const LoginPage: React.FC = () => {
                 // TODO additional logic for storing login details
                 localStorage.setItem("access", response.data.access_token);
                 toast.success('Successful Login!', {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
+                    duration: 5000,
                 });
                 router.push("/");
                 
             }else if (response.status >= 400){
                 console.log("error logging in")
                 toast.warning('Login failed, make sure your username and password is correct', {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
+                    duration: 5000,
                 });
             }
         })
         .catch((error) => {
             toast.warning('Login failed. Make sure your username and password is correct.', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
+                duration: 5000,
             });
         })
         // Add your login logic here
@@ -75,7 +53,6 @@ const LoginPage: React.FC = () => {
 
     return (
         <div className="flex justify-center items-center h-screen">
-            <ToastContainer/>
             <form className="bg-primary-100 border border-slate-500 text-slate-100 shadow-md rounded px-8 pt-6 pb-8 mb-4 lg:w-1/3 md:w-1/2 s:w-10/12 xs:w-10/12" onSubmit={handleSubmit}>
                 <div>
                     <h3 className="flex justify-center items-center text-3xl mb-5">Login</h3>

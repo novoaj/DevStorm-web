@@ -4,7 +4,7 @@ import RoleSelection from "./components/RoleSelection";
 import ToolsSelection from "./components/ToolsSelection";
 import IndustrySelection from "./components/IndustrySelection";
 import Results from "./components/Results";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'sonner';
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 // https://fkhadra.github.io/react-toastify/introduction/
@@ -86,31 +86,15 @@ export default function Home() {
       setIsStarted(true);
     }else{
       toast.info('Need to login before accessing this feature', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        // transition: Bounce,
-        });
+        duration: 5000,
+      });
     }
   }
 
   const makeSelectionNoti = () => {
     toast.info('Please make selection(s) before continuing', {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      // transition: Bounce,
-      });
+      duration: 5000,
+    });
   }
   
   const handleSubmit = () => {
@@ -131,39 +115,18 @@ export default function Home() {
         let obj = JSON.parse(response.data.response)
         setResults(obj);
         toast.info('Selections submitted successfully!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
+          duration: 5000,
         });
         handleNext();
       }else{
         toast.error('Error generating results!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
+          duration: 5000,
         });
       }
     })
     .catch((err) => {
       toast.error('Error generating results!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
+        duration: 5000,
       });
     })    
   };
@@ -180,15 +143,8 @@ export default function Home() {
     // Logic to download results
     let results_str = results.project_title + "\n\n" + results.description + "\n\n" + results.steps.map((step, index) => `${index + 1}) ${step}`).join("\n");
     downloadTxtFile(results_str);
-    toast.info('Results downloaded successfully!', {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
+    toast.success('Results downloaded successfully!', {
+      duration: 5000,
     });
   };
   const backToHome = () => {
@@ -217,7 +173,6 @@ export default function Home() {
   }
   return (
     <div className="flex justify-center min-h-screen">
-      <ToastContainer stacked closeOnClick/>
       <div className="content-center mx-auto px-4 text-slate-100 sm:w-10/12 md:w-9/12 lg:w-8/12 xl:w-8/12">
         <h1 className="text-4xl font-bold mt-10">Welcome to our Brainstorming App!</h1>
         <p className="mt-4">Your guide to exploring tech careers as a student.</p>

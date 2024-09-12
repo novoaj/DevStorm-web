@@ -4,7 +4,7 @@ import Link from "next/link";
 import Logo from "./Logo";
 import Button from "./Button";
 import {jwtDecode} from "jwt-decode";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'sonner';
 // import 'react-toastify/ReactToastify.min.css';
 import {useRouter, usePathname} from "next/navigation";
 
@@ -35,16 +35,7 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
 
     const handleLogout = () => {
       localStorage.removeItem("access");
-      toast.success('Logged out', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        });
+      toast.success('Logged out');
         router.push("/login");
     }
     useEffect(() => {
@@ -54,7 +45,6 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
     return (
       <>
         <div className="w-full h-20 bg-primary-100 sticky top-0">
-          <ToastContainer/>
           <div className="container mx-auto px-4 h-full">
             <div className="flex justify-between items-center h-full">
               <Logo />
