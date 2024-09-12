@@ -5,7 +5,6 @@ import ToolsSelection from "./components/ToolsSelection";
 import IndustrySelection from "./components/IndustrySelection";
 import Results from "./components/Results";
 import { ToastContainer, toast } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css"; 
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 // https://fkhadra.github.io/react-toastify/introduction/
@@ -218,7 +217,7 @@ export default function Home() {
   }
   return (
     <div className="flex justify-center min-h-screen">
-      <ToastContainer/>
+      <ToastContainer stacked closeOnClick/>
       <div className="content-center mx-auto px-4 text-slate-100 sm:w-10/12 md:w-9/12 lg:w-8/12 xl:w-8/12">
         <h1 className="text-4xl font-bold mt-10">Welcome to our Brainstorming App!</h1>
         <p className="mt-4">Your guide to exploring tech careers as a student.</p>
