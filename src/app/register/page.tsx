@@ -1,15 +1,16 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Link from "next/link";
 import { useRouter} from "next/navigation";
 import axios from "axios";
 import { toast } from 'sonner';
-// import 'react-toastify/ReactToastify.min.css';
+import { UserContext } from '../context/UserContext';
 
 const RegisterPage: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
+    const { isLoggedIn, setIsLoggedIn} = useContext(UserContext);
     const router = useRouter()
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,9 +53,14 @@ const RegisterPage: React.FC = () => {
             axios.post(url, {
                 username: username,
                 password: password
+            }, {
+                headers: {
+                'Content-Type': 'application/json'
+                }
             })
             .then((response) => {
-                localStorage.setItem("access", response.data.access_token);
+                localStorage.setItem("access", response.data.access_token); // TODO cookies instead of local storage
+                setIsLoggedIn(true);
                 toast.success('Registered user successfully!', {
                     duration: 5000,
                 });

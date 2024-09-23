@@ -1,13 +1,15 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { UserContext } from '../context/UserContext';
 
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const { isLoggedIn, setIsLoggedIn} = useContext(UserContext);
     const router = useRouter();
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,26 +28,31 @@ const LoginPage: React.FC = () => {
         axios.post(url, {
             username: username,
             password: password
+        }, {
+            headers: {
+            'Content-Type': 'application/json'
+            }
         })
         .then((response) => {
             if (response.status === 200) {
-                // TODO additional logic for storing login details
-                localStorage.setItem("access", response.data.access_token);
-                toast.success('Successful Login!', {
-                    duration: 5000,
-                });
-                router.push("/");
-                
-            }else if (response.status >= 400){
-                console.log("error logging in")
-                toast.warning('Login failed, make sure your username and password is correct', {
-                    duration: 5000,
-                });
+            // TODO remove local storage - use cookies
+            localStorage.setItem("access", response.data.access_token);
+            setIsLoggedIn(true); // update user context
+            toast.success('Successful Login!', {
+                duration: 5000,
+            });
+            router.push("/");
+            
+            } else if (response.status >= 400) {
+            console.log("error logging in")
+            toast.warning('Login failed, make sure your username and password is correct', {
+                duration: 5000,
+            });
             }
         })
         .catch((error) => {
             toast.warning('Login failed. Make sure your username and password is correct.', {
-                duration: 5000,
+            duration: 5000,
             });
         })
         // Add your login logic here

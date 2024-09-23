@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import RoleSelection from "./components/RoleSelection";
 import ToolsSelection from "./components/ToolsSelection";
 import IndustrySelection from "./components/IndustrySelection";
@@ -7,6 +7,7 @@ import Results from "./components/Results";
 import { toast } from 'sonner';
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { UserContext } from "./context/UserContext";
 // https://fkhadra.github.io/react-toastify/introduction/
 
 interface UserSelections {
@@ -22,7 +23,7 @@ interface ResultsType {
 
 export default function Home() {
   // get started button that leads user to linear progression of 
-  // const [isLoggedIn, setIsLoggedIn] = useState(true); // TODO use context
+  const { isLoggedIn, setIsLoggedIn} = useContext(UserContext);
   const [isStarted, setIsStarted] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [userSelections, setUserSelections] = useState<UserSelections>({
@@ -61,6 +62,7 @@ export default function Home() {
       /> },
     { title: "Generate Results", content: <Results results={results} /> },
   ];
+  // helper method to determine if a jwt token is expired/invalid
   const tokenIsExpired = (token: string | null) => {
     if (token === null){
       return true;
@@ -72,17 +74,10 @@ export default function Home() {
     }
     return false;
   }
-  const isLoggedIn = () => {
-    // check if access token exists, is access token expired?
-    let token = localStorage.getItem("access")
-    if(tokenIsExpired(token)) {
-      return false;
-    }
-    return true;
-  }
-
+  // if user is logged in, allow them to start the brainstorming steps through "Get started" button
+  // if not logged in, user is given an error message prompting log in
   const handleGetStarted = () => {
-    if (isLoggedIn()) {
+    if (isLoggedIn) {
       setIsStarted(true);
     }else{
       toast.info('Need to login before accessing this feature', {
@@ -90,13 +85,12 @@ export default function Home() {
       });
     }
   }
-
   const makeSelectionNoti = () => {
     toast.info('Please make selection(s) before continuing', {
       duration: 5000,
     });
   }
-  
+  // handles the submitting of user choices to our api endpoint. moves on to results page if successful
   const handleSubmit = () => {
     // Logic for submitting user selections
     let url = "http://127.0.0.1:5000/api/prompt";
@@ -130,6 +124,7 @@ export default function Home() {
       });
     })    
   };
+  // helper method for handleDownload to download user results locally to a txt file (formatted)
   // https://stackoverflow.com/questions/44656610/download-a-string-as-txt-file-in-react
   const downloadTxtFile = (text : string) => {
     const element = document.createElement("a");
@@ -139,6 +134,7 @@ export default function Home() {
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
   }
+  // used for handling download click from client. prompts local download of file to txt format
   const handleDownloadResults = () => {
     // Logic to download results
     let results_str = results.project_title + "\n\n" + results.description + "\n\n" + results.steps.map((step, index) => `${index + 1}) ${step}`).join("\n");
@@ -147,11 +143,14 @@ export default function Home() {
       duration: 5000,
     });
   };
+
+  // reset logic when user is done generating this plan
   const backToHome = () => {
     // resets state variables, brings user back to getStarted
     setCurrentStep(0);
     setIsStarted(false);
   }
+  // handles the stepthrough logic of the homepage
   const handleNext = () => {
     if (currentStep === 0 && userSelections.roles.length === 0){
       makeSelectionNoti();
@@ -226,7 +225,6 @@ export default function Home() {
                 </>
                 
               )}
-              
             </div>
           </div>
         </> : 

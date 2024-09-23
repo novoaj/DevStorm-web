@@ -5,11 +5,12 @@ import Logo from "./Logo";
 import Button from "./Button";
 import {jwtDecode} from "jwt-decode";
 import { toast } from 'sonner';
-// import 'react-toastify/ReactToastify.min.css';
 import {useRouter, usePathname} from "next/navigation";
+import { UserContext } from '../../../context/UserContext';
+import { useContext } from "react";
 
 const Navbar = ({ toggle }: { toggle: () => void }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const {isLoggedIn, setIsLoggedIn} = useContext(UserContext);
     const router = useRouter();
     const pathname = usePathname(); // Hook to get the current path
     const tokenIsExpired = (token: string | null) => {
@@ -23,24 +24,25 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
       }
       return false;
     }
-    const checkIsLoggedIn = () => {
-      // check if access token exists, is access token expired?
-      let token = localStorage.getItem("access")
-      if(tokenIsExpired(token)) {
-        setIsLoggedIn(false);
-      }else{
-        setIsLoggedIn(true);
-      }
-    }
+    // const checkIsLoggedIn = () => {
+    //   // check if access token exists, is access token expired?
+    //   let token = localStorage.getItem("access")
+    //   if(tokenIsExpired(token)) {
+    //     setIsLoggedIn(false);
+    //   }else{
+    //     setIsLoggedIn(true);
+    //   }
+    // }
 
     const handleLogout = () => {
-      localStorage.removeItem("access");
+      localStorage.removeItem("access"); // TODO cookies instead of localstorage - also hit api logout endpoint
+      setIsLoggedIn(false);
       toast.success('Logged out');
         router.push("/login");
     }
-    useEffect(() => {
-      checkIsLoggedIn(); // Check login status on component mount
-    }, [pathname]);
+    // useEffect(() => {
+    //   checkIsLoggedIn(); // Check login status on component mount
+    // }, [pathname]);
 
     return (
       <>

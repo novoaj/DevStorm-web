@@ -1,12 +1,18 @@
+"use client"
 import Link from "next/link";
+import { UserContext } from '../../../context/UserContext';
+import { useContext } from "react";
+import {toast} from "sonner";
 
-const Sidebar = ({
-  isOpen,
-  toggle,
-}: {
-  isOpen: boolean;
-  toggle: () => void;
-}): JSX.Element => {
+const Sidebar = ({ isOpen, toggle, } : { isOpen: boolean; toggle: () => void; }): JSX.Element => {
+  const {isLoggedIn, setIsLoggedIn} = useContext(UserContext);
+
+  const handleLogout = () => {
+    localStorage.removeItem("access"); // TODO cookies instead of localstorage - also hit api logout endpoint
+    setIsLoggedIn(false);
+    toast.success('Logged out');
+      toggle
+  }
   return (
     <>
       <div
@@ -33,9 +39,18 @@ const Sidebar = ({
           <li>
             <Link href="/contacts" onClick={toggle}><p>Contacts</p></Link>
           </li>
-          <li>
-            <Link href="/login" onClick={toggle}><p>Login</p></Link>
-          </li>
+          {isLoggedIn ? 
+            <>
+              <li>
+                <Link href="/" onClick={handleLogout}><p>Logout</p></Link>
+              </li>
+            </>: 
+            <>
+              <li>
+                <Link href="/login" onClick={toggle}><p>Login</p></Link>
+              </li>
+            </>}
+          
         </ul>
       </div>
     </>
