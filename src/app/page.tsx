@@ -180,7 +180,7 @@ export default function Home() {
         {isStarted ?
         <>
           <div className="mt-10 h-fit bg-primary-100 border border-slate-500 text-slate-100 shadow-md rounded ">
-            {(localStorage.getItem("access") !== null) && steps[currentStep] && (
+            {(isLoggedIn) && steps[currentStep] && (
               <div className=" w-full mb-10 h-fit p-5">
                 <h2 className="text-2xl font-semibold">{steps[currentStep].title}</h2>
                 {steps[currentStep].content}
