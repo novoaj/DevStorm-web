@@ -8,7 +8,7 @@ const Sidebar = ({ isOpen, toggle, } : { isOpen: boolean; toggle: () => void; })
   const {isLoggedIn, setIsLoggedIn} = useContext(UserContext);
 
   const handleLogout = () => {
-    localStorage.removeItem("access"); // TODO cookies instead of localstorage - also hit api logout endpoint
+    //localStorage.removeItem("access"); // TODO cookies instead of localstorage - also hit api logout endpoint
     setIsLoggedIn(false);
     toast.success('Logged out');
       toggle

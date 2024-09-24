@@ -59,7 +59,7 @@ const RegisterPage: React.FC = () => {
                 }
             })
             .then((response) => {
-                localStorage.setItem("access", response.data.access_token); // TODO cookies instead of local storage
+                // localStorage.setItem("access", response.data.access_token); // TODO cookies instead of local storage
                 setIsLoggedIn(true);
                 toast.success('Registered user successfully!', {
                     duration: 5000,

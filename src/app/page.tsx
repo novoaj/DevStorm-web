@@ -69,7 +69,7 @@ export default function Home() {
     }
     let decoded = jwtDecode(token)
     if (decoded?.exp && decoded.exp < Date.now() / 1000) {
-      localStorage.removeItem("access");
+      //localStorage.removeItem("access");
       return true;
     }
     return false;
@@ -103,9 +103,7 @@ export default function Home() {
       technology: userSelections.tech.map(tech => tech.value),
       industries: userSelections.industries.map(industry => industry.value),
     }, {
-      headers: {
-        withCredentials: true  // This ensures cookies are sent and stored
-      }
+        withCredentials: true,  // This ensures cookies are sent and stored
     })
     .then((response) => {
       if (response.status === 200){

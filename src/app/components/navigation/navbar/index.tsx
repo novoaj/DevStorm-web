@@ -20,7 +20,7 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
       }
       let decoded = jwtDecode(token)
       if (decoded?.exp && decoded.exp < Date.now() / 1000) {
-        localStorage.removeItem("access");
+        //localStorage.removeItem("access");
         return true;
       }
       return false;

@@ -38,13 +38,13 @@ const LoginPage: React.FC = () => {
             if (response.status === 200) {
             // If login is successful, store the access token in local storage
             // TODO remove local storage - use cookies
-            console.log(response)
-            localStorage.setItem("access", response.data.access_token);
-            setIsLoggedIn(true); // update user context
-            toast.success('Successful Login!', {
-                duration: 5000,
-            });
-            router.push("/");
+                console.log(response)
+                // localStorage.setItem("access", response.data.access_token);
+                setIsLoggedIn(true); // update user context
+                toast.success('Successful Login!', {
+                    duration: 5000,
+                });
+                router.push("/");
             
             } else if (response.status >= 400) {
             // If login fails, show a warning toast
