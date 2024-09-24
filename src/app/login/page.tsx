@@ -25,6 +25,7 @@ const LoginPage: React.FC = () => {
         let url = "http://127.0.0.1:5000/login"
         // TODO handle null/blank strings
         // post to backend?
+        // Make a POST request to the login endpoint with the username and password
         axios.post(url, {
             username: username,
             password: password
@@ -35,7 +36,9 @@ const LoginPage: React.FC = () => {
         })
         .then((response) => {
             if (response.status === 200) {
+            // If login is successful, store the access token in local storage
             // TODO remove local storage - use cookies
+            console.log(response)
             localStorage.setItem("access", response.data.access_token);
             setIsLoggedIn(true); // update user context
             toast.success('Successful Login!', {
@@ -44,6 +47,7 @@ const LoginPage: React.FC = () => {
             router.push("/");
             
             } else if (response.status >= 400) {
+            // If login fails, show a warning toast
             console.log("error logging in")
             toast.warning('Login failed, make sure your username and password is correct', {
                 duration: 5000,
@@ -51,6 +55,7 @@ const LoginPage: React.FC = () => {
             }
         })
         .catch((error) => {
+            // If there's an error with the request, show a warning toast
             toast.warning('Login failed. Make sure your username and password is correct.', {
             duration: 5000,
             });

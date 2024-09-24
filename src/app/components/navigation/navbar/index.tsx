@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import {useRouter, usePathname} from "next/navigation";
 import { UserContext } from '../../../context/UserContext';
 import { useContext } from "react";
+import axios from 'axios';
 
 const Navbar = ({ toggle }: { toggle: () => void }) => {
     const {isLoggedIn, setIsLoggedIn} = useContext(UserContext);
@@ -35,10 +36,20 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
     // }
 
     const handleLogout = () => {
-      localStorage.removeItem("access"); // TODO cookies instead of localstorage - also hit api logout endpoint
-      setIsLoggedIn(false);
-      toast.success('Logged out');
+      //localStorage.removeItem("access"); // TODO cookies instead of localstorage - also hit api logout endpoint
+      axios.post("http://127.0.0.1:5000/logout", 
+        {}, 
+        {withCredentials: true}
+      ).then((response) => {
+        setIsLoggedIn(false);
+        toast.success('Logged out');
         router.push("/login");
+        }
+      )
+      .catch((err)=> {
+        console.log("error logging out: ", err);
+      })
+      
     }
     // useEffect(() => {
     //   checkIsLoggedIn(); // Check login status on component mount

@@ -91,17 +91,20 @@ export default function Home() {
     });
   }
   // handles the submitting of user choices to our api endpoint. moves on to results page if successful
+  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials
   const handleSubmit = () => {
+    
     // Logic for submitting user selections
     let url = "http://127.0.0.1:5000/api/prompt";
-    let token = localStorage.getItem("access");
+    // let token = localStorage.getItem("access");
+    // axios.defaults.withCredentials = true;
     axios.post(url, {
       role: userSelections.roles.map(role => role.value),
       technology: userSelections.tech.map(tech => tech.value),
       industries: userSelections.industries.map(industry => industry.value),
     }, {
       headers: {
-        "Authorization" : `Bearer ${token}`
+        withCredentials: true  // This ensures cookies are sent and stored
       }
     })
     .then((response) => {
@@ -119,6 +122,7 @@ export default function Home() {
       }
     })
     .catch((err) => {
+      console.log(err);
       toast.error('Error generating results!', {
         duration: 5000,
       });
