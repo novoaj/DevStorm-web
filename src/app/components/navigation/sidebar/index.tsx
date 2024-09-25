@@ -5,16 +5,23 @@ import { useContext } from "react";
 import {toast} from "sonner";
 import axios from "axios";
 import router from "next/router";
+import { fetchCSRFToken } from "@/app/actions/actions";
 
 const Sidebar = ({ isOpen, toggle, } : { isOpen: boolean; toggle: () => void; }): JSX.Element => {
   const {isLoggedIn, setIsLoggedIn} = useContext(UserContext);
 
-  const handleLogout = () => {
-    //localStorage.removeItem("access"); // TODO cookies instead of localstorage - also hit api logout endpoint
-    axios.post("http://127.0.0.1:5000/logout", 
-      {}, 
-      {withCredentials: true}
-    ).then((response) => {
+  const handleLogout = async() => {
+    const csrfToken = await fetchCSRFToken();
+      console.log("child component handleSubmit");
+      console.log(csrfToken);
+      axios.post("http://127.0.0.1:5000/logout", {}, 
+        {
+          withCredentials: true,
+          headers: {
+            'X-CSRF-TOKEN': csrfToken,  // Add CSRF token to headers
+        }
+        }
+      ).then((response) => {
       setIsLoggedIn(false);
       toast.success('Logged out');
       router.push("/login");
