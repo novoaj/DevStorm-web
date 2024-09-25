@@ -3,15 +3,27 @@ import Link from "next/link";
 import { UserContext } from '../../../context/UserContext';
 import { useContext } from "react";
 import {toast} from "sonner";
+import axios from "axios";
+import router from "next/router";
 
 const Sidebar = ({ isOpen, toggle, } : { isOpen: boolean; toggle: () => void; }): JSX.Element => {
   const {isLoggedIn, setIsLoggedIn} = useContext(UserContext);
 
   const handleLogout = () => {
     //localStorage.removeItem("access"); // TODO cookies instead of localstorage - also hit api logout endpoint
-    setIsLoggedIn(false);
-    toast.success('Logged out');
+    axios.post("http://127.0.0.1:5000/logout", 
+      {}, 
+      {withCredentials: true}
+    ).then((response) => {
+      setIsLoggedIn(false);
+      toast.success('Logged out');
+      router.push("/login");
       toggle
+      }
+    )
+    .catch((err)=> {
+      console.log("error logging out: ", err);
+    })
   }
   return (
     <>

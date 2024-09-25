@@ -92,7 +92,7 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
               </ul>
               {isLoggedIn ? 
                 <>
-                  <button onClick={handleLogout}className="h-10 rounded-lg bg-white hover:bg-secondary-100 hover:text-slate-100 hover:border font-bold px-5">Logout</button>
+                  <button onClick={handleLogout}className="hidden md:block h-10 rounded-lg bg-white hover:bg-secondary-100 hover:text-slate-100 hover:border font-bold px-5">Logout</button>
                 </> : 
                 <>
                   <div className="hidden md:block">

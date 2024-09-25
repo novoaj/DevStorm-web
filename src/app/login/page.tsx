@@ -5,6 +5,7 @@ import axios from "axios";
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { UserContext } from '../context/UserContext';
+import { setToken } from '../actions/actions';
 
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -26,20 +27,25 @@ const LoginPage: React.FC = () => {
         // TODO handle null/blank strings
         // post to backend?
         // Make a POST request to the login endpoint with the username and password
+        console.log(username, password)
         axios.post(url, {
             username: username,
             password: password
         }, {
+            withCredentials: true, // Include this to handle cookies
             headers: {
             'Content-Type': 'application/json'
-            }
+            },
+            
         })
         .then((response) => {
             if (response.status === 200) {
             // If login is successful, store the access token in local storage
             // TODO remove local storage - use cookies
                 console.log(response)
-                // localStorage.setItem("access", response.data.access_token);
+                console.log(response.headers);
+                // console.log(response.headers.csrf_token)
+                // setToken(response.headers.csrf_token)
                 setIsLoggedIn(true); // update user context
                 toast.success('Successful Login!', {
                     duration: 5000,
@@ -56,6 +62,7 @@ const LoginPage: React.FC = () => {
         })
         .catch((error) => {
             // If there's an error with the request, show a warning toast
+            console.log(error);
             toast.warning('Login failed. Make sure your username and password is correct.', {
             duration: 5000,
             });
