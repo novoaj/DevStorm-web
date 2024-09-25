@@ -6,12 +6,20 @@ interface ToolsSelectionProps {
     onChoiceChange: (choices: { value: string; label: string }[]) => void; // Correctly typed onChoiceChange
 }
 const ToolsSelection: React.FC<ToolsSelectionProps> = ({ userChoices, onChoiceChange })  => {
-    const [userChoice, setUserChoice] = useState({})
+    const [userChoice, setUserChoice] = useState([])
     const options = [
         { value: "Java", label: "Java"},
         { value: "Python", label: "Python"},
         { value: "JavaScript", label: "JavaScript"},
-        { value: "React", label: "React"},
+        { value: "C", label: "C"},
+        { value: "C++", label: "C++"},
+        { value: "C#", label: "C#"},
+        { value: "GoLang", label: "GoLang"},
+        { value: "Rust", label: "Rust"},
+        { value: "R", label: "R"},
+        { value: "SQL", label: "SQL"},
+        { value: "Swift", label: "Swift"},
+        { value: "Kotlin", label: "Kotlin"},
     ]
     // TODO: add more options
     const handleChange = (choices: any) => {
@@ -20,6 +28,8 @@ const ToolsSelection: React.FC<ToolsSelectionProps> = ({ userChoices, onChoiceCh
       };
     return (
         <div className="pt-5">
+            <p>Maximum of 3 selections</p>
+            <br/>
             <Select 
                 closeMenuOnSelect={false} 
                 defaultValue={"Role"} 
@@ -34,6 +44,7 @@ const ToolsSelection: React.FC<ToolsSelectionProps> = ({ userChoices, onChoiceCh
                 options={options} 
                 isMulti
                 onChange={handleChange}
+                isOptionDisabled={() => userChoice.length >= 3}
             />
         </div>
     )

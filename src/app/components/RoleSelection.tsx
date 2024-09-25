@@ -7,12 +7,19 @@ interface RoleSelectionProps {
 }
 
 const RoleSelection: React.FC<RoleSelectionProps> = ({ userChoices, onChoiceChange }) => {
-    const [userChoice, setUserChoice] = useState({})
+    const [userChoice, setUserChoice] = useState([])
     const options = [
         { value: "Frontend Engineer", label: "Frontend Engineer"},
         { value: "Mobile Developer", label: "Mobile Developer"},
         { value: "Web Developer", label: "Web Developer"},
         { value: "Backend Engineer", label: "Backend Engineer"},
+        { value: "Game Developer", label: "Game Developer"},
+        { value: "Data Scientist", label: "Data Scientist"},
+        { value: "Data Analyst", label: "Data Analyst"},
+        { value: "AI/ML Engineer", label: "AI/ML Engineer"},
+        { value: "Cybersecurity", label: "Cybersecurity"},
+        { value: "DevOps Engineer", label: "DevOps Engineer"},
+        { value: "Cloud Engineer", label: "Cloud Engineer"},
     ]
     // TODO: add more options
     const handleChange = (choices: any) => {
@@ -22,6 +29,8 @@ const RoleSelection: React.FC<RoleSelectionProps> = ({ userChoices, onChoiceChan
     console.log(userChoice)
     return(
         <div className="pt-5">
+            <p>Maximum of 3 selections</p>
+            <br/>
             <Select 
                 closeMenuOnSelect={false} 
                 defaultValue={"Role"} 
@@ -35,6 +44,7 @@ const RoleSelection: React.FC<RoleSelectionProps> = ({ userChoices, onChoiceChan
                 }}
                 options={options} 
                 isMulti
+                isOptionDisabled={() => userChoice.length >= 3}
                 onChange={handleChange}
             />
         </div>

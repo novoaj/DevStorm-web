@@ -44,6 +44,7 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
         ...prevSelections,
         [category]: choices,
         }))
+        console.log(userSelections);
     }
     // get started -> role -> tools/tech -> industries that interest them -> generate results that are downloadable
     const steps = [

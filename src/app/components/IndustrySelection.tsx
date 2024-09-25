@@ -9,20 +9,25 @@ interface IndustrySelectionProps {
 const IndustrySelection: React.FC<IndustrySelectionProps> = ({ userChoices, onChoiceChange }) => {
     const [userChoice, setUserChoice] = useState({})
     const options = [
-        { value: "Tech", label: "Tech"},
+        { value: "Technology", label: "Technology"},
         { value: "Finance", label: "Finance"},
         { value: "Fitness", label: "Fitness"},
         { value: "Environment", label: "Environment"},
+        { value: "Entertainment", label: "Entertainment"},
+        { value: "Social Media", label: "Social Media"},
+        { value: "Food", label: "Food"},
+        { value: "Gaming", label: "Gaming"},
+
     ]
     // TODO: add more options
     const handleChange = (choices: any) => {
         setUserChoice(choices); // Update local state
-        onChoiceChange(choices); // Update parent state via callback
+        onChoiceChange([choices]); // Update parent state via callback
       };
     return (
         <div className="pt-5">
             <Select 
-                closeMenuOnSelect={false} 
+                closeMenuOnSelect={true} 
                 defaultValue={"Role"} 
                 styles={{
                     option: (base) => ({
@@ -33,7 +38,7 @@ const IndustrySelection: React.FC<IndustrySelectionProps> = ({ userChoices, onCh
                     }),
                 }}
                 options={options} 
-                isMulti
+                // isMulti
                 onChange={handleChange}
             />
         </div>
