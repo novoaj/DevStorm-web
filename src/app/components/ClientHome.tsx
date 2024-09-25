@@ -7,6 +7,7 @@ import Results from "./Results";
 import { UserContext } from "../context/UserContext";
 import { fetchCSRFToken } from "../actions/actions";
 import { toast } from "sonner";
+import { useRouter } from 'next/navigation';
 import axios from "axios";
 
 interface UserSelections {
@@ -23,7 +24,7 @@ interface ResultsType {
 interface ClientHomeProps {
    
 }
-
+// https://medium.com/@velja/token-refresh-with-axios-interceptors-for-a-seamless-authentication-experience-854b06064bde
 export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
     const { isLoggedIn, setIsLoggedIn} = useContext(UserContext);
     const [isStarted, setIsStarted] = useState(false);
@@ -38,6 +39,7 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
         description: "",
         steps: [],
     });
+    const router = useRouter();
     // if not logged in, get started isn't reachable and prompt them to log in
     const setUserChoices = (category : keyof UserSelections, choices : Array<{ value: string; label: string }>) => {
         setUserSelections((prevSelections) => ({
@@ -68,18 +70,46 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
     // if not logged in, user is given an error message prompting log in
     const handleGetStarted = () => {
         if (isLoggedIn) {
-        setIsStarted(true);
+            setIsStarted(true);
         }else{
         toast.info('Need to login before accessing this feature', {
-            duration: 5000,
+            duration: 2000,
         });
         }
     }
     const makeSelectionNoti = () => {
         toast.info('Please make selection(s) before continuing', {
-        duration: 5000,
+        duration: 2000,
         });
     }
+
+    const axiosInstance = axios.create({
+        baseURL: "http://127.0.0.1:5000",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
+    axiosInstance.interceptors.response.use(
+        response => response,
+        async error => {
+            const originalRequest = error.config;
+            if (error.response.state === 401 && !originalRequest._retry) {
+                originalRequest._retry = true;
+                try {
+                    const response = await axios.post("http://127.0.0.1:5000/token/refresh", {}, {
+                        withCredentials: true,
+                    })
+                    return axiosInstance(originalRequest); 
+                }catch (refreshError) {
+                    console.log("token refresh failed, logging out...");
+                    // refresh token is probably expired, redirect user to login again
+                    setIsLoggedIn(false);
+                    router.replace("/login");
+                }
+            }
+        }
+    )
+
     const handleSubmit = async(userSelections : UserSelections) => {
         // call parent handleSubmit using userSelections
         const csrfToken = await fetchCSRFToken();
@@ -106,19 +136,19 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
         if (response.status === 200) {
             let obj = JSON.parse(response.data.response);
             toast.info('Selections submitted successfully!', {
-            duration: 5000,
+            duration: 2000,
             });
             setResults(obj);
             setCurrentStep((prev) => prev + 1);
         } else {
             toast.error('Error generating results!', {
-            duration: 5000,
+            duration: 2000,
             });
         }
         } catch (err) {
         console.log(err);
         toast.error('Error generating results!', {
-            duration: 5000,
+            duration: 2000,
         });
         }
         
@@ -139,7 +169,7 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
         let results_str = results.project_title + "\n\n" + results.description + "\n\n" + results.steps.map((step, index) => `${index + 1}) ${step}`).join("\n");
         downloadTxtFile(results_str);
         toast.success('Results downloaded successfully!', {
-        duration: 5000,
+            duration: 2000,
         });
     };
     // reset logic when user is done generating this plan

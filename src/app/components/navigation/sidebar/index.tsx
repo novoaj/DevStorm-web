@@ -19,13 +19,14 @@ const Sidebar = ({ isOpen, toggle, } : { isOpen: boolean; toggle: () => void; })
           withCredentials: true,
           headers: {
             'X-CSRF-TOKEN': csrfToken,  // Add CSRF token to headers
-        }
+          }
         }
       ).then((response) => {
-      setIsLoggedIn(false);
-      toast.success('Logged out');
-      router.push("/login");
-      toggle
+        setIsLoggedIn(false);
+        toggle();
+        toast.success('Logged out');
+        router.push("/login");
+      
       }
     )
     .catch((err)=> {

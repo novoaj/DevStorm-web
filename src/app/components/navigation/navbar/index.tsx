@@ -15,26 +15,6 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
     const {isLoggedIn, setIsLoggedIn} = useContext(UserContext);
     const router = useRouter();
     const pathname = usePathname(); // Hook to get the current path
-    const tokenIsExpired = (token: string | null) => {
-      if (token === null){
-        return true;
-      }
-      let decoded = jwtDecode(token)
-      if (decoded?.exp && decoded.exp < Date.now() / 1000) {
-        //localStorage.removeItem("access");
-        return true;
-      }
-      return false;
-    }
-    // const checkIsLoggedIn = () => {
-    //   // check if access token exists, is access token expired?
-    //   let token = localStorage.getItem("access")
-    //   if(tokenIsExpired(token)) {
-    //     setIsLoggedIn(false);
-    //   }else{
-    //     setIsLoggedIn(true);
-    //   }
-    // }
 
     const handleLogout = async() => {
       const csrfToken = await fetchCSRFToken();
@@ -55,12 +35,8 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
       )
       .catch((err)=> {
         console.log("error logging out: ", err);
-      })
-      
+      })  
     }
-    // useEffect(() => {
-    //   checkIsLoggedIn(); // Check login status on component mount
-    // }, [pathname]);
 
     return (
       <>
