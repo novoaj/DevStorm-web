@@ -81,7 +81,7 @@ const RegisterPage: React.FC = () => {
 
     return (
         <div className="flex justify-center items-center h-screen">
-            <form className="bg-primary-100 border border-slate-500 text-slate-100 shadow-md rounded px-8 pt-6 pb-8 mb-4 lg:w-1/3 md:w-1/2 s:w-10/12 xs:w-10/12" onSubmit={handleSubmit}>
+            <form className="animate-slideDown bg-primary-100 border border-slate-500 text-slate-100 shadow-md rounded px-8 pt-6 pb-8 mb-4 lg:w-1/3 md:w-1/2 s:w-10/12 xs:w-10/12" onSubmit={handleSubmit}>
                 <div>
                     <h3 className="flex justify-center items-center text-3xl mb-5">Register</h3>
                 </div>

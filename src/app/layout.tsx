@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body  style={{background: "linear-gradient(50deg, rgba(33,42,49,1) 0%, rgba(46,57,68,1) 80%, rgba(18,78,102,1) 100%)"}}>
+      <body style={{background: "linear-gradient(50deg, rgba(33,42,49,1) 0%, rgba(46,57,68,1) 80%, rgba(18,78,102,1) 100%)"}}>
         <UserProvider>
           <Navigation/>
           {children}

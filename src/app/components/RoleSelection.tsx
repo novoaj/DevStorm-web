@@ -21,12 +21,11 @@ const RoleSelection: React.FC<RoleSelectionProps> = ({ userChoices, onChoiceChan
         { value: "DevOps Engineer", label: "DevOps Engineer"},
         { value: "Cloud Engineer", label: "Cloud Engineer"},
     ]
-    // TODO: add more options
+
     const handleChange = (choices: any) => {
         setUserChoice(choices); // Update local state
         onChoiceChange(choices); // Update parent state via callback
       };
-    console.log(userChoice)
     return(
         <div className="pt-5">
             <p>Maximum of 3 selections</p>

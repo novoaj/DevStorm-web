@@ -24,6 +24,21 @@ const config: Config = {
         },
         bluegray: "#748D92",
         gray: "#D3D9D4"
+      },
+      keyframes: {
+        slideUp: {
+          "0%": { opacity: "0", marginBottom: "-600px" },
+          "100%": { opacity: "1", marginBottom: "0" }
+        },
+        slideDown: {
+          "0%": { opacity: "0", marginTop: "-600px" },
+          "66%": {opacity: "0.4", marginTop: "-240px"},
+          "100%": { opacity: "1", marginTop: "0" }
+        }
+      },
+      animation: {
+        slideUp: "slideUp 1s ease-in",
+        slideDown: "slideDown 1s ease-in"
       }
     },
   },

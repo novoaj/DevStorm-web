@@ -12,8 +12,6 @@ const Sidebar = ({ isOpen, toggle, } : { isOpen: boolean; toggle: () => void; })
 
   const handleLogout = async() => {
     const csrfToken = await fetchCSRFToken();
-      console.log("child component handleSubmit");
-      console.log(csrfToken);
       axios.post("http://127.0.0.1:5000/logout", {}, 
         {
           withCredentials: true,
@@ -23,10 +21,8 @@ const Sidebar = ({ isOpen, toggle, } : { isOpen: boolean; toggle: () => void; })
         }
       ).then((response) => {
         setIsLoggedIn(false);
-        toggle();
         toast.success('Logged out');
-        router.push("/login");
-      
+        toggle();
       }
     )
     .catch((err)=> {

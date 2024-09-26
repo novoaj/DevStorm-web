@@ -1,5 +1,5 @@
 "use client";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import RoleSelection from "./RoleSelection";
 import ToolsSelection from "./ToolsSelection";
 import IndustrySelection from "./IndustrySelection";
@@ -46,7 +46,6 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
         ...prevSelections,
         [category]: choices,
         }))
-        console.log(userSelections);
     }
     // get started -> role -> tools/tech -> industries that interest them -> generate results that are downloadable
     const steps = [
@@ -79,7 +78,7 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
     }
     const makeSelectionNoti = () => {
         toast.info('Please make selection(s) before continuing', {
-        duration: 2000,
+            duration: 2000,
         });
     }
 
@@ -104,6 +103,8 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
                     console.log("token refresh failed, logging out...");
                     // refresh token is probably expired, redirect user to login again
                     setIsLoggedIn(false);
+                    setCurrentStep(0);
+                    setIsStarted(false);
                     router.replace("/login");
                 }
             }
@@ -113,11 +114,9 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
     const handleSubmit = async(userSelections : UserSelections) => {
         // call parent handleSubmit using userSelections
         const csrfToken = await fetchCSRFToken();
-        console.log("child component handleSubmit");
-        console.log(csrfToken);
-        console.log(document.cookie)
         if (csrfToken === null || csrfToken === ""){
-            console.log("error, no csrf token")
+            console.log("error, no csrf token");
+            return;
         }
         let url = "http://127.0.0.1:5000/api/prompt";
         try{
@@ -146,10 +145,10 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
             });
         }
         } catch (err) {
-        console.log(err);
-        toast.error('Error generating results!', {
-            duration: 2000,
-        });
+            console.log(err);
+            toast.error('Error generating results!', {
+                duration: 2000,
+            });
         }
         
     }
@@ -198,11 +197,20 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
     const handlePrev = () => {
         setCurrentStep((prevStep => prevStep - 1));
     }
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            // Perform any action needed when logged out, like redirecting
+            setIsStarted(false);
+            setCurrentStep(0);
+            // router.replace("/login"); // Redirect to login page
+        }
+    }, [isLoggedIn, router]); // on router change or isLoggedIn context change, reset user
     return (
         <>
             {isStarted ?
             <>
-            <div className="mt-10 h-fit bg-primary-100 border border-slate-500 text-slate-100 shadow-md rounded ">
+            <div className="mt-10 h-fit bg-primary-100 border border-slate-500 text-slate-100 shadow-md rounded">
                 {(isLoggedIn) && steps[currentStep] && (
                 <div className=" w-full mb-10 h-fit p-5">
                     <h2 className="text-2xl font-semibold">{steps[currentStep].title}</h2>
@@ -212,17 +220,20 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
                 <div className="flex content-baseline justify-end m-2 p-3">
                 {currentStep < 2 ? 
                     (<>
-                    <div className="ml-3 mr-3">
-                        <button disabled={currentStep == 0} onClick={handlePrev} className="justify-self-start bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 pl-3 pr-3 pt-1 pb-1 rounded">
-                        Back
-                        </button>
-                    </div>
-                    <div className="justify-end">
-                        <button onClick={handleNext} className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 pl-3 pr-3 pt-1 pb-1 rounded">
-                        Next
-                        </button>
-                    </div>
-                </>)
+                        {currentStep === 0 ? 
+                            <></>: 
+                            <div className="ml-3 mr-3">
+                                <button disabled={currentStep == 0} onClick={handlePrev} className="justify-self-start bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 pl-3 pr-3 pt-1 pb-1 rounded">
+                                    Back
+                                </button>
+                            </div>}
+
+                        <div className="justify-end">
+                            <button onClick={handleNext} className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 pl-3 pr-3 pt-1 pb-1 rounded">
+                                Next
+                            </button>
+                        </div>
+                    </>)
                 : currentStep === 2 ? (
                     <div className="justify-end">
                     <button
@@ -254,7 +265,7 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
             </div>
             </> : 
             <>
-            <button onClick={handleGetStarted} className="mt-10 h-10 rounded-lg bg-white hover:bg-secondary-100 hover:text-slate-100 hover:border font-bold px-5 text-black">Get Started</button>
+                <button onClick={handleGetStarted} className="mt-10 h-10 rounded-lg bg-white hover:bg-secondary-100 hover:text-slate-100 hover:border font-bold px-5 text-black">Get Started</button>
             </>}
         </>
     );

@@ -24,10 +24,14 @@ const LoginPage: React.FC = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         let url = "http://127.0.0.1:5000/login"
-        // TODO handle null/blank strings
-        // post to backend?
-        // Make a POST request to the login endpoint with the username and password
-        console.log(username, password)
+        // validate inputs
+        if (username === "" || password === ""){
+            toast.info("You must enter a valid username and password to continue", {
+                duration: 2000,
+            });
+            return;
+        }
+
         axios.post(url, {
             username: username,
             password: password
@@ -40,23 +44,16 @@ const LoginPage: React.FC = () => {
         })
         .then((response) => {
             if (response.status === 200) {
-            // If login is successful, store the access token in local storage
-            // TODO remove local storage - use cookies
-                console.log(response)
-                console.log(response.headers);
-                // console.log(response.headers.csrf_token)
-                // setToken(response.headers.csrf_token)
                 setIsLoggedIn(true); // update user context
                 toast.success('Successful Login!', {
-                    duration: 5000,
+                    duration: 2000,
                 });
                 router.push("/");
             
             } else if (response.status >= 400) {
             // If login fails, show a warning toast
-            console.log("error logging in")
             toast.warning('Login failed, make sure your username and password is correct', {
-                duration: 5000,
+                duration: 2000,
             });
             }
         })
@@ -67,12 +64,11 @@ const LoginPage: React.FC = () => {
             duration: 5000,
             });
         })
-        // Add your login logic here
     };
 
     return (
         <div className="flex justify-center items-center h-screen">
-            <form className="bg-primary-100 border border-slate-500 text-slate-100 shadow-md rounded px-8 pt-6 pb-8 mb-4 lg:w-1/3 md:w-1/2 s:w-10/12 xs:w-10/12" onSubmit={handleSubmit}>
+            <form className="animate-slideDown bg-primary-100 border border-slate-500 text-slate-100 shadow-md rounded px-8 pt-6 pb-8 mb-4 lg:w-1/3 md:w-1/2 s:w-10/12 xs:w-10/12" onSubmit={handleSubmit}>
                 <div>
                     <h3 className="flex justify-center items-center text-3xl mb-5">Login</h3>
                 </div>

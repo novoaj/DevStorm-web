@@ -18,8 +18,6 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
 
     const handleLogout = async() => {
       const csrfToken = await fetchCSRFToken();
-      console.log("child component handleSubmit");
-      console.log(csrfToken);
       axios.post("http://127.0.0.1:5000/logout", {}, 
         {
           withCredentials: true,
@@ -30,7 +28,7 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
       ).then((response) => {
         setIsLoggedIn(false);
         toast.success('Logged out');
-        router.push("/login");
+        router.replace("/login");
         }
       )
       .catch((err)=> {
