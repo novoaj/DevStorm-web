@@ -15,15 +15,18 @@ const config: Config = {
       },
       colors: {
         primary: {
-          100: "#212A31",
-          200: "#2E3944"
+          100: "#212A31", // orig dark
+          200: "#2E3944", // lighter version
+          300: "#171d22", // dark main theme
+          400: "#1a2227", // 10% lighter than main
         },
         secondary: {
-          100: "#124E66",
-          200: "#295f75"
+          100: "#124E66", // blue
+          200: "#295f75" // lighter blue
         },
         bluegray: "#748D92",
-        gray: "#D3D9D4"
+        gray: "#D3D9D4",
+        outline: "#5f605f",
       },
       keyframes: {
         slideUp: {

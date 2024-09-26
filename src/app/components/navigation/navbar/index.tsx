@@ -38,7 +38,7 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
 
     return (
       <>
-        <div className="w-full h-20 bg-primary-100 sticky top-0 z-40">
+        <div className="w-full h-24 bg-primary-300 sticky top-0 z-40 border-b border-slate-500">
           <div className="container mx-auto px-4 h-full">
             <div className="flex justify-between items-center h-full">
               <Logo />
@@ -59,16 +59,16 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
                   />
                 </svg>
               </button>
-              <ul className="hidden md:flex gap-x-6 text-white">
-                <li>
+              <ul className="hidden md:flex gap-x-6 text-gray">
+                <li className="hover:text-slate-100">
                   <Link href="/about">
-                    <p>About Us</p>
+                  <p>About Us</p>
                   </Link>
                 </li>
-                <li>
-                  <Link href="/">
-                    <p>Contact Us</p>
-                  </Link>
+                <li className="hover:text-slate-100">
+                    <a href="mailto:devstorm.ai@gmail.com">
+                      <p>Contact Us</p>
+                    </a>
                 </li>
               </ul>
               {isLoggedIn ? 

@@ -1,5 +1,7 @@
-import Image from 'next/image';
-import header from "../../../public/images/About-Us-Header-Dark.webp";
+import header from "../../../public/images/about_header_clipart.webp";
+import img1 from "../../../public/images/about_content_1.webp"
+import img2 from "../../../public/images/about_content_2.webp"
+import img3 from "../../../public/images/about_content_3.webp"
 
 const About: React.FC = () => {
     return (
@@ -11,18 +13,21 @@ const About: React.FC = () => {
                 </div>
             </div>
             <div className="animate-slideUp my-4 xl:w-4/5 2xl:w-4/5 mx-auto ">
-                <h1 className="text-4xl font-bold mb-4">About DevStorm</h1>
-                <p className="text-lg mb-4">
-                    We are a group of new Computer Science graduates who are passionate about helping tech students come up with innovative project ideas. Our platform is designed to inspire and guide students as they explore various careers and industries.
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 shadow-lg">
+                <div className="border border-slate-500 rounded p-3">
+                    <h1 className="text-4xl font-bold mb-4">About DevStorm</h1>
+                    <p className="text-lg mb-4">
+                        We are a group of new Computer Science graduates who are passionate about helping tech students come up with innovative project ideas. Our platform is designed to inspire and guide students as they explore various careers and industries.
+                    </p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
+                    <div className="p-4 shadow-lg bg-primary-400 border border-slate-500 rounded p-3">
                         <h2 className="text-2xl font-semibold mb-2">Who We Are</h2>
                         <p>
                             We are a team of enthusiastic and driven individuals who have recently graduated with degrees in Computer Science. Our diverse backgrounds and shared passion for technology have brought us together to create this platform.
                         </p>
                     </div>
-                    <div className="p-4 shadow-lg">
+                    <div className="p-4 shadow-lg  bg-primary-400 border border-slate-500 rounded p-3">
                         <h2 className="text-2xl font-semibold mb-2">What We Offer</h2>
                         <p>
                             Our platform offers a variety of resources and tools to help tech students brainstorm and develop project ideas. We provide guidance on exploring different careers and industries, and offer support throughout the project development process.
@@ -30,6 +35,21 @@ const About: React.FC = () => {
                     </div>
                 </div>
             </div>
+            <div className="grid items-center align-center grid-cols-1 md:grid-cols-3 gap-4 mt-12 xl:w-4/5 2xl:w-4/5 mx-auto">
+                <div className="relative shadow-lg bg-primary-400 border border-slate-500 rounded">
+                    <img src={img2.src} alt="About Content 2" className="w-full object-cover rounded" />
+                    <div className="absolute inset-0 bg-black bg-opacity-35 rounded"></div>
+                </div>
+                <div className="relative shadow-lg bg-primary-400 border border-slate-500 rounded">
+                    <img src={img1.src} alt="About Content 1" className="w-full object-cover rounded" />
+                    <div className="absolute inset-0 bg-black bg-opacity-30 rounded"></div>
+                </div>
+                <div className="relative shadow-lg bg-primary-400 border border-slate-500 rounded">
+                    <img src={img3.src} alt="About Content 3" className="w-full object-cover rounded" />
+                    <div className="absolute inset-0 bg-black bg-opacity-30 rounded"></div>
+                </div>
+            </div>
+            <div className="h-16"></div>
         </div>
     );
 };
