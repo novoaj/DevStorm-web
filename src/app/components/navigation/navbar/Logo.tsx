@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Button from "./Button";
+import logo from "../../../../../public/images/logo_small_rect.png"
 
 const Logo = () => {
   //update the size of the logo when the size of the screen changes
@@ -36,11 +37,11 @@ const Logo = () => {
   return (
     <>
       <Link href="/" style={{ display: showButton ? "none" : "block" }}>
-        <img
-          src="/next.svg"
+        <Image
+          src={logo}
           alt="Logo"
-          width={width < 1024 ? "150" : "250"}
-          height="auto"
+          width={125}
+          height={125}
           className="relative"
         />
       </Link>
