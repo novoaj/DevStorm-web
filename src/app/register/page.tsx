@@ -62,19 +62,19 @@ const RegisterPage: React.FC = () => {
                 // localStorage.setItem("access", response.data.access_token); // TODO cookies instead of local storage
                 setIsLoggedIn(true);
                 toast.success('Registered user successfully!', {
-                    duration: 5000,
+                    duration: 2000,
                 });
                 router.push("/");
             })
             .catch((error) => {
                 console.log(error);
                 toast.warning('Register failed (This username might already exist). Try again!', {
-                    duration: 5000,
+                    duration: 2000,
                 });
             })
         }else{
             toast.warning(result.message, {
-                duration: 5000,
+                duration: 2000,
             });
         }
     };

@@ -7,7 +7,7 @@ interface ToolsSelectionProps {
 }
 const ToolsSelection: React.FC<ToolsSelectionProps> = ({ userChoices, onChoiceChange })  => {
     const [userChoice, setUserChoice] = useState([])
-    const options = [
+    const options : any= [
         { value: "Java", label: "Java"},
         { value: "Python", label: "Python"},
         { value: "JavaScript", label: "JavaScript"},

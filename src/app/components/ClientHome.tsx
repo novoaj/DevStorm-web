@@ -59,7 +59,7 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
             userChoices={userSelections.tech}
             onChoiceChange={(choices) => setUserChoices("tech", choices)}
         /> },
-        { title: "Select Industries/Interests", content: 
+        { title: "Select Industry/Interest", content: 
         <IndustrySelection 
             userChoices={userSelections.industries}
             onChoiceChange={(choices) => setUserChoices("industries", choices)}
@@ -102,6 +102,7 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
                 }catch (refreshError) {
                     console.log("token refresh failed, logging out...");
                     // refresh token is probably expired, redirect user to login again
+                    localStorage.removeItem("isLoggedIn")
                     setIsLoggedIn(false);
                     setCurrentStep(0);
                     setIsStarted(false);
@@ -112,13 +113,16 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
     )
 
     const handleSubmit = async(userSelections : UserSelections) => {
-        // call parent handleSubmit using userSelections
         const csrfToken = await fetchCSRFToken();
         if (csrfToken === null || csrfToken === ""){
-            console.log("error, no csrf token");
+            // can happen if user isLoggedIn=true but doesn't have a csrf token
+            toast.error("Failed to validate user. Please Login/Signup and try again", {
+                duration: 2000,
+            });
             return;
         }
         let url = "http://127.0.0.1:5000/api/prompt";
+        console.log(url)
         try{
             // axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
             const response = await axios.post(url, {
@@ -141,11 +145,11 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
             setCurrentStep((prev) => prev + 1);
         } else {
             toast.error('Error generating results!', {
-            duration: 2000,
+                duration: 2000,
             });
         }
         } catch (err) {
-            console.log(err);
+            console.error(err); // can happen if user doesn't have httponly cookies
             toast.error('Error generating results!', {
                 duration: 2000,
             });
@@ -210,7 +214,7 @@ export const ClientHome: React.FC<ClientHomeProps> = ({}) => {
         <>
             {isStarted ?
             <>
-            <div className="mt-10 h-fit bg-primary-100 border border-slate-500 text-slate-100 shadow-md rounded">
+            <div className="mt-10 h-fit bg-primary-300 border border-slate-500 text-slate-100 shadow-md rounded">
                 {(isLoggedIn) && steps[currentStep] && (
                 <div className=" w-full mb-10 h-fit p-5">
                     <h2 className="text-2xl font-semibold">{steps[currentStep].title}</h2>

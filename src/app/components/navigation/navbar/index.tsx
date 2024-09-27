@@ -32,13 +32,14 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
         }
       )
       .catch((err)=> {
-        console.log("error logging out: ", err);
+        toast.success('Logged out');
+        setIsLoggedIn(false); // log user out even if it fails
       })  
     }
 
     return (
       <>
-        <div className="w-full h-24 bg-primary-300 sticky top-0 z-40 border-b border-slate-500">
+        <div className="w-full h-24 bg-primary-300 sticky top-0 z-40 border-b border-primary-200">
           <div className="container mx-auto px-4 h-full">
             <div className="flex justify-between items-center h-full">
               <Logo />

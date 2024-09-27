@@ -8,7 +8,7 @@ interface IndustrySelectionProps {
 
 const IndustrySelection: React.FC<IndustrySelectionProps> = ({ userChoices, onChoiceChange }) => {
     const [userChoice, setUserChoice] = useState({})
-    const options = [
+    const options : any = [
         { value: "Technology", label: "Technology"},
         { value: "Finance", label: "Finance"},
         { value: "Fitness", label: "Fitness"},

@@ -8,7 +8,7 @@ interface RoleSelectionProps {
 
 const RoleSelection: React.FC<RoleSelectionProps> = ({ userChoices, onChoiceChange }) => {
     const [userChoice, setUserChoice] = useState([])
-    const options = [
+    const options : any = [
         { value: "Frontend Engineer", label: "Frontend Engineer"},
         { value: "Mobile Developer", label: "Mobile Developer"},
         { value: "Web Developer", label: "Web Developer"},

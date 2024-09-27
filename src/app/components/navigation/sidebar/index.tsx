@@ -26,7 +26,8 @@ const Sidebar = ({ isOpen, toggle, } : { isOpen: boolean; toggle: () => void; })
       }
     )
     .catch((err)=> {
-      console.log("error logging out: ", err);
+      toast.success('Logged out');
+      setIsLoggedIn(false); // log user out even if it fails
     })
   }
   return (

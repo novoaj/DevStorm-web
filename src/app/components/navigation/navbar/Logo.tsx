@@ -37,12 +37,10 @@ const Logo = () => {
   return (
     <>
       <Link href="/" style={{ display: showButton ? "none" : "block" }}>
-        <Image
-          src={logo}
+        <img
+          src={logo.src}
           alt="Logo"
-          width={120}
-          height={120}
-          className="relative"
+          className="h-16 w-auto relative"
         />
       </Link>
       <div

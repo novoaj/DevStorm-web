@@ -7,7 +7,7 @@ import { UserProvider } from "./context/UserContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "DevStorm",
+  title: "DevStorm - Brainstorming platform for tech projects for students",
   description: "Project planning app for tech students to explore careers and industries",
 };
 
