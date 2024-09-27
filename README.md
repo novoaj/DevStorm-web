@@ -9,5 +9,7 @@ Technologies Used:
 - tailwindcss
 
 ## Demo
-https://github.com/user-attachments/assets/c21f9ce1-469c-46c5-9248-4e467cb0053f
+https://github.com/user-attachments/assets/1a56368f-ad04-4731-ae6c-a1893ceee4b9
+
+
 
