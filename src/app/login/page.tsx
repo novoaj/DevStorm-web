@@ -5,7 +5,6 @@ import axios from "axios";
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { UserContext } from '../context/UserContext';
-import { setToken } from '../actions/actions';
 
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -51,10 +50,10 @@ const LoginPage: React.FC = () => {
                 router.push("/");
             
             } else if (response.status >= 400) {
-            // If login fails, show a warning toast
-            toast.warning('Login failed, make sure your username and password is correct', {
-                duration: 2000,
-            });
+                // If login fails, show a warning toast
+                toast.warning('Login failed, make sure your username and password is correct', {
+                    duration: 2000,
+                });
             }
         })
         .catch((error) => {
