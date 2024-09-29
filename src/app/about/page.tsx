@@ -26,7 +26,7 @@ const About: React.FC = () => {
             <div className="animate-slideUp my-4 xl:w-4/5 2xl:w-4/5 mx-auto ">
                 <div className="border border-slate-500 bg-primary-400 rounded p-3">
                     <p className="text-lg mb-4">
-                        We are a group of new Computer Science graduates who are passionate about helping tech students come up with innovative project ideas. Our platform is designed to inspire and guide students as they explore various careers and industries.
+                        We are a group of Computer Science Majors who are passionate about helping tech students come up with innovative project ideas. Our platform is designed to inspire and guide students as they explore various careers and industries.
                     </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">

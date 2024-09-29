@@ -51,10 +51,10 @@ const Sidebar = ({ isOpen, toggle, } : { isOpen: boolean; toggle: () => void; })
 
         <ul className="sidebar-nav text-center leading-relaxed text-xl">
           <li>
-            <Link href="/about" onClick={toggle}><p>About Us</p></Link>
+            <Link href="/about" onClick={toggle}><p>About</p></Link>
           </li>
           <li>
-            <Link href="/contacts" onClick={toggle}><p>Contacts</p></Link>
+            <Link href="/contacts" onClick={toggle}><p>Contact Us</p></Link>
           </li>
           {isLoggedIn ? 
             <>
