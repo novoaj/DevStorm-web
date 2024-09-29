@@ -79,14 +79,14 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
                   </button>
                   {isLoggedIn ? 
                     <>
-                      <button onClick={handleLogout}className="hidden md:block h-10 rounded-lg bg-white hover:bg-secondary-100 hover:text-slate-100 hover:border font-bold px-5 transition duration-300">
+                      <button onClick={handleLogout}className="hidden text-primary-100 md:block h-10 rounded-lg bg-gray hover:bg-secondary-100 hover:text-slate-100 hover:border font-bold px-5 transition duration-300">
                         Logout
                       </button>
                     </> : 
                     <>
                       <div className="hidden md:flex gap-x-4">
                         <Button />
-                        <button onClick={handleRegister} className="h-10 rounded-lg bg-white hover:bg-secondary-100 hover:text-slate-100 hover:border font-bold px-5 transition duration-300">
+                        <button onClick={handleRegister} className="h-10 rounded-lg bg-gray hover:bg-secondary-100 hover:text-slate-100 hover:border font-bold px-5 transition duration-300">
                           Register
                         </button>
                       </div>

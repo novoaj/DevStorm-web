@@ -164,6 +164,7 @@ const CreateProject : React.FC<any>  = () => {
     // used for handling download click from client. prompts local download of file to txt format
     const handleDownloadResults = () => {
         // Logic to download results
+        // TODO hit endpoint to save project
         let results_str = results.project_title + "\n\n" + results.description + "\n\n" + results.steps.map((step, index) => `${index + 1}) ${step}`).join("\n");
         downloadTxtFile(results_str);
         toast.success('Results downloaded successfully!', {
