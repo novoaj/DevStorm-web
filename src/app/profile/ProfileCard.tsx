@@ -13,7 +13,7 @@ interface ProfileCardProps {
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
     return (
-        <div className="container h-96 mt-12 w-72 mr-5 bg-primary-300 border border-primary-200 text-slate-100 shadow-md rounded-md p-5">
+        <div className="container h-96 mt-5 w-full bg-primary-300 border border-primary-200 text-slate-100 shadow-md rounded-md p-5">
             <div className="text-center mx-auto mb-5">
                 <div className="flex justify-center">
                     <img src={user.avatar} alt="Avatar" className="w-24 rounded-full" />
