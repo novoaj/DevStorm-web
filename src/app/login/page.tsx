@@ -37,7 +37,7 @@ const LoginPage: React.FC = () => {
         }, {
             withCredentials: true, // Include this to handle cookies
             headers: {
-            'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
             
         })
