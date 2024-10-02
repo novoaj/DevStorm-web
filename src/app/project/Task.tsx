@@ -3,15 +3,17 @@ import { Draggable } from "@hello-pangea/dnd";
 
 interface TaskProps {
     task: {
-        id: string;
+        id: number;
+        priority: number;
         content: string;
+        status: number;
     };
     index: number;
 }
 
 const Task: React.FC<TaskProps> = ({ task, index }) => {
     return (
-        <Draggable key={task.id} draggableId={task.id} index={index}>
+        <Draggable key={task.id} draggableId={task.content} index={index}>
             {(provided) => (
                 <li
                     ref={provided.innerRef}

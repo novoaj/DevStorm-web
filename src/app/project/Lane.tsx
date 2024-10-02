@@ -3,8 +3,10 @@ import { Droppable, Draggable } from "@hello-pangea/dnd";
 import Task from './Task';
 
 interface Task {
-    id: string;
+    id: number;
+    priority: number;
     content: string;
+    status: number;
   }
   
   interface LaneProps {
@@ -18,7 +20,7 @@ const Lane: React.FC<LaneProps> = ({ title, tasks }) => {
             <h2 className="text-xl font-semibold mb-2 text-gray">{title}</h2>
             <Droppable droppableId={title}>
                 {(provided) => (
-                    <div className="flex-grow overflow-hidden hover:overflow-y-scroll pr-1">
+                    <div className="flex-grow overflow-hidden hover:overflow-y-scroll mr-2">
                         <ul
                             {...provided.droppableProps}
                             ref={provided.innerRef}
