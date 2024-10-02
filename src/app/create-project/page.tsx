@@ -172,6 +172,31 @@ const CreateProject : React.FC<any>  = () => {
         });
     };
 
+    const handleSaveProject = async () => {
+        let url = process.env.NEXT_PUBLIC_API_URL + "/project/create";
+        console.log(url);
+        try {
+            const response = await axiosInstance.post(url, {
+                title: results.project_title,
+                summary: results.description,
+                steps: results.steps,
+                languages: selections.tech.map(technology => technology.value)
+            },{
+                withCredentials: true,  // This ensures cookies are sent and stored
+            })
+            if (response.status === 201) {
+                toast.success('Project saved successfully! Check out your saved projects in your profile page', {
+                    duration: 2000,
+                });
+            }
+        }catch (err) {
+            console.error(err);
+            toast.warning('Error saving your project.', {
+                duration: 2000,
+            });
+        }
+    }
+
     const CurrentStepComponent = steps[step].component;
     return (
         <div className="flex justify-center min-h-screen">
@@ -211,7 +236,7 @@ const CreateProject : React.FC<any>  = () => {
                                         </button>
                                     )}
                                     {step === steps.length - 1 && (
-                                        <button onClick={handleDownloadResults} className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 px-3 py-1 rounded">
+                                        <button onClick={handleSaveProject} className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 px-3 py-1 rounded">
                                             Save Project
                                         </button>
                                     )}

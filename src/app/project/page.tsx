@@ -1,8 +1,11 @@
 "use client";
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import Lane from './Lane';
+import axios from 'axios';
+import { fetchCSRFToken } from '../actions/actions';
+import Spinner from '../components/Spinner';
 
 interface Task {
     id: number;
@@ -15,16 +18,19 @@ interface ProjectTasks {
     [key: string]: Task[];
 }
 interface Project {
-    title : string;
-    summary: string;
-    steps: string;
-    ideas: string;
+  id: string;
+  languages: string[];
+  title: string;
+  steps: string[];
+  summary: string;
+  username: string;
 }
 const Project: React.FC = () => {
     // TODO: fetch project details on component render (project info and tasks)
     const searchParams = useSearchParams();
     const pid = searchParams.get('pid');
     const router = useRouter();
+    const [project, setProject] = useState<Project>();
     const [projectData, setProjectData] = useState<ProjectTasks>({
         Todo: [
           { id: 1, priority: 3, content: 'Create React frontend', status: 1 },
@@ -75,20 +81,81 @@ const Project: React.FC = () => {
         });
       };
 
+    const axiosInstance = axios.create({
+        baseURL: process.env.NEXT_PUBLIC_API_URL,
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
+    axiosInstance.interceptors.request.use(async request => {
+        // console.log(request);
+        const csrfToken = await fetchCSRFToken(); // inject csrf token into each request with this instance
+        if (csrfToken) {
+            request.headers['X-CSRF-TOKEN'] = csrfToken;
+        }
+        return request;
+      }, error => {
+        return Promise.reject(error);
+      });
+    axiosInstance.interceptors.response.use(
+        response => response, // successful response
+        async error => {
+            // error response from server is intercepted
+            const originalRequest = error.config; 
+            // console.log(error); // response from server
+            console.log(error.response.status, originalRequest._retry) // !undefined -> (true)
+            if (error.response.status === 401 && !originalRequest._retry) {
+                originalRequest._retry = true; // mark retry as true so we don't retry more than once
+                try {
+                    // console.log("refreshing refresh token");
+                    const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/token/refresh", {}, {
+                        withCredentials: true,
+                    })
+                    return axiosInstance(originalRequest); 
+                }catch (refreshError) {
+                    // refresh token is expired, force logout
+                    localStorage.removeItem("isLoggedIn")
+                    router.replace("/login");
+                }
+            }
+        }
+    )
+    useEffect(() => {
+        let url = process.env.NEXT_PUBLIC_API_URL + `/project/${pid}`;
+        const getData = async() => {
+            const response = await axiosInstance.get(url, {
+                withCredentials: true
+            });
+            console.log(response.data);
+            setProject(response.data);
+        }   
+        getData(); 
+    }, [pid])
+
+    // TODO: loading icon for screens that wait on server data
     return ( 
         <div className="h-screen flex">
             <div className="p-4 flex flex-col flex-1">
-                <div className="ml-10">
+                <div className="mx-8">
                     <button
                         className="bg-secondary-100 hover:bg-secondary-200 text-gray px-4 py-2 rounded mb-4 transition duration-300"
                         onClick={goBack}
                     >
                         &lt; Back
                     </button>
-                    <h1 className="text-2xl font-bold mb-4 text-gray">Project ID: {pid}</h1>
-                    <p className="text-gray">Summary for this project. this project is axasdasd asdasd</p>
-                    <br/>
-                    <p className="text-gray">Additional features to build/scale up the project</p>
+                    {project === undefined ? (
+                      <div className="flex justify-center items-center">
+                        <Spinner/>
+                      </div>
+                    ) : (
+                      <div className="bg-primary-300 border rounded-lg border-primary-200 p-5 space-y-4 sm:space-y-0 sm:space-x-4">
+                        <h1 className="text-2xl font-bold mb-4 ml-3 text-gray">{project.title}</h1>
+                        <p className="text-gray">{project.summary}</p>
+                        <br/>
+                        <p className="text-gray">This drag and drop interface allows you to keep track of your progress while completing your project. Tasks are sorted by priority with the most critical tasks being at the top.</p>
+                      </div>
+                    )}
+
                 </div>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <div className="animate-slideUp flex flex-col md:flex-row flex-wrap h-fit w-full justify-between p-5 space-y-4 sm:space-y-0 sm:space-x-4">

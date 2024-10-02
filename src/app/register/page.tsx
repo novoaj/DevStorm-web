@@ -7,12 +7,16 @@ import { toast } from 'sonner';
 import { UserContext } from '../context/UserContext';
 
 const RegisterPage: React.FC = () => {
+    const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
     const { isLoggedIn, setIsLoggedIn} = useContext(UserContext);
     const router = useRouter()
 
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(e.target.value);
+    }
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value);
     };
@@ -51,8 +55,10 @@ const RegisterPage: React.FC = () => {
             let url = "http://127.0.0.1:5000/register"
             // post to backend?
             axios.post(url, {
+                email: email,
                 username: username,
-                password: password
+                password: password,
+                membership: "standard"
             }, {
                 headers: {
                 'Content-Type': 'application/json'
@@ -81,9 +87,22 @@ const RegisterPage: React.FC = () => {
 
     return (
         <div className="flex justify-center items-center h-screen">
-            <form className="animate-slideDown bg-primary-300 border border-slate-500 text-slate-100 shadow-md rounded px-8 pt-6 pb-8 mb-4 lg:w-1/3 md:w-1/2 s:w-10/12 xs:w-10/12" onSubmit={handleSubmit}>
+            <form className="animate-slideDown bg-primary-300 max-w-96 border border-slate-500 text-slate-100 shadow-md rounded px-8 pt-6 pb-8 mb-4 lg:w-1/2 md:w-4/6 s:w-full xs:w-full" onSubmit={handleSubmit}>
                 <div>
                     <h3 className="flex justify-center items-center text-3xl mb-5">Register</h3>
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                        Email
+                    </label>
+                    <input
+                        className="shadow bg-primary-100 appearance-none border border-slate-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="email"
+                        type="text"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={handleEmailChange}
+                    />
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
