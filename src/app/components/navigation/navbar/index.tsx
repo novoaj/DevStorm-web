@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from "next/link";
 import Logo from "./Logo";
 import Button from "./Button";
@@ -37,6 +37,10 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
     }
     const handleRegister = () => {
       router.replace("/register");
+    }
+
+    const handleProfile = () => {
+      router.push("/profile");
     }
 
     return (
@@ -78,11 +82,17 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
                     </svg>
                   </button>
                   {isLoggedIn ? 
-                    <>
+                    <div className="hidden md:flex gap-x-4">
+                      {pathname !== "/profile" ? 
+                        (
+                        <button onClick={handleProfile}className="bg-secondary-100 hover:bg-secondary-200 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+                            Profile
+                        </button>
+                        ): (<></>)}
                       <button onClick={handleLogout}className="hidden text-primary-100 md:block h-10 rounded-lg bg-gray hover:bg-secondary-100 hover:text-slate-100 hover:border font-bold px-5 transition duration-300">
                         Logout
                       </button>
-                    </> : 
+                    </div> : 
                     <>
                       <div className="hidden md:flex gap-x-4">
                         <Button />

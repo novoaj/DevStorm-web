@@ -91,7 +91,10 @@ const CreateProject : React.FC<any>  = () => {
                 originalRequest._retry = true; // mark retry as true so we don't retry more than once
                 try {
                     // console.log("refreshing refresh token");
-                    const response = await axios.post("http://127.0.0.1:5000/token/refresh", {}, {
+                    const csrfToken = await fetchCSRFToken(); 
+                    const response = await axios.post("http://127.0.0.1:5000/token/refresh", {
+                        "X-CSRF-TOKEN": csrfToken
+                    }, {
                         withCredentials: true,
                     })
                     return axiosInstance(originalRequest); 
@@ -186,7 +189,7 @@ const CreateProject : React.FC<any>  = () => {
             })
             if (response.status === 201) {
                 toast.success('Project saved successfully! Check out your saved projects in your profile page', {
-                    duration: 2000,
+                    duration: 4000,
                 });
             }
         }catch (err) {

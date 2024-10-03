@@ -4,16 +4,17 @@ import { Draggable } from "@hello-pangea/dnd";
 interface TaskProps {
     task: {
         id: number;
+        pid: number;
+        description: string;
         priority: number;
-        content: string;
-        status: number;
+        status: number; // 1->Todo, 2: In Progress, 3: Complete
     };
     index: number;
 }
 
 const Task: React.FC<TaskProps> = ({ task, index }) => {
     return (
-        <Draggable key={task.id} draggableId={task.content} index={index}>
+        <Draggable key={task.id} draggableId={task.description} index={index}>
             {(provided) => (
                 <li
                     ref={provided.innerRef}
@@ -21,7 +22,7 @@ const Task: React.FC<TaskProps> = ({ task, index }) => {
                     {...provided.dragHandleProps}
                     className="mb-2 p-2 border border-primary-200 rounded text-gray bg-primary-400"
                 >
-                    {task.content}
+                    {task.description}
                 </li>
             )}
         </Draggable>

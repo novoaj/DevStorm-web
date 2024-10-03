@@ -58,7 +58,6 @@ const RegisterPage: React.FC = () => {
                 email: email,
                 username: username,
                 password: password,
-                membership: "standard"
             }, {
                 headers: {
                 'Content-Type': 'application/json'

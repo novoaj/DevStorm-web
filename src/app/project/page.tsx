@@ -9,14 +9,18 @@ import Spinner from '../components/Spinner';
 
 interface Task {
     id: number;
+    pid: number;
+    description: string;
     priority: number;
-    content: string;
-    status: number;
+    status: number; // 1->Todo, 2: In Progress, 3: Complete
 }
 
-interface ProjectTasks {
-    [key: string]: Task[];
+interface TaskLanes {
+  "Todo": Task[];
+  "In Progress": Task[];
+  "Completed": Task[];
 }
+
 interface Project {
   id: string;
   languages: string[];
@@ -31,25 +35,12 @@ const Project: React.FC = () => {
     const pid = searchParams.get('pid');
     const router = useRouter();
     const [project, setProject] = useState<Project>();
-    const [projectData, setProjectData] = useState<ProjectTasks>({
-        Todo: [
-          { id: 1, priority: 3, content: 'Create React frontend', status: 1 },
-          { id: 2, priority: 2, content: 'Connect your API to your database', status: 1},
-          { id: 3, priority: 1, content: 'Create Flask/Django backend', status: 1},
-          { id: 8, priority: 3, content: 'Use axios or fetch api to interface with API/backend', status: 1},
-          { id: 9, priority: 2, content: 'create CRUD endpoints for database interactions', status: 1},
-          { id: 10, priority: 1, content: 'Host database locally or in the cloud (AWS RDS, Azure, etc)', status: 1 },
-          { id: 11, priority: 1, content: 'Set up users table and schema with necessary fields (userid, email, password, date_joined)', status: 1},
-        ],
-        inProgress: [
-          { id: 4, priority: 2, content: 'Delete-user endpoint in API', status: 2},
-          { id: 5, priority: 1, content: 'Set up tasks table and schema with id, userid, content fields', status: 2 },
-        ],
-        Completed: [
-          { id: 6, priority: 2, content: 'Create-user endpoint in API for inserting new user into database', status: 3},
-          { id: 7, priority: 1, content: 'Select Database Engine (MySQL, PostgreSQL, etc)', status: 3},
-        ],
-      });
+    const [projectData, setProjectData] = useState<TaskLanes>({
+      "Todo": [],
+      "In Progress": [],
+      "Completed": []
+    });
+    const rows = ["Todo", "In Progress", "Completed"]
 
     const goBack = () => {
         router.back();        
@@ -69,8 +60,8 @@ const Project: React.FC = () => {
           return;
         }
     
-        const sourceColumn = projectData[source.droppableId];
-        const destColumn = projectData[destination.droppableId];
+        const sourceColumn = projectData[source.droppableId as keyof TaskLanes];
+        const destColumn = projectData[destination.droppableId as keyof TaskLanes];
         const [removed] = sourceColumn.splice(source.index, 1);
         destColumn.splice(destination.index, 0, removed);
     
@@ -108,7 +99,10 @@ const Project: React.FC = () => {
                 originalRequest._retry = true; // mark retry as true so we don't retry more than once
                 try {
                     // console.log("refreshing refresh token");
-                    const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/token/refresh", {}, {
+                    const csrfToken = await fetchCSRFToken(); 
+                    const response = await axios.post("http://127.0.0.1:5000/token/refresh", {
+                        "X-CSRF-TOKEN": csrfToken
+                    }, {
                         withCredentials: true,
                     })
                     return axiosInstance(originalRequest); 
@@ -122,14 +116,49 @@ const Project: React.FC = () => {
     )
     useEffect(() => {
         let url = process.env.NEXT_PUBLIC_API_URL + `/project/${pid}`;
-        const getData = async() => {
+        const getProjectData = async() => {
+          try{
             const response = await axiosInstance.get(url, {
-                withCredentials: true
+              withCredentials: true
             });
-            console.log(response.data);
             setProject(response.data);
+          }catch (err) {
+            // Error handling if project not found
+            console.error("couldnt find project");
+          }
         }   
-        getData(); 
+        const getTasks = async() => {
+          url = process.env.NEXT_PUBLIC_API_URL + `/task/${pid}`;
+          try {
+              const response = await axiosInstance.get(url, {
+                withCredentials: true
+              })
+              let todo : Task[]= []
+              let inp : Task[] = []
+              let complete : Task[]= []
+              response.data.forEach((task: Task) => {
+                if (task.status === 1) {
+                  todo.push(task);
+                } else if (task.status === 2) {
+                  inp.push(task);
+                } else if (task.status === 3) {
+                  complete.push(task);
+                }
+              });
+              todo.sort((a, b) => a.priority - b.priority);
+              inp.sort((a, b) => a.priority - b.priority);
+              complete.sort((a, b) => a.priority - b.priority);
+              setProjectData({
+                "Todo": todo,
+                "In Progress": inp,
+                "Completed": complete
+              });
+          }catch (err) {
+              console.error("error fetching tasks")
+          }
+        }
+        getProjectData(); 
+        getTasks();
     }, [pid])
 
     // TODO: loading icon for screens that wait on server data
@@ -159,14 +188,19 @@ const Project: React.FC = () => {
                 </div>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <div className="animate-slideUp flex flex-col md:flex-row flex-wrap h-fit w-full justify-between p-5 space-y-4 sm:space-y-0 sm:space-x-4">
-                        {Object.entries(projectData).map(([columnId, tasks]) => (
-                            <div key={columnId} className="w-full md:w-[calc(33.333%-1rem)] flex-grow ">
+                        {projectData === undefined ? 
+                          <></> : 
+                          <>
+                            {Object.entries(projectData).map(([columnId, tasks]) => (
+                            <div key={columnId} className="w-full md:w-[calc(33.333%-1rem)] flex-grow h-96">
                                 <Lane 
                                     title={columnId} 
-                                    tasks={tasks.sort((a, b) => a.priority - b.priority)} 
+                                    tasks={tasks.sort((a : Task, b : Task) => a.priority - b.priority)} 
                                 />
                             </div>
                         ))}
+                          </>}
+                        
                     </div>
                 </DragDropContext>
             </div>

@@ -51,7 +51,10 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ }) => {
                 originalRequest._retry = true; // mark retry as true so we don't retry more than once
                 try {
                     // console.log("refreshing refresh token");
-                    const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/token/refresh", {}, {
+                    const csrfToken = await fetchCSRFToken(); 
+                    const response = await axios.post("http://127.0.0.1:5000/token/refresh", {
+                        "X-CSRF-TOKEN": csrfToken
+                    }, {
                         withCredentials: true,
                     })
                     return axiosInstance(originalRequest); 
@@ -67,11 +70,16 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ }) => {
     useEffect(() => {
         let url = process.env.NEXT_PUBLIC_API_URL + "/project/by-user";
         const getData = async() => {
-            const response = await axiosInstance.get(url, {
-                withCredentials: true
-            });
-            // console.log(response.data);
-            setProjects(response.data);
+            try {
+                const response = await axiosInstance.get(url, {
+                    withCredentials: true
+                });
+                // console.log(response.data);
+                setProjects(response.data);
+            }catch (err){
+                setProjects([])
+            }
+            
         }   
         getData(); 
     }, [])

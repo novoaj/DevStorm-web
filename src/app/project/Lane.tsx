@@ -4,10 +4,11 @@ import Task from './Task';
 
 interface Task {
     id: number;
+    pid: number;
+    description: string;
     priority: number;
-    content: string;
-    status: number;
-  }
+    status: number; // 1->Todo, 2: In Progress, 3: Complete
+}
   
   interface LaneProps {
     title: string;
