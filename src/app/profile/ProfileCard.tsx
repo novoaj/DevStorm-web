@@ -161,9 +161,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ }) => {
                                         </Dialog.Close>
                                     </div>
                                     <Dialog.Close asChild>
-                                    <button className="h-5 w-5 inline-flex items-center justify-center absolute top-5 right-5 hover:border border-primary-200 rounded" aria-label="Close">
-                                        <Cross />
-                                    </button>
+                                        <button className="h-5 w-5 inline-flex items-center justify-center absolute top-5 right-5 hover:border border-primary-200 rounded" aria-label="Close">
+                                            <Cross />
+                                        </button>
                                     </Dialog.Close>
                                 </Dialog.Content>
                             </Dialog.Portal>

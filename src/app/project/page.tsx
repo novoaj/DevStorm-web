@@ -100,7 +100,7 @@ const Project: React.FC = () => {
                 try {
                     // console.log("refreshing refresh token");
                     const csrfToken = await fetchCSRFToken(); 
-                    const response = await axios.post("http://127.0.0.1:5000/token/refresh", {
+                    const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/token/refresh", {
                         "X-CSRF-TOKEN": csrfToken
                     }, {
                         withCredentials: true,
@@ -161,7 +161,6 @@ const Project: React.FC = () => {
         getTasks();
     }, [pid])
 
-    // TODO: loading icon for screens that wait on server data
     return ( 
         <div className="h-screen flex">
             <div className="p-4 flex flex-col flex-1">
@@ -187,18 +186,19 @@ const Project: React.FC = () => {
 
                 </div>
                 <DragDropContext onDragEnd={onDragEnd}>
-                    <div className="animate-slideUp flex flex-col md:flex-row flex-wrap h-fit w-full justify-between p-5 space-y-4 sm:space-y-0 sm:space-x-4">
+                    <div className="animate-slideUp flex flex-col md:flex-row flex-wrap h-fit justify-between mx-8">
                         {projectData === undefined ? 
                           <></> : 
                           <>
                             {Object.entries(projectData).map(([columnId, tasks]) => (
-                            <div key={columnId} className="w-full md:w-[calc(33.333%-1rem)] flex-grow h-96">
-                                <Lane 
-                                    title={columnId} 
-                                    tasks={tasks.sort((a : Task, b : Task) => a.priority - b.priority)} 
-                                />
-                            </div>
-                        ))}
+                              <div key={columnId} className="w-fit md:w-[calc(33.333%-1rem)] flex-grow h-96 md:mx-2 my-3">
+                                    <Lane 
+                                      title={columnId} 
+                                      tasks={tasks.sort((a : Task, b : Task) => a.priority - b.priority)}
+                                      project={pid || ""}
+                                    />
+                              </div>
+                            ))}
                           </>}
                         
                     </div>
