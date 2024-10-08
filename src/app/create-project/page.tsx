@@ -154,26 +154,6 @@ const CreateProject : React.FC<any>  = () => {
             industries: [],
         });
     }
-    // save project
-    // https://stackoverflow.com/questions/44656610/download-a-string-as-txt-file-in-react
-    const downloadTxtFile = (text : string) => {
-        const element = document.createElement("a");
-        const file = new Blob([text], {type: 'text/plain'});
-        element.href = URL.createObjectURL(file);
-        element.download = "myFile.txt";
-        document.body.appendChild(element); // Required for this to work in FireFox
-        element.click();
-    }
-    // used for handling download click from client. prompts local download of file to txt format
-    const handleDownloadResults = () => {
-        // Logic to download results
-        // TODO hit endpoint to save project
-        let results_str = results.project_title + "\n\n" + results.description + "\n\n" + results.steps.map((step, index) => `${index + 1}) ${step}`).join("\n");
-        downloadTxtFile(results_str);
-        toast.success('Results downloaded successfully!', {
-            duration: 2000,
-        });
-    };
 
     const handleSaveProject = async () => {
         let url = process.env.NEXT_PUBLIC_API_URL + "/project/create";
@@ -210,7 +190,7 @@ const CreateProject : React.FC<any>  = () => {
                     </h1>
                 </div>
                 <div className="mt-12 h-fit bg-primary-300 border border-slate-500 text-slate-100 shadow-md rounded p-5">
-                {isLoggedIn && (
+                {isLoggedIn ?  (
                     <>
                         <h2 className="text-2xl font-semibold mb-5">{steps[step].title}</h2>
                         <CurrentStepComponent
@@ -246,7 +226,8 @@ const CreateProject : React.FC<any>  = () => {
                                 </div>
                             </div>
                     </>
-                )}
+                ) : 
+                    <p>Login or signup in order to create a project!</p>}
                 </div>
             </div>
         </div>

@@ -47,7 +47,7 @@ const LoginPage: React.FC = () => {
                 toast.success('Successful Login!', {
                     duration: 2000,
                 });
-                router.push("/");
+                router.push("/profile"); // route to profile on login
             
             } else if (response.status >= 400) {
                 // If login fails, show a warning toast
