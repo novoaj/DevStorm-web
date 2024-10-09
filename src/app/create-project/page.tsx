@@ -5,7 +5,7 @@ import ToolsSelection from "./ToolsSelection"
 import IndustrySelection from "./IndustrySelection";
 import Results from "./Results";
 import { UserContext } from "../context/UserContext";
-import { fetchCSRFToken } from "../actions/actions";
+import { fetchCSRFToken, fetchCSRFAccess } from "../actions/actions";
 import { toast } from "sonner";
 import { useRouter } from 'next/navigation';
 import axios from "axios";
@@ -65,14 +65,14 @@ const CreateProject : React.FC<any>  = () => {
     };
     // refresh logic: 
     const axiosInstance = axios.create({
-        baseURL: "http://127.0.0.1:5000",
+        baseURL: process.env.NEXT_PUBLIC_API_URL,
         headers: {
             "Content-Type": "application/json",
         }
     });
     axiosInstance.interceptors.request.use(async request => {
         console.log(request);
-        const csrfToken = await fetchCSRFToken(); // inject csrf token into each request with this instance
+        const csrfToken = await fetchCSRFAccess(); // inject csrf token into each request with this instance
         if (csrfToken) {
             request.headers['X-CSRF-TOKEN'] = csrfToken;
         }
@@ -91,12 +91,16 @@ const CreateProject : React.FC<any>  = () => {
                 originalRequest._retry = true; // mark retry as true so we don't retry more than once
                 try {
                     // console.log("refreshing refresh token");
-                    const csrfToken = await fetchCSRFToken(); 
-                    const response = await axios.post("http://127.0.0.1:5000/token/refresh", {
-                        "X-CSRF-TOKEN": csrfToken
-                    }, {
+                    const csrfRefreshToken = await fetchCSRFToken(); 
+                    const instance = axios.create({
+                        withCredentials: true,
+                        baseURL: process.env.NEXT_PUBLIC_API_URL
+                     });
+                    instance.defaults.headers.common['X-CSRF-TOKEN'] = csrfRefreshToken;
+                    const response = await instance.post(process.env.NEXT_PUBLIC_API_URL + "/token/refresh", {}, {
                         withCredentials: true,
                     })
+                    console.log(response, csrfRefreshToken);
                     return axiosInstance(originalRequest); 
                 }catch (refreshError) {
                     // refresh token is expired, force logout
@@ -116,7 +120,7 @@ const CreateProject : React.FC<any>  = () => {
             });
             return;
         }
-        let url = "http://127.0.0.1:5000/api/prompt";
+        let url = process.env.NEXT_PUBLIC_API_URL + "/api/prompt";
         try{
             const response = await axiosInstance.post(url, {
                 role: userSelections.roles.map(role => role.value),
@@ -126,17 +130,13 @@ const CreateProject : React.FC<any>  = () => {
                 withCredentials: true,  // This ensures cookies are sent and stored
             })
             // handle response
-            if (response.status === 200) {
+            if (response){
                 let obj = JSON.parse(response.data.response);
                 toast.info('Selections submitted successfully!', {
                 duration: 2000,
                 });
                 setResults(obj);
                 setStep((prev) => prev + 1);
-            } else {
-                toast.error('Error generating results!', {
-                    duration: 2000,
-                });
             }
         } catch (err) {
             console.error(err); // can happen if user doesn't have httponly cookies
@@ -167,7 +167,8 @@ const CreateProject : React.FC<any>  = () => {
             },{
                 withCredentials: true,  // This ensures cookies are sent and stored
             })
-            if (response.status === 201) {
+            console.log(response);
+            if (response){
                 toast.success('Project saved successfully! Check out your saved projects in your profile page', {
                     duration: 4000,
                 });

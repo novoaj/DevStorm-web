@@ -4,7 +4,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import Lane from './Lane';
 import axios from 'axios';
-import { fetchCSRFToken } from '../actions/actions';
+import { fetchCSRFAccess, fetchCSRFToken } from '../actions/actions';
 import Spinner from '../components/Spinner';
 
 interface Task {
@@ -80,7 +80,7 @@ const Project: React.FC = () => {
     });
     axiosInstance.interceptors.request.use(async request => {
         // console.log(request);
-        const csrfToken = await fetchCSRFToken(); // inject csrf token into each request with this instance
+        const csrfToken = await fetchCSRFAccess(); // inject csrf token into each request with this instance
         if (csrfToken) {
             request.headers['X-CSRF-TOKEN'] = csrfToken;
         }

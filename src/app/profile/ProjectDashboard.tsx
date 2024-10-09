@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import { fetchCSRFToken } from '../actions/actions';
+import { fetchCSRFAccess, fetchCSRFToken } from '../actions/actions';
 import Spinner from '../components/Spinner';
 import { toast } from 'sonner';
 import * as Dialog from "@radix-ui/react-dialog";
@@ -35,7 +35,7 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ }) => {
         }
     });
     axiosInstance.interceptors.request.use(async request => {
-        const csrfToken = await fetchCSRFToken(); // inject csrf token into each request with this instance
+        const csrfToken = await fetchCSRFAccess(); // inject csrf token into each request with this instance
         if (csrfToken) {
             request.headers['X-CSRF-TOKEN'] = csrfToken;
         }
@@ -54,13 +54,16 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ }) => {
                 originalRequest._retry = true; // mark retry as true so we don't retry more than once
                 try {
                     // console.log("refreshing refresh token");
-                    const csrfToken = await fetchCSRFToken(); 
-                    console.log("refreshing", csrfToken);
-                    const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/token/refresh", {
-                        "X-CSRF-TOKEN": csrfToken
-                    }, {
+                    const csrfRefreshToken = await fetchCSRFToken(); 
+                    const instance = axios.create({
+                        withCredentials: true,
+                        baseURL: process.env.NEXT_PUBLIC_API_URL
+                     });
+                    instance.defaults.headers.common['X-CSRF-TOKEN'] = csrfRefreshToken;
+                    const response = await instance.post(process.env.NEXT_PUBLIC_API_URL + "/token/refresh", {}, {
                         withCredentials: true,
                     })
+                    console.log(response, csrfRefreshToken);
                     return axiosInstance(originalRequest); 
                 }catch (refreshError) {
                     // refresh token is expired, force logout

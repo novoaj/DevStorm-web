@@ -3,7 +3,7 @@ import { Droppable, Draggable } from "@hello-pangea/dnd";
 import Task from './Task';
 import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
-import { fetchCSRFToken } from '../actions/actions';
+import { fetchCSRFToken, fetchCSRFAccess } from '../actions/actions';
 import { useRouter } from 'next/navigation';
 import * as Dialog from "@radix-ui/react-dialog";
 import Cross from '../components/Cross';
@@ -35,7 +35,7 @@ const Lane: React.FC<LaneProps> = ({ title, tasks, project }) => {
     });
     axiosInstance.interceptors.request.use(async request => {
         // console.log(request);
-        const csrfToken = await fetchCSRFToken(); // inject csrf token into each request with this instance
+        const csrfToken = await fetchCSRFAccess(); // inject csrf token into each request with this instance
         if (csrfToken) {
             request.headers['X-CSRF-TOKEN'] = csrfToken;
         }
@@ -60,6 +60,7 @@ const Lane: React.FC<LaneProps> = ({ title, tasks, project }) => {
                     }, {
                         withCredentials: true,
                     })
+                    console.log(response);
                     return axiosInstance(originalRequest); 
                 }catch (refreshError) {
                     // refresh token is expired, force logout
@@ -84,6 +85,7 @@ const Lane: React.FC<LaneProps> = ({ title, tasks, project }) => {
                 withCredentials: true,
             })
             console.log(response);
+            // insert task into list of tasks
         } catch(error) {
             console.error("Error adding task:", error);
         }
