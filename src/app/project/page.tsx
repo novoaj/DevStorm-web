@@ -64,7 +64,8 @@ const Project: React.FC = () => {
         const destColumn = projectData[destination.droppableId as keyof TaskLanes];
         const [removed] = sourceColumn.splice(source.index, 1);
         destColumn.splice(destination.index, 0, removed);
-    
+        
+        // update task status
         setProjectData({
           ...projectData,
           [source.droppableId]: sourceColumn,

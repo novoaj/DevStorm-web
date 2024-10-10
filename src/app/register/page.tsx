@@ -69,7 +69,7 @@ const RegisterPage: React.FC = () => {
                 toast.success('Registered user successfully!', {
                     duration: 2000,
                 });
-                router.push("/");
+                router.push("/confirm");
             })
             .catch((error) => {
                 console.log(error);
