@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from 'react';
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import Task from './Task';
@@ -54,13 +55,16 @@ const Lane: React.FC<LaneProps> = ({ title, tasks, project }) => {
                 originalRequest._retry = true; // mark retry as true so we don't retry more than once
                 try {
                     // console.log("refreshing refresh token");
-                    const csrfToken = await fetchCSRFToken(); 
-                    const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/token/refresh", {
-                        "X-CSRF-TOKEN": csrfToken
-                    }, {
+                    const csrfRefreshToken = await fetchCSRFToken(); 
+                    const instance = axios.create({
+                        withCredentials: true,
+                        baseURL: process.env.NEXT_PUBLIC_API_URL
+                     });
+                    instance.defaults.headers.common['X-CSRF-TOKEN'] = csrfRefreshToken;
+                    const response = await instance.post(process.env.NEXT_PUBLIC_API_URL + "/token/refresh", {}, {
                         withCredentials: true,
                     })
-                    console.log(response);
+                    console.log(originalRequest);
                     return axiosInstance(originalRequest); 
                 }catch (refreshError) {
                     // refresh token is expired, force logout
@@ -86,6 +90,16 @@ const Lane: React.FC<LaneProps> = ({ title, tasks, project }) => {
             })
             console.log(response);
             // insert task into list of tasks
+            const newTask: Task = {
+                id: response.data.id,
+                pid: response.data.pid,
+                description: content,
+                priority: 1,
+                status: status
+            };
+            const updatedTasks = [...tasks, newTask].sort((a, b) => a.priority - b.priority);
+            // setLaneTasks(updatedTasks);
+            tasks = updatedTasks;
         } catch(error) {
             console.error("Error adding task:", error);
         }

@@ -99,10 +99,13 @@ const Project: React.FC = () => {
                 originalRequest._retry = true; // mark retry as true so we don't retry more than once
                 try {
                     // console.log("refreshing refresh token");
-                    const csrfToken = await fetchCSRFToken(); 
-                    const response = await axios.post(process.env.NEXT_PUBLIC_API_URL + "/token/refresh", {
-                        "X-CSRF-TOKEN": csrfToken
-                    }, {
+                    const csrfRefreshToken = await fetchCSRFToken(); 
+                    const instance = axios.create({
+                        withCredentials: true,
+                        baseURL: process.env.NEXT_PUBLIC_API_URL
+                     });
+                    instance.defaults.headers.common['X-CSRF-TOKEN'] = csrfRefreshToken;
+                    const response = await instance.post(process.env.NEXT_PUBLIC_API_URL + "/token/refresh", {}, {
                         withCredentials: true,
                     })
                     return axiosInstance(originalRequest); 
@@ -191,7 +194,7 @@ const Project: React.FC = () => {
                           <></> : 
                           <>
                             {Object.entries(projectData).map(([columnId, tasks]) => (
-                              <div key={columnId} className="w-fit md:w-[calc(33.333%-1rem)] flex-grow h-96 md:mx-2 my-3">
+                              <div key={columnId} className="w-full md:w-[calc(33.333%-1rem)] flex-grow h-96 md:mx-2 my-3">
                                     <Lane 
                                       title={columnId} 
                                       tasks={tasks.sort((a : Task, b : Task) => a.priority - b.priority)}

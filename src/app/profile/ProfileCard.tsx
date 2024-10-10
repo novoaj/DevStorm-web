@@ -89,14 +89,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ }) => {
             const response = await axiosInstance.get(url, {
                 withCredentials: true
             });
-            // console.log(response.data);
-            setUser({
-                username: response.data.username,
-                email: response.data.email,
-                dateJoined: formatDate(response.data.date_joined),
-                projects: response.data.projects,
-                projectsCompleted: response.data.projects_completed,
-            });
+            console.log(response.data);
+            if (response){
+                setUser({
+                    username: response.data.username,
+                    email: response.data.email,
+                    dateJoined: formatDate(response.data.date_joined),
+                    projects: response.data.projects,
+                    projectsCompleted: response.data.projects_completed,
+                });
+            }
         }   
         getData(); 
     }, [])

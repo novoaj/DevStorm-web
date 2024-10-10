@@ -59,6 +59,9 @@ const Sidebar = ({ isOpen, toggle, } : { isOpen: boolean; toggle: () => void; })
           {isLoggedIn ? 
             <>
               <li>
+                <Link href="/profile"><p>Profile</p></Link>
+              </li>
+              <li>
                 <Link href="/" onClick={handleLogout}><p>Logout</p></Link>
               </li>
             </>: 
