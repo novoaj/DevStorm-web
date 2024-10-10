@@ -65,12 +65,30 @@ const Project: React.FC = () => {
         const [removed] = sourceColumn.splice(source.index, 1);
         destColumn.splice(destination.index, 0, removed);
         
-        // update task status
-        setProjectData({
-          ...projectData,
-          [source.droppableId]: sourceColumn,
-          [destination.droppableId]: destColumn,
-        });
+        const dstIdx = rows.indexOf(destination.droppableId) + 1;
+        // update task status on backend
+        const taskId = removed.id;
+        const updateTaskStatus = async () => {
+            try {
+                let url = `${process.env.NEXT_PUBLIC_API_URL}/task/${taskId}/update-status`
+                await axiosInstance.put(url,
+                    { 
+                        status: dstIdx 
+                    },
+                    { 
+                        withCredentials: true 
+                    });
+                // update columns locally
+                setProjectData({
+                  ...projectData,
+                  [source.droppableId]: sourceColumn,
+                  [destination.droppableId]: destColumn,
+                });
+            } catch (err) {
+                console.error("Error updating task status", err);
+            }
+        };
+        updateTaskStatus();
       };
 
     useEffect(() => {
