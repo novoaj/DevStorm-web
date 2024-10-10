@@ -120,7 +120,7 @@ const Lane: React.FC<LaneProps> = ({ title, tasks, project, onTaskAdded }) => {
             </div>       
             <Droppable droppableId={title}>
                 {(provided) => (
-                    <div className="flex-grow overflow-hidden hover:overflow-y-scroll mr-2">
+                    <div className="flex-grow overflow-hidden hover:overflow-y-scroll pr-2">
                         <ul
                             {...provided.droppableProps}
                             ref={provided.innerRef}

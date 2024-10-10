@@ -1,6 +1,8 @@
 "use client"
 import React from 'react';
 import { Draggable } from "@hello-pangea/dnd";
+import DehazeIcon from '@mui/icons-material/Dehaze';
+import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 
 interface TaskProps {
     task: {
@@ -17,14 +19,16 @@ const Task: React.FC<TaskProps> = ({ task, index }) => {
     return (
         <Draggable key={task.id} draggableId={task.description} index={index}>
             {(provided) => (
-                <li
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    className="mb-2 p-2 border border-primary-200 rounded text-gray bg-primary-400"
-                >
-                    {task.description}
-                </li>
+                <div className="flex flex-row justify-between mb-2 p-2 border border-primary-200 rounded text-gray bg-primary-400">
+                    <li
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                    >
+                        {task.description}
+                    </li>
+                    <ModeEditOutlineIcon fontSize={'small'}/>
+                </div>
             )}
         </Draggable>
     );
