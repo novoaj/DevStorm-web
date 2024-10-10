@@ -4,7 +4,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import Lane from './Lane';
 import axios from 'axios';
-import { fetchCSRFAccess, fetchCSRFToken } from '../actions/actions';
+import axiosInstance from '../axiosInstance';
 import Spinner from '../components/Spinner';
 
 interface Task {
@@ -72,51 +72,6 @@ const Project: React.FC = () => {
         });
       };
 
-    const axiosInstance = axios.create({
-        baseURL: process.env.NEXT_PUBLIC_API_URL,
-        headers: {
-            "Content-Type": "application/json",
-        }
-    });
-    axiosInstance.interceptors.request.use(async request => {
-        // console.log(request);
-        const csrfToken = await fetchCSRFAccess(); // inject csrf token into each request with this instance
-        if (csrfToken) {
-            request.headers['X-CSRF-TOKEN'] = csrfToken;
-        }
-        return request;
-      }, error => {
-        return Promise.reject(error);
-      });
-    axiosInstance.interceptors.response.use(
-        response => response, // successful response
-        async error => {
-            // error response from server is intercepted
-            const originalRequest = error.config; 
-            // console.log(error); // response from server
-            console.log(error.response.status, originalRequest._retry) // !undefined -> (true)
-            if (error.response.status === 401 && !originalRequest._retry) {
-                originalRequest._retry = true; // mark retry as true so we don't retry more than once
-                try {
-                    // console.log("refreshing refresh token");
-                    const csrfRefreshToken = await fetchCSRFToken(); 
-                    const instance = axios.create({
-                        withCredentials: true,
-                        baseURL: process.env.NEXT_PUBLIC_API_URL
-                     });
-                    instance.defaults.headers.common['X-CSRF-TOKEN'] = csrfRefreshToken;
-                    const response = await instance.post(process.env.NEXT_PUBLIC_API_URL + "/token/refresh", {}, {
-                        withCredentials: true,
-                    })
-                    return axiosInstance(originalRequest); 
-                }catch (refreshError) {
-                    // refresh token is expired, force logout
-                    localStorage.removeItem("isLoggedIn")
-                    router.replace("/login");
-                }
-            }
-        }
-    )
     useEffect(() => {
         let url = process.env.NEXT_PUBLIC_API_URL + `/project/${pid}`;
         const getProjectData = async() => {

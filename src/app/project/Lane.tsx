@@ -4,10 +4,10 @@ import { Droppable, Draggable } from "@hello-pangea/dnd";
 import Task from './Task';
 import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
-import { fetchCSRFToken, fetchCSRFAccess } from '../actions/actions';
 import { useRouter } from 'next/navigation';
 import * as Dialog from "@radix-ui/react-dialog";
 import Cross from '../components/Cross';
+import axiosInstance from '../axiosInstance';
 
 interface Task {
     id: number;
@@ -28,52 +28,6 @@ const Lane: React.FC<LaneProps> = ({ title, tasks, project }) => {
     const [taskDescription, setTaskDescription] = useState("");
     const router = useRouter();
 
-    const axiosInstance = axios.create({
-        baseURL: process.env.NEXT_PUBLIC_API_URL,
-        headers: {
-            "Content-Type": "application/json",
-        }
-    });
-    axiosInstance.interceptors.request.use(async request => {
-        // console.log(request);
-        const csrfToken = await fetchCSRFAccess(); // inject csrf token into each request with this instance
-        if (csrfToken) {
-            request.headers['X-CSRF-TOKEN'] = csrfToken;
-        }
-        return request;
-      }, error => {
-        return Promise.reject(error);
-      });
-    axiosInstance.interceptors.response.use(
-        response => response, // successful response
-        async error => {
-            // error response from server is intercepted
-            const originalRequest = error.config; 
-            // console.log(error); // response from server
-            console.log(error.response.status, originalRequest._retry) // !undefined -> (true)
-            if (error.response.status === 401 && !originalRequest._retry) {
-                originalRequest._retry = true; // mark retry as true so we don't retry more than once
-                try {
-                    // console.log("refreshing refresh token");
-                    const csrfRefreshToken = await fetchCSRFToken(); 
-                    const instance = axios.create({
-                        withCredentials: true,
-                        baseURL: process.env.NEXT_PUBLIC_API_URL
-                     });
-                    instance.defaults.headers.common['X-CSRF-TOKEN'] = csrfRefreshToken;
-                    const response = await instance.post(process.env.NEXT_PUBLIC_API_URL + "/token/refresh", {}, {
-                        withCredentials: true,
-                    })
-                    console.log(originalRequest);
-                    return axiosInstance(originalRequest); 
-                }catch (refreshError) {
-                    // refresh token is expired, force logout
-                    localStorage.removeItem("isLoggedIn")
-                    router.replace("/login");
-                }
-            }
-        }
-    )
     const addTask = async(column : string, content: string) => {
         console.log(column, content);
         const status = rows.findIndex(row => row === column) + 1;
