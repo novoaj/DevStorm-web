@@ -91,6 +91,15 @@ const Project: React.FC = () => {
         updateTaskStatus();
       };
 
+    const handleAdd = (lane: keyof TaskLanes, t: Task) => {
+        const updatedLane = [...projectData[lane], t].sort((a, b) => a.priority - b.priority);
+        
+        setProjectData({
+            ...projectData,
+            [lane]: updatedLane,
+        });
+    }
+
     useEffect(() => {
         let url = process.env.NEXT_PUBLIC_API_URL + `/project/${pid}`;
         const getProjectData = async() => {
@@ -173,6 +182,7 @@ const Project: React.FC = () => {
                                       title={columnId} 
                                       tasks={tasks.sort((a : Task, b : Task) => a.priority - b.priority)}
                                       project={pid || ""}
+                                      onTaskAdded={handleAdd}
                                     />
                               </div>
                             ))}

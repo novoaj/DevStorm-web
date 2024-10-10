@@ -16,14 +16,20 @@ interface Task {
     priority: number;
     status: number; // 1->Todo, 2: In Progress, 3: Complete
 }
-  
-  interface LaneProps {
+interface TaskLanes {
+    "Todo": Task[];
+    "In Progress": Task[];
+    "Completed": Task[];
+}
+
+interface LaneProps {
     title: string;
     tasks: Task[];
     project: string;
-  }
+    onTaskAdded: (lane: keyof TaskLanes, newTask: Task) => void;
+}
 
-const Lane: React.FC<LaneProps> = ({ title, tasks, project }) => {
+const Lane: React.FC<LaneProps> = ({ title, tasks, project, onTaskAdded }) => {
     const rows = ["Todo", "In Progress", "Completed"]
     const [taskDescription, setTaskDescription] = useState("");
     const router = useRouter();
@@ -45,15 +51,16 @@ const Lane: React.FC<LaneProps> = ({ title, tasks, project }) => {
             console.log(response);
             // insert task into list of tasks
             const newTask: Task = {
-                id: response.data.id,
-                pid: response.data.pid,
+                id: response.data.task.id,
+                pid: response.data.task.pid,
                 description: content,
                 priority: 1,
                 status: status
             };
-            const updatedTasks = [...tasks, newTask].sort((a, b) => a.priority - b.priority);
-            // setLaneTasks(updatedTasks);
-            tasks = updatedTasks;
+            // const updatedTasks = [...tasks, newTask].sort((a, b) => a.priority - b.priority);
+            // // setLaneTasks(updatedTasks);
+            // tasks = updatedTasks;
+            onTaskAdded(column as keyof TaskLanes, newTask);
         } catch(error) {
             console.error("Error adding task:", error);
         }
