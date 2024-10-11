@@ -107,28 +107,30 @@ const Project: React.FC = () => {
                         <h1 className="text-2xl font-bold mb-4 ml-3 text-gray">{project.title}</h1>
                         <p className="text-gray">{project.summary}</p>
                         <br/>
-                        <p className="text-gray">This drag and drop interface allows you to keep track of your progress while completing your project. Tasks are sorted by priority with the most critical tasks being at the top.</p>
                       </div>
                     )}
-
                 </div>
-                <DragDropContext onDragEnd={onDragEnd}>
-                    <div className="animate-slideUp flex flex-col md:flex-row flex-wrap h-fit justify-between mx-8">
-                        {project === undefined ? 
-                          <></> : 
-                          <>
-                            {Object.entries(tasks).map(([columnId, tasks]) => (
-                              <div key={columnId} className="w-full md:w-[calc(33.333%-1rem)] flex-grow h-96 md:mx-2 my-3">
-                                    <Lane 
-                                      title={columnId} 
-                                      project={pid || ""}
-                                    />
-                              </div>
-                            ))}
-                          </>}
-                        
-                    </div>
-                </DragDropContext>
+                <div className="flex flex-col mt-8 bg-primary-300 border border-primary-200 rounded-lg mx-8">
+                  <p className="text-gray mx-5 p-3">This drag and drop interface allows you to keep track of your progress while completing your project. Tasks are sorted by priority with the most critical tasks being at the top.</p>
+                  <DragDropContext onDragEnd={onDragEnd}>
+                      <div className="animate-slideUp flex flex-col md:flex-row flex-wrap h-fit justify-between mx-5">
+                          {project === undefined ? 
+                            <></> : 
+                            <>
+                              {Object.entries(tasks).map(([columnId, tasks]) => (
+                                <div key={columnId} className="w-full md:w-[calc(33.333%-1rem)] flex-grow h-96 md:mx-2 my-3">
+                                      <Lane 
+                                        title={columnId} 
+                                        project={pid || ""}
+                                      />
+                                </div>
+                              ))}
+                            </>}
+                          
+                      </div>
+                  </DragDropContext>
+                </div>
+                
             </div>
         </div>
     );

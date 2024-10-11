@@ -120,9 +120,10 @@ const CreateProject : React.FC<any>  = () => {
             })
             console.log(response);
             if (response){
-                toast.success('Project saved successfully! Check out your saved projects in your profile page', {
+                toast.success('Project saved successfully!', {
                     duration: 4000,
                 });
+                router.push("/profile");
             }
         }catch (err) {
             console.error(err);

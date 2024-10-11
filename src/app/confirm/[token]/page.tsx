@@ -19,8 +19,8 @@ const ConfirmEmailPage: React.FC = () => {
                     const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + `/confirm/${token}`);
                     if (response) {
                         setConfirmationStatus('Email confirmed successfully!');
-                        toast.success("Email confirmed, redirecting to home");
-                        router.push("/");
+                        toast.success("Email confirmed, redirecting to Login");
+                        router.push("/login");
                         // redirect
                     } else {
                         setConfirmationStatus('Failed to confirm email.');

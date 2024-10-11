@@ -65,10 +65,10 @@ const RegisterPage: React.FC = () => {
             })
             .then((response) => {
                 // localStorage.setItem("isLoggedIn", true); // TODO cookies instead of local storage
-                setIsLoggedIn(true);
-                toast.success('Registered user successfully!', {
-                    duration: 2000,
-                });
+                // setIsLoggedIn(true);
+                // toast.success('Registered user successfully!', {
+                //     duration: 2000,
+                // });
                 router.push("/confirm");
             })
             .catch((error) => {

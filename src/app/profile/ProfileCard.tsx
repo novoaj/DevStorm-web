@@ -135,6 +135,19 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ }) => {
             router.replace("/login");
         }
     }
+
+    const deleteAccount = async() => {
+        try{
+            let url = process.env.NEXT_PUBLIC_API_URL + "/user/delete";
+            await axiosInstance.delete(url);
+            setIsLoggedIn(false);
+            router.replace("/");
+            toast.info("Account deleted!");
+        }catch (error){
+            console.error(error);
+            toast.error("There was a problem deleting your account!");
+        }
+    }
     useEffect(() => {
         let url = process.env.NEXT_PUBLIC_API_URL + "/user/info";
         const getData = async() => {
@@ -241,10 +254,20 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ }) => {
                                             onChange={handleChangeNewPassword2} 
                                         />
                                     </fieldset>
-                                    <div className="flex flex-end justify-end mt-5">
+                                    <div className="flex flex-end justify-between mt-5">
+                                        <Dialog.Close asChild>
+                                            <button 
+                                                className="h-fit w-fit p-2 flex flex-center items-center justify-center hover:border border-primary-200 bg-secondary-100 hover:bg-secondary-200 rounded ml-5" 
+                                                aria-label="Delete account"
+                                                onClick={deleteAccount}
+                                            >
+                                                Delete Acccount
+                                            </button>
+                                        </Dialog.Close>
                                         <Dialog.Close asChild>
                                             <ButtonWhite value={"Save Changes"} onClick={handleUpdateProfile}/>
                                         </Dialog.Close>
+                                        
                                     </div>
                                     <Dialog.Close asChild>
                                         <button className="h-5 w-5 inline-flex items-center justify-center absolute top-5 right-5 hover:border border-primary-200 rounded" aria-label="Close">

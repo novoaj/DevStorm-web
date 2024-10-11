@@ -20,7 +20,7 @@ export default function RootLayout({
 //rgba(33,42,49,1)
   return (
     <html lang="en">
-      <body style={{background: "radial-gradient(circle at bottom, rgba(23,29,34,1) 0%, rgba(23,29,34,1) 85%, rgba(18,78,102,1) 100%)"}}>
+      <body className="bg-primary-400">
         <UserProvider> 
           <Navigation/>
           <TaskProvider>
