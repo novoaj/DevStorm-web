@@ -17,7 +17,7 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
 
     const handleLogout = async() => {
       const csrfToken = await fetchCSRFToken();
-      axios.post("http://127.0.0.1:5000/logout", {}, 
+      axios.post(process.env.PUBLIC_NEXT_API_URL + "/logout", {}, 
         {
           withCredentials: true,
           headers: {
