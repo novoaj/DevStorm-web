@@ -4,8 +4,6 @@ import { Draggable } from "@hello-pangea/dnd";
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import * as Dialog from "@radix-ui/react-dialog";
 import Cross from '../components/Cross';
-import assert from 'assert';
-import axiosInstance from '../axiosInstance';
 import { toast } from 'sonner';
 import { useTasks } from '../context/TaskContext';
 

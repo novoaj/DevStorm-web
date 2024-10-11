@@ -1,13 +1,11 @@
 "use client"
 import React, { useState } from 'react';
-import { Droppable, Draggable } from "@hello-pangea/dnd";
+import { Droppable } from "@hello-pangea/dnd";
 import Task from './Task';
 import AddIcon from '@mui/icons-material/Add';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import * as Dialog from "@radix-ui/react-dialog";
 import Cross from '../components/Cross';
-import axiosInstance from '../axiosInstance';
 import { useTasks } from '../context/TaskContext';
 
 interface Task {
@@ -43,13 +41,6 @@ const Lane: React.FC<LaneProps> = ({ title, project }) => {
         setTaskDescription("");
     }
 
-    const updateTask = (updated : Task) => {
-        console.log("lane updateTask: ", updated);
-    }
-
-    const deleteTask = (taskId : number) => {
-        console.log("Lane deleting ", taskId);
-    }
     return (
         <div className="flex flex-col w-full p-5 h-full mx-2 bg-primary-300 border border-primary-200 rounded-md">
             <div className="flex flex-row justify-between mb-2">

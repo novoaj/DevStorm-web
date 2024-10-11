@@ -1,12 +1,11 @@
 "use client";
-import React, {useState, useEffect, useContext, createContext} from 'react';
+import React, {useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import Lane from './Lane';
-import axios from 'axios';
 import axiosInstance from '../axiosInstance';
 import Spinner from '../components/Spinner';
-import { useTasks, TaskProvider } from "../context/TaskContext";
+import { useTasks } from "../context/TaskContext";
 import assert from 'assert';
 
 interface Task {
@@ -59,10 +58,13 @@ const Project: React.FC = () => {
         }
     
         const sourceColumn = tasks[source.droppableId as keyof typeof tasks];
-        const [movedTask] = sourceColumn.splice(source.index, 1);
+        const destColumn = tasks[destination.droppableId as keyof typeof tasks];
+
+        const [removed] = sourceColumn.splice(source.index, 1);
+        destColumn.splice(destination.index, 0, removed);
         const newStatus = ["Todo", "In Progress", "Completed"].indexOf(destination.droppableId) + 1;
         
-        updateTaskStatus(movedTask.id, newStatus);
+        updateTaskStatus(removed.id, newStatus);
         if (pid) {
             fetchTasks(pid);
         }
