@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import * as Dialog from "@radix-ui/react-dialog";
 import Cross from '../components/Cross';
 import axiosInstance from '../axiosInstance';
+import { useTasks } from '../context/TaskContext';
 
 interface Task {
     id: number;
@@ -24,46 +25,30 @@ interface TaskLanes {
 
 interface LaneProps {
     title: string;
-    tasks: Task[];
     project: string;
-    onTaskAdded: (lane: keyof TaskLanes, newTask: Task) => void;
 }
 
-const Lane: React.FC<LaneProps> = ({ title, tasks, project, onTaskAdded }) => {
+const Lane: React.FC<LaneProps> = ({ title, project }) => {
     const rows = ["Todo", "In Progress", "Completed"]
     const [taskDescription, setTaskDescription] = useState("");
+    const { tasks, addTask } = useTasks();
+    const laneTasks = tasks[title as keyof typeof tasks];
+
+
     const router = useRouter();
 
-    const addTask = async(column : string, content: string) => {
-        console.log(column, content);
-        const status = rows.findIndex(row => row === column) + 1;
-        console.log(status); // 1,2, or 3
-        // need description, priority (just default to 1 since user created), status in body of POST
-        let url = process.env.NEXT_PUBLIC_API_URL + `/task/${project}/create`;
-        try{
-            let response = await axiosInstance.post(url, {
-                description: content,
-                priority: 1,
-                status: status
-            }, {
-                withCredentials: true,
-            })
-            console.log(response);
-            // insert task into list of tasks
-            const newTask: Task = {
-                id: response.data.task.id,
-                pid: response.data.task.pid,
-                description: content,
-                priority: 1,
-                status: status
-            };
-            // const updatedTasks = [...tasks, newTask].sort((a, b) => a.priority - b.priority);
-            // // setLaneTasks(updatedTasks);
-            // tasks = updatedTasks;
-            onTaskAdded(column as keyof TaskLanes, newTask);
-        } catch(error) {
-            console.error("Error adding task:", error);
-        }
+    const handleAddTask = async () => {
+        const status = ["Todo", "In Progress", "Completed"].indexOf(title) + 1;
+        await addTask(project, taskDescription, status);
+        setTaskDescription("");
+    }
+
+    const updateTask = (updated : Task) => {
+        console.log("lane updateTask: ", updated);
+    }
+
+    const deleteTask = (taskId : number) => {
+        console.log("Lane deleting ", taskId);
     }
     return (
         <div className="flex flex-col w-full p-5 h-full mx-2 bg-primary-300 border border-primary-200 rounded-md">
@@ -101,7 +86,7 @@ const Lane: React.FC<LaneProps> = ({ title, tasks, project, onTaskAdded }) => {
                                         <button
                                             disabled={taskDescription === ""}
                                             className="bg-gray hover:bg-secondary-200 text-primary-100 hover:text-slate-100 rounded-md transition duration-300 h-fit w-fit px-1"
-                                            onClick={() => addTask(title, taskDescription)}
+                                            onClick={handleAddTask}
                                         >
                                             Submit
                                         </button>
@@ -126,7 +111,7 @@ const Lane: React.FC<LaneProps> = ({ title, tasks, project, onTaskAdded }) => {
                             ref={provided.innerRef}
                             className="min-h-full"
                         >
-                            {tasks.map((task, index) => (
+                            {laneTasks.map((task, index) => (
                                 <Task key={index} task={task} index={index}/>
                             ))}
                             {provided.placeholder}

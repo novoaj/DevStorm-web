@@ -1,11 +1,13 @@
 "use client";
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext, createContext} from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import Lane from './Lane';
 import axios from 'axios';
 import axiosInstance from '../axiosInstance';
 import Spinner from '../components/Spinner';
+import { useTasks, TaskProvider } from "../context/TaskContext";
+import assert from 'assert';
 
 interface Task {
     id: number;
@@ -35,11 +37,7 @@ const Project: React.FC = () => {
     const pid = searchParams.get('pid');
     const router = useRouter();
     const [project, setProject] = useState<Project>();
-    const [projectData, setProjectData] = useState<TaskLanes>({
-      "Todo": [],
-      "In Progress": [],
-      "Completed": []
-    });
+    const { tasks, fetchTasks, updateTaskStatus } = useTasks();
     const rows = ["Todo", "In Progress", "Completed"]
 
     const goBack = () => {
@@ -60,91 +58,32 @@ const Project: React.FC = () => {
           return;
         }
     
-        const sourceColumn = projectData[source.droppableId as keyof TaskLanes];
-        const destColumn = projectData[destination.droppableId as keyof TaskLanes];
-        const [removed] = sourceColumn.splice(source.index, 1);
-        destColumn.splice(destination.index, 0, removed);
+        const sourceColumn = tasks[source.droppableId as keyof typeof tasks];
+        const [movedTask] = sourceColumn.splice(source.index, 1);
+        const newStatus = ["Todo", "In Progress", "Completed"].indexOf(destination.droppableId) + 1;
         
-        const dstIdx = rows.indexOf(destination.droppableId) + 1;
-        // update task status on backend
-        const taskId = removed.id;
-        const updateTaskStatus = async () => {
-            try {
-                let url = `${process.env.NEXT_PUBLIC_API_URL}/task/${taskId}/update-status`
-                await axiosInstance.put(url,
-                    { 
-                        status: dstIdx 
-                    },
-                    { 
-                        withCredentials: true 
-                    });
-                // update columns locally
-                setProjectData({
-                  ...projectData,
-                  [source.droppableId]: sourceColumn,
-                  [destination.droppableId]: destColumn,
-                });
-            } catch (err) {
-                console.error("Error updating task status", err);
-            }
-        };
-        updateTaskStatus();
+        updateTaskStatus(movedTask.id, newStatus);
+        if (pid) {
+            fetchTasks(pid);
+        }
       };
 
-    const handleAdd = (lane: keyof TaskLanes, t: Task) => {
-        const updatedLane = [...projectData[lane], t].sort((a, b) => a.priority - b.priority);
-        
-        setProjectData({
-            ...projectData,
-            [lane]: updatedLane,
-        });
-    }
-
     useEffect(() => {
+        assert(pid);
         let url = process.env.NEXT_PUBLIC_API_URL + `/project/${pid}`;
         const getProjectData = async() => {
-          try{
-            const response = await axiosInstance.get(url, {
-              withCredentials: true
-            });
-            setProject(response.data);
-          }catch (err) {
-            // Error handling if project not found
-            console.error("couldnt find project");
-          }
+            try{
+                const response = await axiosInstance.get(url, {
+                  withCredentials: true
+                });
+                setProject(response.data);
+            }catch (err) {
+              // Error handling if project not found
+                console.error("couldnt find project");
+            }
         }   
-        const getTasks = async() => {
-          url = process.env.NEXT_PUBLIC_API_URL + `/task/${pid}`;
-          try {
-              const response = await axiosInstance.get(url, {
-                withCredentials: true
-              })
-              let todo : Task[]= []
-              let inp : Task[] = []
-              let complete : Task[]= []
-              response.data.forEach((task: Task) => {
-                if (task.status === 1) {
-                  todo.push(task);
-                } else if (task.status === 2) {
-                  inp.push(task);
-                } else if (task.status === 3) {
-                  complete.push(task);
-                }
-              });
-              todo.sort((a, b) => a.priority - b.priority);
-              inp.sort((a, b) => a.priority - b.priority);
-              complete.sort((a, b) => a.priority - b.priority);
-              setProjectData({
-                "Todo": todo,
-                "In Progress": inp,
-                "Completed": complete
-              });
-          }catch (err) {
-              console.error("error fetching tasks")
-          }
-        }
         getProjectData(); 
-        getTasks();
+        fetchTasks(pid);
     }, [pid])
 
     return ( 
@@ -173,16 +112,14 @@ const Project: React.FC = () => {
                 </div>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <div className="animate-slideUp flex flex-col md:flex-row flex-wrap h-fit justify-between mx-8">
-                        {projectData === undefined ? 
+                        {project === undefined ? 
                           <></> : 
                           <>
-                            {Object.entries(projectData).map(([columnId, tasks]) => (
+                            {Object.entries(tasks).map(([columnId, tasks]) => (
                               <div key={columnId} className="w-full md:w-[calc(33.333%-1rem)] flex-grow h-96 md:mx-2 my-3">
                                     <Lane 
                                       title={columnId} 
-                                      tasks={tasks.sort((a : Task, b : Task) => a.priority - b.priority)}
                                       project={pid || ""}
-                                      onTaskAdded={handleAdd}
                                     />
                               </div>
                             ))}
