@@ -41,7 +41,7 @@ const ConfirmEmailPage: React.FC = () => {
             {confirmationStatus ? (
                 <p>{confirmationStatus}</p>
             ) : (
-                <p>Confirming your email...</p>
+                <p>Confirming your email and redirecting...</p>
             )}
             </div>
         </div>

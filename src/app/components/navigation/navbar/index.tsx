@@ -7,8 +7,7 @@ import { toast } from 'sonner';
 import {useRouter, usePathname} from "next/navigation";
 import { UserContext } from '../../../context/UserContext';
 import { useContext } from "react";
-import axios from 'axios';
-import { fetchCSRFToken } from '@/app/actions/actions';
+import axiosInstance from '@/app/axiosInstance';
 
 const Navbar = ({ toggle }: { toggle: () => void }) => {
     const {isLoggedIn, setIsLoggedIn} = useContext(UserContext);
@@ -16,24 +15,20 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
     const pathname = usePathname(); // Hook to get the current path
 
     const handleLogout = async() => {
-      const csrfToken = await fetchCSRFToken();
-      axios.post(process.env.PUBLIC_NEXT_API_URL + "/logout", {}, 
-        {
-          withCredentials: true,
-          headers: {
-            'X-CSRF-TOKEN': csrfToken,  // Add CSRF token to headers
-        }
-        }
-      ).then((response) => {
-        setIsLoggedIn(false);
-        toast.success('Logged out');
-        router.replace("/login");
-        }
-      )
-      .catch((err)=> {
-        toast.success('Logged out');
-        setIsLoggedIn(false); // log user out even if it fails
-      })  
+      try{
+          await axiosInstance.post(process.env.NEXT_PUBLIC_API_URL + "/logout", {}, 
+          {
+              withCredentials: true,
+          })
+      
+          setIsLoggedIn(false);
+          toast.success('Logged out');
+          router.replace("/login");
+      }catch (err) {
+          toast.success('Logged out');
+          setIsLoggedIn(false); // log user out even if it fails
+          router.replace("/login");
+      }
     }
     const handleRegister = () => {
       router.replace("/register");

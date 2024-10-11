@@ -132,6 +132,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ }) => {
         }catch (err) {
             toast.success('Logged out');
             setIsLoggedIn(false); // log user out even if it fails
+            router.replace("/login");
         }
     }
     useEffect(() => {
