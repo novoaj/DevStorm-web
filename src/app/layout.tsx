@@ -20,7 +20,7 @@ export default function RootLayout({
 //rgba(33,42,49,1)
   return (
     <html lang="en">
-      <body className="bg-primary-400">
+      <body className="bg-primary-300">
         <UserProvider> 
           <Navigation/>
           <TaskProvider>
