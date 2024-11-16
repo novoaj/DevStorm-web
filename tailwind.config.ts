@@ -21,7 +21,11 @@ const config: Config = {
           100: "#124E66", // blue
           200: "#295f75" // lighter blue
         },
-        bluegray: "#748D92",
+        bluegray: {
+          100: "#748D92",
+          200: "#687e83",
+          300: "#516266"
+        },
         gray: "#D3D9D4",
         outline: "#5f605f",
       },
