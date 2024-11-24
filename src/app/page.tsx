@@ -4,11 +4,9 @@ import { ClientHome } from './components/ClientHome';
 export default async function Home() {
 
   return (
-    <div className="flex justify-center">
-      <div className="justify-center content-center text-slate-100">
-        <div className="animate-slideUp w-fit">
+    <div className="w-full">
+        <div className="animate-slideUp w-full">
           <ClientHome/>
-        </div>
       </div>
     </div>
   );

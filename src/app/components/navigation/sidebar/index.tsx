@@ -65,6 +65,9 @@ const Sidebar = ({ isOpen, toggle, } : { isOpen: boolean; toggle: () => void; })
               <li>
                 <Link href="/login" onClick={toggle}><p>Login</p></Link>
               </li>
+              <li>
+                <Link href="/register" onClick={toggle}><p>Register</p></Link>
+              </li>
             </>}
           
         </ul>
