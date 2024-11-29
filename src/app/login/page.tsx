@@ -102,7 +102,7 @@ const LoginPage: React.FC = () => {
                         className="bg-secondary-100 hover:bg-secondary-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
                         type="submit"
                     >
-                        Sign In
+                        Submit
                     </button>
                 </div>
                 <div className="flex items-center mt-10">

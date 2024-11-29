@@ -80,18 +80,18 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
                     <div className="hidden md:flex gap-x-4">
                       {pathname !== "/profile" ? 
                         (
-                        <button onClick={handleProfile}className="bg-secondary-100 hover:bg-secondary-200 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+                        <button onClick={handleProfile}className="bg-secondary-100 hover:bg-secondary-200 text-white font-bold py-2 px-4 rounded-full transition duration-300">
                             Profile
                         </button>
                         ): (<></>)}
-                      <button onClick={handleLogout}className="hidden text-primary-100 md:block h-10 rounded-lg bg-gray hover:bg-secondary-100 hover:text-slate-100 hover:border font-bold px-5 transition duration-300">
+                      <button onClick={handleLogout}className="hidden text-primary-100 md:block h-10 rounded-full bg-gray hover:bg-secondary-100 hover:text-slate-100 hover:border font-bold px-5 transition duration-300">
                         Logout
                       </button>
                     </div> : 
                     <>
                       <div className="hidden md:flex gap-x-4">
                         <Button />
-                        <button onClick={handleRegister} className="h-10 rounded-lg bg-gray hover:bg-secondary-100 hover:text-slate-100 hover:border font-bold px-5 transition duration-300">
+                        <button onClick={handleRegister} className="h-10 rounded-full bg-gray hover:bg-secondary-100 hover:text-slate-100 hover:border font-bold px-5 transition duration-300">
                           Register
                         </button>
                       </div>

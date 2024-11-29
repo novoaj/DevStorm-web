@@ -73,7 +73,7 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ }) => {
         <div className="flex-1 mt-5 bg-primary-300 h-96 w-full border border-primary-200 p-5 rounded-md">
             <div className="flex flex-row justify-between items-center">
                 <h2 className="text-2xl text-gray font-semibold mb-4" id="dashboard-heading">Dashboard</h2>
-                <button onClick={handleAddProject} className="justify-center bg-gray hover:bg-secondary-200 text-primary-100 hover:text-slate-100 rounded-lg transition duration-300 px-3 py-1">Add Project</button>
+                <button onClick={handleAddProject} className="justify-center bg-gray hover:bg-secondary-200 text-primary-100 hover:text-slate-100 rounded-full transition duration-300 px-3 py-1">Add Project</button>
             </div>
 
             {projects === undefined ? (

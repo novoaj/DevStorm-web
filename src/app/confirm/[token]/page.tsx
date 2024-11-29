@@ -19,7 +19,7 @@ const ConfirmEmailPage: React.FC = () => {
                     const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + `/confirm/${token}`);
                     if (response) {
                         setConfirmationStatus('Email confirmed successfully!');
-                        toast.success("Email confirmed, redirecting to Login");
+                        toast.success("Email confirmed!");
                         router.push("/login");
                         // redirect
                     } else {
@@ -35,7 +35,7 @@ const ConfirmEmailPage: React.FC = () => {
     }, [token]);
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-primary-400 text-gray">
+        <div className="flex items-center justify-center min-h-[calc(100vh-96px)] bg-primary-400 text-gray">
             <div className="p-6 bg-primary-300 rounded shadow-md border border-primary-200">
             <h1 className="text-2xl font-bold mb-4">Confirm Email</h1>
             {confirmationStatus ? (

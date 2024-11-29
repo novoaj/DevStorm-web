@@ -192,7 +192,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ }) => {
                     <div className="flex justify-between items-center">
                         <Dialog.Root>
                             <Dialog.Trigger asChild>
-                                <button className="w-1/2 py-2 px-4 mr-2 bg-secondary-100 hover:bg-secondary-200 text-slate-100 rounded-lg transition duration-300">Edit Profile</button>
+                                <button className="w-1/2 py-2 px-4 mr-2 bg-secondary-100 hover:bg-secondary-200 text-slate-100 rounded-full transition duration-300">Edit Profile</button>
                             </Dialog.Trigger>
                             <Dialog.Portal>
                                 <Dialog.Overlay className="bg-black opacity-75 fixed inset-0"/>
@@ -257,7 +257,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ }) => {
                                     <div className="flex flex-end justify-between mt-5">
                                         <Dialog.Close asChild>
                                             <button 
-                                                className="h-fit w-fit p-2 flex flex-center items-center justify-center hover:border border-primary-200 bg-secondary-100 hover:bg-secondary-200 rounded ml-5" 
+                                                className="h-fit w-fit p-2 px-4 flex flex-center items-center justify-center hover:border border-primary-200 bg-secondary-100 hover:bg-secondary-200 rounded-full ml-5" 
                                                 aria-label="Delete account"
                                                 onClick={deleteAccount}
                                             >
@@ -278,7 +278,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ }) => {
                             </Dialog.Portal>
                         </Dialog.Root>
                         <button 
-                            className="w-1/2 py-2 px-4 ml-2 bg-gray hover:bg-secondary-200 text-primary-100 hover:text-slate-100 rounded-lg transition duration-300"
+                            className="w-1/2 py-2 px-4 ml-2 bg-gray hover:bg-secondary-200 text-primary-100 hover:text-slate-100 rounded-full transition duration-300"
                             onClick={handleLogout}
                         >
                             Logout
