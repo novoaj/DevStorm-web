@@ -26,25 +26,40 @@ const ToolsSelection: React.FC<ToolsSelectionProps> = ({ userChoices, onChoiceCh
         setUserChoice(choices); // Update local state
         onChoiceChange(choices); // Update parent state via callback
       };
-    return (
+      const customStyles = {
+        option: (styles: any, { isSelected }: any) => ({
+            ...styles,
+            backgroundColor: isSelected ? '#171d22' : 'text-slate-200',
+            color: isSelected ? 'white' : '#171d22',
+            '&:hover': {
+                backgroundColor: '#171d22',
+                color: 'white'
+            }
+        }),
+        multiValue: (styles: any) => ({
+            ...styles,
+            backgroundColor: '#171d22',
+        }),
+        multiValueLabel: (styles: any) => ({
+            ...styles,
+            color: 'white',
+        })
+    };
+
+    return(
         <div className="pt-5">
             <p>Maximum of 3 selections</p>
             <br/>
             <Select 
+                className="my-react-select-container"
+                classNamePrefix="my-react-select"
                 closeMenuOnSelect={false} 
                 defaultValue={"Role"} 
-                styles={{
-                    option: (base) => ({
-                    ...base,
-                    border: `1px dotted black`,
-                    height: '100%',
-                    color: 'black'
-                    }),
-                }}
                 options={options} 
                 isMulti
-                onChange={handleChange}
+                styles={customStyles}
                 isOptionDisabled={() => userChoice.length >= 3}
+                onChange={handleChange}
             />
         </div>
     )

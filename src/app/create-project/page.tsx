@@ -152,27 +152,27 @@ const CreateProject : React.FC<any>  = () => {
                             results={results}
                         />
                         <div className="flex justify-between mt-5">
-                                <button onClick={handleReset} className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 px-3 py-1 rounded">
+                                <button onClick={handleReset} className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 px-3 py-1 rounded-full">
                                     Reset
                                 </button>
                                 <div>
                                     {step > 0 && step < steps.length - 1 && (
-                                        <button onClick={handleBack} className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 px-3 py-1 rounded mr-2">
+                                        <button onClick={handleBack} className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 px-3 py-1 rounded-full mr-2">
                                             Prev
                                         </button>
                                     )}
                                     {step < steps.length - 2 && (
-                                        <button onClick={handleNext} className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 px-3 py-1 rounded">
+                                        <button onClick={handleNext} className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 px-3 py-1 rounded-full">
                                             Next
                                         </button>
                                     )}
                                     {step === steps.length - 2 && (
-                                        <button onClick={() => handleSubmit(selections)} className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 px-3 py-1 rounded">
+                                        <button onClick={() => handleSubmit(selections)} className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 px-3 py-1 rounded-full">
                                             Generate Project
                                         </button>
                                     )}
                                     {step === steps.length - 1 && (
-                                        <button onClick={handleSaveProject} className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 px-3 py-1 rounded">
+                                        <button onClick={handleSaveProject} className="bg-secondary-100 hover:bg-secondary-200 hover:outline text-slate-100 px-3 py-1 rounded-full">
                                             Save Project
                                         </button>
                                     )}
