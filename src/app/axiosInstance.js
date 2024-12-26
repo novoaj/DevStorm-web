@@ -49,8 +49,16 @@ axiosInstance.interceptors.response.use(
                     baseURL: process.env.NEXT_PUBLIC_API_URL
                 });
                 refreshInstance.defaults.headers.common['X-CSRF-TOKEN'] = csrfRefreshToken;
-                await refreshInstance.post("/token/refresh", {});
-
+                try{
+                    await refreshInstance.post("/token/refresh", {});
+                } catch (refreshError) {
+                    if (refreshError.response?.status === 401) {
+                      localStorage.clear();
+                      window.location.href = "/login";
+                      return Promise.reject(new Error("Session expired. Please login again."))
+                    }
+                    throw refreshError
+                }
                 // set instance header to new access token
                 const newCsrfAccess = await fetchCSRFAccess();
                 axiosInstance.defaults.headers.common['X-CSRF-TOKEN'] = newCsrfAccess;
@@ -58,10 +66,10 @@ axiosInstance.interceptors.response.use(
                 
                 originalRequest.headers['X-CSRF-TOKEN'] = newCsrfAccess;
                 return axiosInstance(originalRequest);
-            } catch (refreshError) {
+            } catch (error) {
                 localStorage.removeItem("isLoggedIn");
-                // window.location.href = "/login";
-                return Promise.reject(refreshError);
+                window.location.href = "/login";
+                return Promise.reject(error);
             } finally {
                 isRefreshing = false;
             }

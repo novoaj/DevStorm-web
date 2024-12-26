@@ -44,10 +44,13 @@ const Lane: React.FC<LaneProps> = ({ title, project }) => {
     return (
         <div className="flex flex-col w-full p-5 h-full mx-2 bg-primary-300 border border-primary-200 rounded-md">
             <div className="flex flex-row justify-between mb-2">
-                <h2 className="text-xl font-semibold text-gray">{title}</h2>
+                <div className="flex flex-row text-center items-center">
+                    <h2 className="text-xl font-semibold text-gray w-fit pr-5">{title}</h2>
+                    <p className="text-slate-400">{laneTasks.length}</p>
+                </div>
                 <Dialog.Root>
                     <Dialog.Trigger asChild>
-                        <button className="bg-gray hover:bg-secondary-200 text-primary-100 hover:text-slate-100 rounded-md transition duration-300 h-fit w-fit px-1 flex items-center justify-center">
+                        <button className="bg-gray hover:bg-secondary-200 text-primary-100 hover:text-slate-100 rounded-full transition duration-300 h-fit w-fit px-1 flex items-center justify-center">
                             <AddIcon fontSize={'medium'}/>  
                         </button>
                     </Dialog.Trigger>

@@ -22,8 +22,8 @@ export const ClientHome: React.FC<any> = ({}) => {
         <div id="wrapper" className="w-full overflow-x-hidden">
             <div id="section-intro" className="text-center min-h-[calc(100vh-96px)] content-center">
                 <div id="intro-content" className="w-full min-w-min md:px-64 px-12 text-left">
-                    <h1 className="text-5xl text-slate-50 font-bold mb-4">DevStorm</h1>
-                    <p className="text-lg text-slate-300 mb-8">Your guide to exploring tech careers through project-based learning.</p>
+                    <h1 className="text-5xl text-slate-50 font-bold mb-4">Code, Learn, and Grow with AI-Guided Projects</h1>
+                    <p className="text-lg text-slate-300 mb-8">Join now to start exploring tech careers through project-based learning.</p>
                     <button 
                         onClick={handleCTA} 
                         className="bg-primary-300 border border-primary-200 hover:bg-primary-100 text-slate-200 text-sm font-bold py-2 px-4 rounded-full transition duration-300"
@@ -67,14 +67,14 @@ export const ClientHome: React.FC<any> = ({}) => {
                 </section>
             </div>
             <div id="section-two" className="flex flex-col w-full">
-                <div id="section-two-content" className="flex flex-col bg-secondary-100 py-12 px-8">
+                <div id="section-two-content" className="flex flex-col bg-primary-100 py-12 px-8">
                     <div id="section-two-header pt-8">
                         <h2 className="text-4xl pb-2 text-slate-50">Building Projects with Devstorm</h2>
                         <p className="text-slate-300" >Our product is a platform that allows users to generate project ideas, follow step-by-step instructions to complete their projects, and collaborate with others to learn and grow together.</p>
                     </div>
                     <div id="section-two-features">
                         <section className="my-12 grid grid-cols-1 md:grid-cols-2">
-                            <div id="feature-1" className="border md:rounded-t-md border-secondary-200 p-5">
+                            <div id="feature-1" className="border md:rounded-t-md border-primary-200 p-5">
                                 <h2 className="text-2xl pb-2 text-slate-50">Personalized Project Generation</h2>
                                 <p className="text-slate-300">
                                     Tell us about your career goals and interests, and we'll help you create projects that align with your path. 
@@ -82,7 +82,7 @@ export const ClientHome: React.FC<any> = ({}) => {
                                     project ideas that are perfectly tailored to help you build relevant skills and explore your future career.
                                 </p>
                             </div>
-                            <div id="feature-2" className="border border-secondary-200 p-5">
+                            <div id="feature-2" className="border border-primary-200 p-5">
                                 <h2 className="text-2xl pb-2 text-slate-50">Step-by-Step Guidance</h2>
                                 <p className="text-slate-300">
                                     Never feel lost in your project journey. Each project comes with AI-generated, detailed instructions that 
@@ -90,7 +90,7 @@ export const ClientHome: React.FC<any> = ({}) => {
                                     analysis tool, you'll always know what to do next.
                                 </p>
                             </div>
-                            <div id="feature-3" className="border border-secondary-200 p-5">
+                            <div id="feature-3" className="border border-primary-200 p-5">
                                 <h2 className="text-2xl pb-2 text-slate-50">Progress Tracking</h2>
                                 <p className="text-slate-300">
                                     Stay motivated with our intuitive progress tracking system. Mark tasks as complete, monitor your project's 
@@ -98,7 +98,7 @@ export const ClientHome: React.FC<any> = ({}) => {
                                     transform ambitious project ideas into completed portfolio pieces.
                                 </p>
                             </div>
-                            <div id="feature-4" className="border md:rounded-b-md border-secondary-200 p-5">
+                            <div id="feature-4" className="border md:rounded-b-md border-primary-200 p-5">
                                 <h2 className="text-2xl pb-2 text-slate-50">Project Portfolio</h2>
                                 <p className="text-slate-300">
                                     Build a compelling portfolio of projects that demonstrates your skills to potential employers. Each completed 

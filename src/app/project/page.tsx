@@ -93,10 +93,10 @@ const Project: React.FC = () => {
             <div className="p-4 flex flex-col flex-1">
                 <div className="mx-8">
                     <button
-                        className="bg-secondary-100 hover:bg-secondary-200 text-gray px-4 py-2 rounded mb-4 transition duration-300"
+                        className="bg-secondary-100 hover:bg-secondary-200 text-gray px-4 py-2 rounded-full mb-4 transition duration-300"
                         onClick={goBack}
                     >
-                        &lt; Back
+                       Back
                     </button>
                     {project === undefined ? (
                       <div className="flex justify-center items-center">
@@ -110,7 +110,7 @@ const Project: React.FC = () => {
                       </div>
                     )}
                 </div>
-                <div className="flex flex-col mt-8 bg-primary-300 border border-primary-200 rounded-lg mx-8">
+                <div className="flex flex-col mt-8 bg-primary-300 mx-8">
                   <p className="text-gray mx-5 p-3">This drag and drop interface allows you to keep track of your progress while completing your project. Tasks are sorted by priority with the most critical tasks being at the top.</p>
                   <DragDropContext onDragEnd={onDragEnd}>
                       <div className="animate-slideUp flex flex-col md:flex-row flex-wrap h-fit justify-between mx-5">
