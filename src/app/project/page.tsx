@@ -93,7 +93,7 @@ const Project: React.FC = () => {
             <div className="p-4 flex flex-col flex-1">
                 <div className="mx-8">
                     <button
-                        className="bg-secondary-100 hover:bg-secondary-200 text-gray px-4 py-2 rounded-full mb-4 transition duration-300"
+                        className="bg-secondary-100 hover:bg-secondary-200 text-gray px-4 py-2 rounded-full mb-4 transition duration-300 ml-8"
                         onClick={goBack}
                     >
                        Back
@@ -103,7 +103,7 @@ const Project: React.FC = () => {
                         <Spinner/>
                       </div>
                     ) : (
-                      <div className="bg-primary-300 border rounded-lg border-primary-200 p-5 space-y-4 sm:space-y-0 sm:space-x-4">
+                      <div className="bg-primary-300 border rounded-lg border-primary-200 p-5 space-y-4 sm:space-y-0 sm:space-x-4 mx-8">
                         <h1 className="text-2xl font-bold mb-4 ml-3 text-gray">{project.title}</h1>
                         <p className="text-gray">{project.summary}</p>
                         <br/>
@@ -111,14 +111,14 @@ const Project: React.FC = () => {
                     )}
                 </div>
                 <div className="flex flex-col mt-8 bg-primary-300 mx-8">
-                  <p className="text-gray mx-5 p-3">This drag and drop interface allows you to keep track of your progress while completing your project. Tasks are sorted by priority with the most critical tasks being at the top.</p>
+                  <p className="text-gray mx-8 p-3">This drag and drop interface allows you to keep track of your progress while completing your project. Tasks are sorted by priority with the most critical tasks being at the top.</p>
                   <DragDropContext onDragEnd={onDragEnd}>
                       <div className="animate-slideUp flex flex-col md:flex-row flex-wrap h-fit justify-between mx-5">
                           {project === undefined ? 
                             <></> : 
                             <>
                               {Object.entries(tasks).map(([columnId, tasks]) => (
-                                <div key={columnId} className="w-full md:w-[calc(33.333%-1rem)] flex-grow h-96 md:mx-2 my-3">
+                                <div key={columnId} className="w-full lg:w-[calc(33.333%-1rem)] flex-grow h-96 md:mx-2 my-3">
                                       <Lane 
                                         title={columnId} 
                                         project={pid || ""}

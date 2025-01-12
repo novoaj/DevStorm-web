@@ -2,10 +2,12 @@
 import React, { useState } from 'react';
 import { Draggable } from "@hello-pangea/dnd";
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import * as Dialog from "@radix-ui/react-dialog";
 import Cross from '../components/Cross';
 import { toast } from 'sonner';
 import { useTasks } from '../context/TaskContext';
+import { MoreHoriz } from '@mui/icons-material';
 
 interface TaskProps {
     task: {
@@ -60,7 +62,7 @@ const Task: React.FC<TaskProps> = ({ task, index }) => {
                     </li>
                     <Dialog.Root>
                         <Dialog.Trigger asChild>
-                            <ModeEditOutlineIcon fontSize={'small'} className="cursor-pointer" />
+                            <MoreHoriz fontSize={'small'} className="cursor-pointer" /> 
                         </Dialog.Trigger>
                         <Dialog.Portal>
                             <Dialog.Overlay className="bg-black opacity-75 fixed inset-0" />

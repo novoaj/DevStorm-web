@@ -42,7 +42,7 @@ const Lane: React.FC<LaneProps> = ({ title, project }) => {
     }
 
     return (
-        <div className="flex flex-col w-full p-5 h-full mx-2 bg-primary-300 border border-primary-200 rounded-md">
+        <div className="flex flex-col w-full p-3 h-full mx-2 bg-primary-300 border border-primary-200 rounded-md overflow-y-scroll">
             <div className="flex flex-row justify-between mb-2">
                 <div className="flex flex-row text-center items-center">
                     <h2 className="text-xl font-semibold text-gray w-fit pr-5">{title}</h2>
@@ -99,7 +99,7 @@ const Lane: React.FC<LaneProps> = ({ title, project }) => {
             </div>       
             <Droppable droppableId={title}>
                 {(provided) => (
-                    <div className="flex-grow overflow-hidden hover:overflow-y-scroll pr-2">
+                    <div className="flex-grow p-1">
                         <ul
                             {...provided.droppableProps}
                             ref={provided.innerRef}
