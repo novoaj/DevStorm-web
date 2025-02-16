@@ -25,20 +25,20 @@ const About: React.FC = () => {
             </div>
             <div className="animate-slideUp my-4 xl:w-4/5 2xl:w-4/5 mx-auto ">
                 <div className="border border-slate-500 bg-primary-400 rounded p-3">
-                    <p className="text-lg mb-4">
+                    <p className="text-lg mb-4 text-slate-300">
                         We are a group of Computer Science Majors who are passionate about helping tech students come up with innovative project ideas. Our platform is designed to inspire and guide students as they explore various careers and industries.
                     </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
                     <div className="shadow-lg bg-primary-400 border border-slate-500 rounded p-3">
-                        <h2 className="text-2xl font-semibold mb-2">Who We Are</h2>
-                        <p>
+                        <h2 className="text-2xl font-semibold mb-2 text-slate-200">Who We Are</h2>
+                        <p className="text-slate-300">
                             We are a team of enthusiastic and driven individuals who have recently graduated with degrees in Computer Science. Our diverse backgrounds and shared passion for technology have brought us together to create this platform.
                         </p>
                     </div>
                     <div className="shadow-lg  bg-primary-400 border border-slate-500 rounded p-3">
-                        <h2 className="text-2xl font-semibold mb-2">What We Offer</h2>
-                        <p>
+                        <h2 className="text-2xl font-semibold mb-2 text-slate-200">What We Offer</h2>
+                        <p className="text-slate-300">
                             Our platform offers a variety of resources and tools to help tech students brainstorm and develop project ideas. We provide guidance on exploring different careers and industries, and offer support throughout the project development process.
                         </p>
                     </div>

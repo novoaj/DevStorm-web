@@ -104,14 +104,14 @@ const Project: React.FC = () => {
                       </div>
                     ) : (
                       <div className="bg-primary-300 border rounded-lg border-primary-200 p-5 space-y-4 sm:space-y-0 sm:space-x-4 mx-8">
-                        <h1 className="text-2xl font-bold mb-4 ml-3 text-gray">{project.title}</h1>
-                        <p className="text-gray">{project.summary}</p>
+                        <h1 className="text-2xl font-bold mb-4 ml-3 text-slate-200">{project.title}</h1>
+                        <p className="text-slate-300">{project.summary}</p>
                         <br/>
                       </div>
                     )}
                 </div>
                 <div className="flex flex-col mt-8 bg-primary-300 mx-8">
-                  <p className="text-gray mx-8 p-3">This drag and drop interface allows you to keep track of your progress while completing your project. Tasks are sorted by priority with the most critical tasks being at the top.</p>
+                  <p className="text-slate-400 mx-8 p-3">This drag and drop interface allows you to keep track of your progress while completing your project. Tasks are sorted by priority with the most critical tasks being at the top.</p>
                   <DragDropContext onDragEnd={onDragEnd}>
                       <div className="animate-slideUp flex flex-col md:flex-row flex-wrap h-fit justify-between mx-5">
                           {project === undefined ? 

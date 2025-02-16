@@ -151,18 +151,30 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ }) => {
     useEffect(() => {
         let url = process.env.NEXT_PUBLIC_API_URL + "/user/info";
         const getData = async() => {
-            const response = await axiosInstance.get(url);
-            console.log(response.data);
-            if (response){
+            try {
+                const response = await axiosInstance.get(url);
+                console.log(response);
+                if (response){
+                    setUser({
+                        username: response.data.username,
+                        email: response.data.email,
+                        dateJoined: formatDate(response.data.date_joined),
+                        projects: response.data.projects,
+                        projectsCompleted: response.data.projects_completed,
+                    });
+                    setUsername(response.data.username);
+                }
+            }catch (e){
                 setUser({
-                    username: response.data.username,
-                    email: response.data.email,
-                    dateJoined: formatDate(response.data.date_joined),
-                    projects: response.data.projects,
-                    projectsCompleted: response.data.projects_completed,
+                    username: "",
+                    email: "",
+                    dateJoined: "",
+                    projects: 0,
+                    projectsCompleted:0,
                 });
-                setUsername(response.data.username);
-            }
+                // router.replace("/");
+                // toast.info("Error loading profile details");
+                }
         }   
         getData(); 
     }, [])

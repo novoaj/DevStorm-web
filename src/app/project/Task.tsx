@@ -52,7 +52,7 @@ const Task: React.FC<TaskProps> = ({ task, index }) => {
     return (
         <Draggable key={task.id} draggableId={task.description} index={index}>
             {(provided) => (
-                <div className="flex flex-row justify-between mb-2 p-2 border border-primary-200 rounded text-gray bg-primary-400">
+                <div className="flex flex-row justify-between mb-2 p-2 border border-primary-200 rounded text-slate-300 hover:text-slate-100 bg-primary-400">
                     <li
                         ref={provided.innerRef}
                         {...provided.draggableProps}
@@ -67,13 +67,13 @@ const Task: React.FC<TaskProps> = ({ task, index }) => {
                         <Dialog.Portal>
                             <Dialog.Overlay className="bg-black opacity-75 fixed inset-0" />
                             <Dialog.Content className="p-6 fixed bg-primary-400 border border-primary-200 rounded-md top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 max-w-450 max-h-4/5 text-slate-100">
-                                <Dialog.Title className="m-0 font-semibold text-xl">Edit Task</Dialog.Title>
-                                <Dialog.Description className="mt-3 mb-6 text-md">
+                                <Dialog.Title className="m-0 font-semibold text-xl text-slate-100">Edit Task</Dialog.Title>
+                                <Dialog.Description className="mt-3 mb-6 text-md text-slate-300">
                                     Edit the task's content or delete the task. If you don't wish to make changes, close out of this popup by pressing cancel.
                                 </Dialog.Description>
                                 <fieldset className="flex gap-4 items-center mb-2">
-                                    <label className="text-md bg-primary-400 w-48 text-left" htmlFor="description">
-                                        Description
+                                    <label className="text-md bg-primary-400 w-48 text-left text-slate-300" htmlFor="description">
+                                        Description:
                                     </label>
                                     <input 
                                         className="w-full flex inline-flex items-center justify-center border border-primary-200 rounded-md pl-3 text-md bg-primary-300 h-8" 

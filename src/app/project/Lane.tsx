@@ -45,7 +45,7 @@ const Lane: React.FC<LaneProps> = ({ title, project }) => {
         <div className="flex flex-col w-full p-3 h-full mx-2 bg-primary-300 border border-primary-200 rounded-md overflow-y-scroll">
             <div className="flex flex-row justify-between mb-2">
                 <div className="flex flex-row text-center items-center">
-                    <h2 className="text-xl font-semibold text-gray w-fit pr-5">{title}</h2>
+                    <h2 className="text-xl font-semibold text-slate-200 w-fit pr-5">{title}</h2>
                     <p className="text-slate-400">{laneTasks.length}</p>
                 </div>
                 <Dialog.Root>

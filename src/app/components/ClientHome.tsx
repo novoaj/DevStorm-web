@@ -22,11 +22,11 @@ export const ClientHome: React.FC<any> = ({}) => {
         <div id="wrapper" className="w-full overflow-x-hidden">
             <div id="section-intro" className="text-center min-h-[calc(100vh-96px)] content-center">
                 <div id="intro-content" className="w-full min-w-min md:px-64 px-12 text-left">
-                    <h1 className="text-5xl text-slate-50 font-bold mb-4">Code, Learn, and Grow with AI-Guided Projects</h1>
+                    <h1 className="text-5xl text-slate-100 font-bold mb-4">Code, Learn, and Grow with AI-Guided Projects</h1>
                     <p className="text-lg text-slate-300 mb-8">Join now to start exploring tech careers through project-based learning.</p>
                     <button 
                         onClick={handleCTA} 
-                        className="bg-primary-300 border border-primary-200 hover:bg-primary-100 text-slate-200 text-sm font-bold py-2 px-4 rounded-full transition duration-300"
+                        className="bg-primary-300 border border-primary-200 hover:bg-primary-100 text-slate-300 text-sm font-bold py-2 px-4 rounded-full transition duration-300"
                     >
                         {isLoggedIn ? 'Create a Project' : 'Create an Account'}
                     </button>
@@ -38,31 +38,31 @@ export const ClientHome: React.FC<any> = ({}) => {
                 </div>
             </div>
             <div id="section-one" className="flex flex-col w-full">
-                <section className="flex flex-col md:flex-row bg-bluegray-100">
+                <section className="flex flex-col md:flex-row bg-primary-200">
                     <div id="section-image" className="w-full md:w-96 min-w-0">
                         <img src={handImg.src} alt="ai hand clipart" className="w-full object-cover"/>
                     </div>
                     <div id="section-content" className="px-12 py-8 md:p-8 flex-1 min-w-0 content-center">
-                        <h2 className="text-4xl pb-4 text-slate-50">Project ideas that will stand out</h2>
+                        <h2 className="text-4xl pb-4 text-slate-100">Project ideas that will stand out</h2>
                         <p className="text-sm md:text-base text-slate-200">Our generated project ideas focus on leading technologies/languages used in the industries that interest users the most, giving our users valuable insights that will help them to explore career paths that interest them.</p>
                     </div>
                 </section>
-                <section className="flex flex-col md:flex-row bg-bluegray-200">
+                <section className="flex flex-col md:flex-row bg-primary-100">
                     <div id="section-image" className="w-full md:w-96 min-w-0">
                         <img src={codeImg.src} alt="ai hand clipart" className="w-full object-cover"/>
                     </div>
                     <div id="section-content" className="px-12 py-8 md:p-8 flex-1 min-w-0 content-center">
-                        <h2 className="text-4xl pb-2 text-slate-50">Guidance Through Your Coding Journey</h2>
-                        <p className="text-sm md:text-base text-slate-200">Our platform provides step-by-step instructions and resources to help you navigate the programming process of your project, ensuring you gain valuable coding skills along the way.</p>
+                        <h2 className="text-4xl pb-2 text-slate-100">Guidance Through Your Coding Journey</h2>
+                        <p className="text-sm md:text-base text-slate-300">Our platform provides step-by-step instructions and resources to help you navigate the programming process of your project, ensuring you gain valuable coding skills along the way.</p>
                     </div>
                 </section>
-                <section className="flex flex-col md:flex-row bg-bluegray-300">
+                <section className="flex flex-col md:flex-row bg-primary-300">
                     <div id="section-image" className="w-full md:w-96 min-w-0">
                         <img src={collabImg.src} alt="ai hand clipart" className="w-full object-cover"/>
                     </div>
                     <div id="section-content" className="px-12 py-8 md:p-8 flex-1 min-w-0 content-center">
-                        <h2 className="text-4xl pb-2 text-slate-50">Collaborate and Grow Together</h2>
-                        <p className="text-sm md:text-base text-slate-200">Our platform fosters collaboration by connecting you with like-minded individuals, allowing you to work together on programming projects, share knowledge, and grow your skills as a team.</p>
+                        <h2 className="text-4xl pb-2 text-slate-300">Collaborate and Grow Together</h2>
+                        <p className="text-sm md:text-base text-slate-300">Our platform fosters collaboration by connecting you with like-minded individuals, allowing you to work together on programming projects, share knowledge, and grow your skills as a team.</p>
                     </div>
                 </section>
             </div>
@@ -74,7 +74,7 @@ export const ClientHome: React.FC<any> = ({}) => {
                     </div>
                     <div id="section-two-features">
                         <section className="my-12 grid grid-cols-1 md:grid-cols-2">
-                            <div id="feature-1" className="border md:rounded-t-md border-primary-200 p-5">
+                            <div id="feature-1" className="border border-primary-200 p-5">
                                 <h2 className="text-2xl pb-2 text-slate-50">Personalized Project Generation</h2>
                                 <p className="text-slate-300">
                                     Tell us about your career goals and interests, and we'll help you create projects that align with your path. 
@@ -98,7 +98,7 @@ export const ClientHome: React.FC<any> = ({}) => {
                                     transform ambitious project ideas into completed portfolio pieces.
                                 </p>
                             </div>
-                            <div id="feature-4" className="border md:rounded-b-md border-primary-200 p-5">
+                            <div id="feature-4" className="border border-primary-200 p-5">
                                 <h2 className="text-2xl pb-2 text-slate-50">Project Portfolio</h2>
                                 <p className="text-slate-300">
                                     Build a compelling portfolio of projects that demonstrates your skills to potential employers. Each completed 

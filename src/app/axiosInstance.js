@@ -22,6 +22,7 @@ axiosInstance.interceptors.request.use(async (request) => {
   if (csrfToken) {
     request.headers['X-CSRF-TOKEN'] = csrfToken;
   }
+  console.log(`request\n\n${csrfToken}`)
   return request;
 }, (error) => {
   return Promise.reject(error);
