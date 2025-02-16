@@ -52,7 +52,7 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
                     </Link>
                   </li>
                   <li className="hover:text-slate-100">
-                    <a href="mailto:devstorm.ai@gmail.com">
+                    <a href="mailto:devstorm.communications@gmail.com">
                       <p>Contact Us</p>
                     </a>
                   </li>

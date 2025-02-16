@@ -50,7 +50,10 @@ const Sidebar = ({ isOpen, toggle, } : { isOpen: boolean; toggle: () => void; })
             <Link href="/about" onClick={toggle}><p>About</p></Link>
           </li>
           <li>
-            <Link href="/contacts" onClick={toggle}><p>Contact Us</p></Link>
+            {/* <Link href="/contacts" onClick={toggle}><p>Contact Us</p></Link> */}
+            <a href="mailto:devstorm.communications@gmail.com">
+                <p>Contact Us</p>
+              </a>
           </li>
           {isLoggedIn ? 
             <>

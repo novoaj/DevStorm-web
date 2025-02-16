@@ -153,6 +153,7 @@ export const ClientHome: React.FC<any> = ({}) => {
                         <button 
                             type="submit"
                             className="bg-primary-200 border border-primary-300 hover:bg-primary-100 text-slate-200 text-sm font-bold py-2 px-4 rounded-full transition duration-300"
+                            disabled={!isLoggedIn}
                         >
                             Send Message
                         </button>

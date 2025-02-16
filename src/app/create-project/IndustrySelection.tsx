@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import Select from "react-select";
 
 interface IndustrySelectionProps {
-    userChoices: { value: string; label: string }[]; // Correctly typed userChoices
-    onChoiceChange: (choices: { value: string; label: string }[]) => void; // Correctly typed onChoiceChange
+    userChoices: { value: string; label: string }[]; 
+    onChoiceChange: (choices: { value: string; label: string }[]) => void; 
 }
 
 const IndustrySelection: React.FC<IndustrySelectionProps> = ({ userChoices, onChoiceChange }) => {
@@ -19,12 +19,12 @@ const IndustrySelection: React.FC<IndustrySelectionProps> = ({ userChoices, onCh
         { value: "Gaming", label: "Gaming"},
 
     ]
-    // TODO: add more options
+
     const handleChange = (choices: any) => {
         setUserChoice(choices); // Update local state
         onChoiceChange([choices]); // Update parent state via callback
-      };
-      const customStyles = {
+    };
+    const customStyles = {
         option: (styles: any, { isSelected }: any) => ({
             ...styles,
             backgroundColor: isSelected ? '#171d22' : 'text-slate-200',
