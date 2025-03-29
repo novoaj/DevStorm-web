@@ -11,7 +11,7 @@ jest.mock('sonner', () => ({
 }));
 
 // tests for register - validateInputs
-describe('validateInputs', () => {
+describe('validateInputs() helper function', () => {
   it('should return valid for valid inputs', () => {
     expect(validateInputs(
       'validuser',
