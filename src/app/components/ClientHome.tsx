@@ -15,7 +15,7 @@ export const ClientHome: React.FC<any> = ({}) => {
         if (isLoggedIn) {
           router.push('/create-project');
         } else {
-          router.push('/register');
+          router.push('/auth/register');
         }
       };
     return (
@@ -32,7 +32,7 @@ export const ClientHome: React.FC<any> = ({}) => {
                     </button>
                     {!isLoggedIn && (
                         <p className="mt-4 text-slate-300">
-                            Already have an account? <a href="/login" className="text-blue-400 hover:underline">Login</a>
+                            Already have an account? <a href="/auth/login" className="text-blue-400 hover:underline">Login</a>
                         </p>
                     )}
                 </div>

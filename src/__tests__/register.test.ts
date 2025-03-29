@@ -1,4 +1,4 @@
-import { validateInputs, handleSubmit } from '../app/register/page';
+import { validateInputs, handleSubmit } from '../app/auth/register/page';
 import axios from 'axios';
 import { toast } from 'sonner';
 

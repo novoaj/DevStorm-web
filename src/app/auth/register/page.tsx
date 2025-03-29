@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter} from "next/navigation";
 import axios from "axios";
 import { toast } from 'sonner';
-import { UserContext } from '../context/UserContext';
+import { UserContext } from '../../context/UserContext';
 
 // valiadtes user inputs before sending request to backend
 export const validateInputs = (username: string, password: string, password2: string) => {
@@ -147,7 +147,7 @@ const RegisterPage: React.FC = () => {
                     </button>
                 </div>
                 <div className="flex items-center mt-10">
-                    <p>Already have an account? <Link className="text-blue-400" href="/login">Login</Link></p>
+                    <p>Already have an account? <Link className="text-blue-400" href="/auth/login">Login</Link></p>
                 </div>
             </form>
         </div>

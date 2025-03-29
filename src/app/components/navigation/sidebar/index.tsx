@@ -19,11 +19,11 @@ const Sidebar = ({ isOpen, toggle, } : { isOpen: boolean; toggle: () => void; })
     
         setIsLoggedIn(false);
         toast.success('Logged out');
-        router.replace("/login");
+        router.replace("/auth/login");
     }catch (err) {
         toast.success('Logged out');
         setIsLoggedIn(false); // log user out even if it fails
-        router.replace("/login");
+        router.replace("/auth/login");
     }
   }
   return (
@@ -66,10 +66,10 @@ const Sidebar = ({ isOpen, toggle, } : { isOpen: boolean; toggle: () => void; })
             </>: 
             <>
               <li>
-                <Link href="/login" onClick={toggle}><p>Login</p></Link>
+                <Link href="/auth/login" onClick={toggle}><p>Login</p></Link>
               </li>
               <li>
-                <Link href="/register" onClick={toggle}><p>Register</p></Link>
+                <Link href="/auth/register" onClick={toggle}><p>Register</p></Link>
               </li>
             </>}
           

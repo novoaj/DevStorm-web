@@ -20,7 +20,7 @@ const ConfirmEmailPage: React.FC = () => {
                     if (response) {
                         setConfirmationStatus('Email confirmed successfully!');
                         toast.success("Email confirmed!");
-                        router.push("/login");
+                        router.push("/auth/login");
                         // redirect
                     } else {
                         setConfirmationStatus('Failed to confirm email.');

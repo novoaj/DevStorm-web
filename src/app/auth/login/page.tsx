@@ -4,7 +4,7 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { UserContext } from '../context/UserContext';
+import { UserContext } from '../../context/UserContext';
 
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -106,7 +106,7 @@ const LoginPage: React.FC = () => {
                     </button>
                 </div>
                 <div className="flex items-center mt-10">
-                    <p>Don't have an account yet? <Link className="text-blue-400" href="/register">Register</Link></p>
+                    <p>Don't have an account yet? <Link className="text-blue-400" href="/auth/register">Register</Link></p>
                 </div>
             </form>
         </div>

@@ -55,7 +55,7 @@ axiosInstance.interceptors.response.use(
                 } catch (refreshError) {
                     if (refreshError.response?.status === 401) {
                       localStorage.clear();
-                      window.location.href = "/login";
+                      window.location.href = "/auth/login";
                       return Promise.reject(new Error("Session expired. Please login again."))
                     }
                     throw refreshError
@@ -69,7 +69,7 @@ axiosInstance.interceptors.response.use(
                 return axiosInstance(originalRequest);
             } catch (error) {
                 localStorage.removeItem("isLoggedIn");
-                window.location.href = "/login";
+                window.location.href = "/auth/login";
                 return Promise.reject(error);
             } finally {
                 isRefreshing = false;
