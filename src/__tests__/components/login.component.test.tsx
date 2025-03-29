@@ -1,9 +1,9 @@
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import axios from 'axios';
-import { notifications } from '../utils/notifications';
+import { notifications } from '../../utils/notifications';
 import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
-import LoginPage from '../app/auth/login/page';
+import LoginPage from '../../app/auth/login/page';
 
 // Mock environment variables
 process.env.NEXT_PUBLIC_API_URL = 'http://test-api:5000';
@@ -13,7 +13,7 @@ jest.mock('axios');
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn()
 }));
-jest.mock('../utils/notifications', () => ({
+jest.mock('../../utils/notifications', () => ({
   notifications: {
     success: {
       login: jest.fn()
