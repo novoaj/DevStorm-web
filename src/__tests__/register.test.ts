@@ -1,12 +1,21 @@
-import { validateInputs, handleSubmit } from '../app/auth/register/page';
+import { validateInputs, handleRegisterSubmit } from '../app/auth/register/page';
 import axios from 'axios';
-import { toast } from 'sonner';
+import { notifications } from '../utils/notifications';
+
+// Mock environment variables
+process.env.NEXT_PUBLIC_API_URL = 'http://test-api:5000';
 
 // Mock dependencies
 jest.mock('axios');
-jest.mock('sonner', () => ({
-  toast: {
-    warning: jest.fn()
+jest.mock('../utils/notifications', () => ({
+  notifications: {
+    success: {
+      register: jest.fn()
+    },
+    warning: {
+      registerValidation: jest.fn(),
+      registerFailed: jest.fn()
+    }
   }
 }));
 
@@ -70,6 +79,8 @@ describe('validateInputs() helper function', () => {
 
 // register - handleSubmit tests
 describe('handleSubmit', () => {
+  const mockRouter = { push: jest.fn() };
+
   beforeEach(() => {
     // Clear all mocks before each test
     jest.clearAllMocks();
@@ -79,11 +90,12 @@ describe('handleSubmit', () => {
     // Mock successful API response
     (axios.post as jest.Mock).mockResolvedValueOnce({ data: {} });
 
-    const result = await handleSubmit(
+    const result = await handleRegisterSubmit(
       'validuser',
       'password123',
       'password123',
-      'test@example.com'
+      'test@example.com',
+      mockRouter
     );
 
     // Check the result
@@ -91,7 +103,7 @@ describe('handleSubmit', () => {
 
     // Verify API was called with correct data
     expect(axios.post).toHaveBeenCalledWith(
-      'http://127.0.0.1:5000/register',
+      'http://test-api:5000/register',
       {
         email: 'test@example.com',
         username: 'validuser',
@@ -103,21 +115,23 @@ describe('handleSubmit', () => {
         }
       }
     );
+    expect(notifications.success.register).toHaveBeenCalled();
+    expect(mockRouter.push).toHaveBeenCalledWith('/confirm');
   });
 
   it('should return failure when validation fails', async () => {
-    const result = await handleSubmit(
+    const result = await handleRegisterSubmit(
       'user', // too short username
       'password123',
       'password123',
-      'test@example.com'
+      'test@example.com',
+      mockRouter
     );
 
     expect(result).toEqual({ success: false });
     expect(axios.post).not.toHaveBeenCalled();
-    expect(toast.warning).toHaveBeenCalledWith(
-      'Username must be at least 5 characters!',
-      { duration: 2000 }
+    expect(notifications.warning.registerValidation).toHaveBeenCalledWith(
+      'Username must be at least 5 characters!'
     );
   });
 
@@ -125,33 +139,31 @@ describe('handleSubmit', () => {
     // Mock API error
     (axios.post as jest.Mock).mockRejectedValueOnce(new Error('API Error'));
 
-    const result = await handleSubmit(
+    const result = await handleRegisterSubmit(
       'validuser',
       'password123',
       'password123',
-      'test@example.com'
+      'test@example.com',
+      mockRouter
     );
 
     expect(result).toEqual({ success: false });
-    expect(toast.warning).toHaveBeenCalledWith(
-      'Register failed (This username might already exist). Try again!',
-      { duration: 2000 }
-    );
+    expect(notifications.warning.registerFailed).toHaveBeenCalled();
   });
 
   it('should return failure when passwords do not match', async () => {
-    const result = await handleSubmit(
+    const result = await handleRegisterSubmit(
       'validuser',
       'password123',
       'differentpassword',
-      'test@example.com'
+      'test@example.com',
+      mockRouter
     );
 
     expect(result).toEqual({ success: false });
     expect(axios.post).not.toHaveBeenCalled();
-    expect(toast.warning).toHaveBeenCalledWith(
-      'Passwords must match!',
-      { duration: 2000 }
+    expect(notifications.warning.registerValidation).toHaveBeenCalledWith(
+      'Passwords must match!'
     );
   });
 });
