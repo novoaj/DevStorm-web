@@ -23,15 +23,15 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
       
           setIsLoggedIn(false);
           toast.success('Logged out');
-          router.replace("/login");
+          router.replace("/auth/login");
       }catch (err) {
           toast.success('Logged out');
           setIsLoggedIn(false); // log user out even if it fails
-          router.replace("/login");
+          router.replace("/auth/login");
       }
     }
     const handleRegister = () => {
-      router.replace("/register");
+      router.replace("/auth/register");
     }
 
     const handleProfile = () => {

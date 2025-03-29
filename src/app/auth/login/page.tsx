@@ -3,10 +3,51 @@ import React, { useState, useContext } from 'react';
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
-import { UserContext } from '../context/UserContext';
+import { UserContext } from '../../context/UserContext';
+import { notifications } from '../../../utils/notifications';
 
-const LoginPage: React.FC = () => {
+export const validateLoginInputs = (username : string, password : string) => {
+    if (username === "" || password === ""){
+        notifications.info.loginRequired();
+        return false
+    }
+    return true
+}
+
+export const handleLoginSubmit = async (
+    username: string,
+    password: string,
+    setIsLoggedIn: (value: boolean) => void,
+    router: { push: (path: string) => void }
+) => {
+    if (!validateLoginInputs(username, password)) {
+        return { success: false };
+    }
+    
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/login`;
+    try {
+        const response = await axios.post(url, {
+            username: username,
+            password: password
+        }, {
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+        
+        setIsLoggedIn(true);
+        notifications.success.login();
+        router.push("/profile");
+        return { success: true };
+    } catch (error) {
+        console.log(error);
+        notifications.warning.loginFailed();
+        return { success: false };
+    }
+};
+
+function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const { isLoggedIn, setIsLoggedIn} = useContext(UserContext);
@@ -20,49 +61,9 @@ const LoginPage: React.FC = () => {
         setPassword(e.target.value);
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        let url = "http://127.0.0.1:5000/login"
-        // validate inputs
-        if (username === "" || password === ""){
-            toast.info("You must enter a valid username and password to continue", {
-                duration: 2000,
-            });
-            return;
-        }
-
-        axios.post(url, {
-            username: username,
-            password: password
-        }, {
-            withCredentials: true, // Include this to handle cookies
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            
-        })
-        .then((response) => {
-            if (response.status === 200) {
-                setIsLoggedIn(true); // update user context
-                toast.success('Successful Login!', {
-                    duration: 2000,
-                });
-                router.push("/profile"); // route to profile on login
-            
-            } else if (response.status >= 400) {
-                // If login fails, show a warning toast
-                toast.warning('Login failed, make sure your username and password is correct', {
-                    duration: 2000,
-                });
-            }
-        })
-        .catch((error) => {
-            // If there's an error with the request, show a warning toast
-            console.log(error);
-            toast.warning('Login failed. Make sure your username and password is correct.', {
-            duration: 5000,
-            });
-        })
+        await handleLoginSubmit(username, password, setIsLoggedIn, router);
     };
 
     return (
@@ -106,11 +107,11 @@ const LoginPage: React.FC = () => {
                     </button>
                 </div>
                 <div className="flex items-center mt-10">
-                    <p>Don't have an account yet? <Link className="text-blue-400" href="/register">Register</Link></p>
+                    <p>Don't have an account yet? <Link className="text-blue-400" href="/auth/register">Register</Link></p>
                 </div>
             </form>
         </div>
     );
-};
+}
 
 export default LoginPage;

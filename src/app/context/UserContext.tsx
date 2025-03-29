@@ -20,12 +20,19 @@ export const UserContext = createContext<UserContextType>({
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false) 
     const [isInitialized, setIsInitialized] = useState<boolean>(false); // Tracks if localStorage has been read
-        // Retrieve the stored value during initialization
+    
+    // Retrieve the stored value during initialization
     useEffect(() => {
         // Only run this effect on initial mount to read from localStorage
         const storedValue = localStorage.getItem("isLoggedIn");
         if (storedValue !== null) {
-            setIsLoggedIn(JSON.parse(storedValue));
+            try {
+                const parsedValue = JSON.parse(storedValue);
+                setIsLoggedIn(parsedValue);
+            } catch (error) {
+                // If parsing fails, default to false
+                setIsLoggedIn(false);
+            }
         }
         setIsInitialized(true)
     }, [])
@@ -38,7 +45,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
     const value: UserContextType = { isLoggedIn, setIsLoggedIn }
     return (
-        <UserContext.Provider value ={value}>
+        <UserContext.Provider value={value}>
             {children}
         </UserContext.Provider>
     );

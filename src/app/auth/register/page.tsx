@@ -1,12 +1,11 @@
 'use client'
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import Link from "next/link";
-import { useRouter} from "next/navigation";
 import axios from "axios";
-import { toast } from 'sonner';
-import { UserContext } from '../context/UserContext';
+import { useRouter} from "next/navigation";
+import { notifications } from '../../../utils/notifications';
 
-// valiadtes user inputs before sending request to backend
+// validates user inputs before sending request to backend
 export const validateInputs = (username: string, password: string, password2: string) => {
     const validations = [
         {
@@ -28,6 +27,9 @@ export const validateInputs = (username: string, password: string, password2: st
     ];
 
     const failedValidation = validations.find(v => v.condition);
+    if (failedValidation) {
+        notifications.warning.registerValidation(failedValidation.message);
+    }
     return {
         valid: !failedValidation,
         message: failedValidation?.message || 'No issues'
@@ -35,10 +37,16 @@ export const validateInputs = (username: string, password: string, password2: st
 };
 
 // Move handleSubmit outside and export it
-export const handleSubmit = async (username: string, password: string, password2: string, email: string) => {
-    let result = validateInputs(username, password, password2);
-    if (result.valid){
-        let url = "http://127.0.0.1:5000/register"
+export const handleRegisterSubmit = async (
+    username: string,
+    password: string,
+    password2: string,
+    email: string,
+    router: { push: (path: string) => void }
+) => {
+    const result = validateInputs(username, password, password2);
+    if (result.valid) {
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/register`;
         try {
             await axios.post(url, {
                 email: email,
@@ -49,20 +57,16 @@ export const handleSubmit = async (username: string, password: string, password2
                     'Content-Type': 'application/json'
                 }
             });
+            notifications.success.register();
+            router.push("/confirm");
             return { success: true };
         } catch (error) {
             console.log(error);
-            toast.warning('Register failed (This username might already exist). Try again!', {
-                duration: 2000,
-            });
+            notifications.warning.registerFailed();
             return { success: false };
         }
-    }else{
-        toast.warning(result.message, {
-            duration: 2000,
-        });
-        return { success: false };
     }
+    return { success: false };
 };
 
 const RegisterPage: React.FC = () => {
@@ -70,19 +74,17 @@ const RegisterPage: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
-    const { isLoggedIn, setIsLoggedIn} = useContext(UserContext);
-    const router = useRouter()
+    const router = useRouter();
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        await handleRegisterSubmit(username, password, password2, email, router);
+    };
 
     return (
         <div className="flex justify-center items-center min-h-[calc(100vh-96px)]">
             <form className="animate-slideDown bg-primary-300 max-w-96 border border-slate-500 text-slate-100 shadow-md rounded px-8 pt-6 pb-8 mb-4 lg:w-1/2 md:w-4/6 s:w-full xs:w-full" 
-                onSubmit={async (e) => {
-                    e.preventDefault();
-                    const result = await handleSubmit(username, password, password2, email);
-                    if (result.success) {
-                        router.push("/confirm");
-                    }
-                }}>
+                onSubmit={handleSubmit}>
                 <div>
                     <h3 className="flex justify-center items-center text-3xl mb-5">Register</h3>
                 </div>
@@ -147,7 +149,7 @@ const RegisterPage: React.FC = () => {
                     </button>
                 </div>
                 <div className="flex items-center mt-10">
-                    <p>Already have an account? <Link className="text-blue-400" href="/login">Login</Link></p>
+                    <p>Already have an account? <Link className="text-blue-400" href="/auth/login">Login</Link></p>
                 </div>
             </form>
         </div>
