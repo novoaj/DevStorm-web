@@ -1,6 +1,6 @@
 import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { UserProvider, UserContext } from '../app/context/UserContext';
+import { UserProvider, UserContext } from '../../app/context/UserContext';
 import { useContext } from 'react';
 
 // Mock localStorage
