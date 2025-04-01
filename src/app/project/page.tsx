@@ -65,9 +65,6 @@ const Project: React.FC = () => {
         const newStatus = ["Todo", "In Progress", "Completed"].indexOf(destination.droppableId) + 1;
         
         updateTaskStatus(removed.id, newStatus);
-        if (pid) {
-            fetchTasks(pid);
-        }
       };
 
     useEffect(() => {
