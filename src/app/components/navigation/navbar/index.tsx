@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from "next/link";
 import Logo from "./Logo";
-import Button from "./Button";
+import LoginButton from "./LoginButton";
 import { toast } from 'sonner';
 import {useRouter, usePathname} from "next/navigation";
 import { UserContext } from '../../../context/UserContext';
@@ -90,7 +90,7 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
                     </div> : 
                     <>
                       <div className="hidden md:flex gap-x-4">
-                        <Button />
+                        <LoginButton />
                         <button onClick={handleRegister} className="h-10 rounded-full bg-gray hover:bg-secondary-100 hover:text-slate-100 hover:border font-bold px-5 transition duration-300">
                           Register
                         </button>

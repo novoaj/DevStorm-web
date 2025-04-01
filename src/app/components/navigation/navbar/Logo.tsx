@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Button from "./Button";
+import LoginButton from "./LoginButton";
 import logo from "../../../../../public/images/logo_darkbg_rect.png"
 
 const Logo = () => {
@@ -48,7 +48,7 @@ const Logo = () => {
           display: showButton ? "block" : "none",
         }}
       >
-        <Button />
+        <LoginButton />
       </div>
     </>
   );
