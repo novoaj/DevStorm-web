@@ -4,6 +4,8 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter} from "next/navigation";
 import { notifications } from '../../../utils/notifications';
+import FormInput from '@/components/common/FormInput';
+import FormButton from '@/components/common/FormButton';
 
 // validates user inputs before sending request to backend
 export const validateInputs = (username: string, password: string, password2: string) => {
@@ -88,65 +90,39 @@ const RegisterPage: React.FC = () => {
                 <div>
                     <h3 className="flex justify-center items-center text-3xl mb-5">Register</h3>
                 </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                        Email
-                    </label>
-                    <input
-                        className="shadow bg-primary-100 appearance-none border border-slate-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="email"
-                        type="text"
-                        placeholder="Enter your email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-                        Username
-                    </label>
-                    <input
-                        className="shadow bg-primary-100 appearance-none border border-slate-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="username"
-                        type="text"
-                        placeholder="Enter your username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                        Password
-                    </label>
-                    <input
-                        className="shadow bg-primary-100 appearance-none border border-slate-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="password"
-                        type="password"
-                        placeholder="Enter your password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <div className="mb-6">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password2">
-                        Re-enter password
-                    </label>
-                    <input
-                        className="shadow bg-primary-100 appearance-none border border-slate-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="password2"
-                        type="password"
-                        placeholder="Enter your password again"
-                        value={password2}
-                        onChange={(e) => setPassword2(e.target.value)}
-                    />
-                </div>
+                <FormInput 
+                    id = "email" 
+                    label="Email"
+                    type="text" 
+                    placeholder="Enter your email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}/>
+                <FormInput
+                    id="username"
+                    label="Username"
+                    type="text"
+                    placeholder="Enter your username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <FormInput
+                    id="password"
+                    label="Password"
+                    type="password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <FormInput
+                    id="password2"
+                    label="Re-enter password"
+                    type="password"
+                    placeholder="Enter your password again"
+                    value={password2}
+                    onChange={(e) => setPassword2(e.target.value)}
+                />
                 <div className="flex items-center justify-between">
-                    <button
-                        className="bg-secondary-100 hover:bg-secondary-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
-                        type="submit"
-                    >
-                        Continue
-                    </button>
+                    <FormButton text="Continue" type="submit"/>
                 </div>
                 <div className="flex items-center mt-10">
                     <p>Already have an account? <Link className="text-blue-400" href="/auth/login">Login</Link></p>

@@ -5,6 +5,8 @@ import axios from "axios";
 import { useRouter } from 'next/navigation';
 import { UserContext } from '../../context/UserContext';
 import { notifications } from '../../../utils/notifications';
+import FormInput from '@/components/common/FormInput';
+import FormButton from '@/components/common/FormButton';
 
 export const validateLoginInputs = (username : string, password : string) => {
     if (username === "" || password === ""){
@@ -72,39 +74,25 @@ function LoginPage() {
                 <div>
                     <h3 className="flex justify-center items-center text-3xl mb-5">Login</h3>
                 </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-                        Username
-                    </label>
-                    <input
-                        className="shadow bg-primary-100 appearance-none border border-slate-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="username"
-                        type="text"
-                        placeholder="Enter your username"
-                        value={username}
-                        onChange={handleUsernameChange}
-                    />
-                </div>
-                <div className="mb-6">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                        Password
-                    </label>
-                    <input
-                        className="shadow bg-primary-100 appearance-none border border-slate-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="password"
-                        type="password"
-                        placeholder="Enter your password"
-                        value={password}
-                        onChange={handlePasswordChange}
-                    />
-                </div>
+
+                <FormInput
+                    id="username"
+                    label="Username"
+                    type="text"
+                    placeholder="Enter your username"
+                    value={username}
+                    onChange={handleUsernameChange}
+                />
+                <FormInput
+                    id="password"
+                    label="Password"
+                    type="password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={handlePasswordChange}
+                />
                 <div className="flex items-center justify-between">
-                    <button
-                        className="bg-secondary-100 hover:bg-secondary-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
-                        type="submit"
-                    >
-                        Submit
-                    </button>
+                    <FormButton text="Submit" type="submit"/>
                 </div>
                 <div className="flex items-center mt-10">
                     <p>Don't have an account yet? <Link className="text-blue-400" href="/auth/register">Register</Link></p>

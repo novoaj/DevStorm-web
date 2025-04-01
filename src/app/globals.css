@@ -55,3 +55,23 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  background-color: #212A31 !important; /* Match your bg-primary-100 */
+  color: oklch(0.373 0.034 259.733) !important;           /* Match your text-gray-700 */
+  border-color: oklch(0.554 0.046 257.417) !important;    /* Match your border-slate-500 */
+  -webkit-box-shadow: 0 0 0px 1000px #212A31 inset !important; /* Force background color */
+  -webkit-text-fill-color:  rgb(241 245 249) !important; /* Force text color text-slate-100 */
+}
+
+/* input:-webkit-autofill:focus {
+  background-color: #f3f4f6 !important;
+  color: #374151 !important;
+} */
