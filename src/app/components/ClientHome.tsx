@@ -2,9 +2,9 @@
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { useRouter } from 'next/navigation';
-import handImg from "../../../public/images/home/ai-hand-clipart.webp";
-import codeImg from "../../../public/images/home/code-screen-clipart.webp";
-import collabImg from "../../../public//images/home/collab-clipart.webp";
+import handImg from "../../../public/images/home/hands_clipart.webp";
+import codeImg from "../../../public/images/home/code_clipart_clean.webp";
+import collabImg from "../../../public//images/home/collab_whiteboard.webp";
 
 // https://medium.com/@velja/token-refresh-with-axios-interceptors-for-a-seamless-authentication-experience-854b06064bde
 export const ClientHome: React.FC<any> = ({}) => {

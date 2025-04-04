@@ -85,7 +85,7 @@ const RegisterPage: React.FC = () => {
 
     return (
         <div className="flex justify-center items-center min-h-[calc(100vh-96px)]">
-            <form className="animate-slideDown bg-primary-300 max-w-96 border border-slate-500 text-slate-100 shadow-md rounded px-8 pt-6 pb-8 mb-4 lg:w-1/2 md:w-4/6 s:w-full xs:w-full" 
+            <form className="animate-slideDown max-w-md w-full bg-primary-300 border border-slate-500 text-slate-100 shadow-md rounded px-8 pt-6 pb-8 mb-4" 
                 onSubmit={handleSubmit}>
                 <div>
                     <h3 className="flex justify-center items-center text-3xl mb-5">Register</h3>
@@ -121,7 +121,7 @@ const RegisterPage: React.FC = () => {
                     value={password2}
                     onChange={(e) => setPassword2(e.target.value)}
                 />
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mt-10">
                     <FormButton text="Continue" type="submit"/>
                 </div>
                 <div className="flex items-center mt-10">

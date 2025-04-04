@@ -3,8 +3,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import LoginButton from "./LoginButton";
-import logo from "../../../../../public/images/logo_darkbg_rect.png"
-
+//import logo from "../../../../../public/images/logo_darkbg_rect.png"
+import logo from "../../../../../public/images/Logo_2.png"
 const Logo = () => {
   //update the size of the logo when the size of the screen changes
   const [width, setWidth] = useState(0);
