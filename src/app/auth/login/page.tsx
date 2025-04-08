@@ -50,21 +50,24 @@ export const handleLoginSubmit = async (
 };
 
 function LoginPage() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [formData, setFormData] = useState({
+        username: '',
+        password: '',
+    });
     const { isLoggedIn, setIsLoggedIn} = useContext(UserContext);
     const router = useRouter();
 
-    const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUsername(e.target.value);
-    };
-
-    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        const{ username, password } = formData;
         await handleLoginSubmit(username, password, setIsLoggedIn, router);
     };
 
@@ -80,16 +83,16 @@ function LoginPage() {
                     label="Username"
                     type="text"
                     placeholder="Enter your username"
-                    value={username}
-                    onChange={handleUsernameChange}
+                    value={formData.username}
+                    onChange={handleChange}
                 />
                 <FormInput
                     id="password"
                     label="Password"
                     type="password"
                     placeholder="Enter your password"
-                    value={password}
-                    onChange={handlePasswordChange}
+                    value={formData.password}
+                    onChange={handleChange}
                 />
                 <div className="flex items-center justify-between mt-10">
                     <FormButton text="Submit" type="submit"/>
