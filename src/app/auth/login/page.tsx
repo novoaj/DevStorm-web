@@ -1,12 +1,11 @@
 'use client'
 import React, { useState, useContext } from 'react';
-import Link from "next/link";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
 import { UserContext } from '../../context/UserContext';
 import { notifications } from '../../../utils/notifications';
-import FormInput from '@/components/common/FormInput';
-import FormButton from '@/components/common/FormButton';
+import Preview from './loading';
+import LoginForm from './LoginForm';
 
 export const validateLoginInputs = (username : string, password : string) => {
     if (username === "" || password === ""){
@@ -50,6 +49,7 @@ export const handleLoginSubmit = async (
 };
 
 function LoginPage() {
+    const [loading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -68,39 +68,17 @@ function LoginPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const{ username, password } = formData;
+        setIsLoading(true);
         await handleLoginSubmit(username, password, setIsLoggedIn, router);
+        setIsLoading(false);
     };
 
     return (
         <div className="flex justify-center items-center min-h-[calc(100vh-96px)]">
-            <form className="animate-slideDown max-w-md w-full bg-primary-300 border border-slate-500 text-slate-100 shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
-                <div>
-                    <h3 className="flex justify-center items-center text-3xl mb-5">Login</h3>
-                </div>
-
-                <FormInput
-                    id="username"
-                    label="Username"
-                    type="text"
-                    placeholder="Enter your username"
-                    value={formData.username}
-                    onChange={handleChange}
-                />
-                <FormInput
-                    id="password"
-                    label="Password"
-                    type="password"
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={handleChange}
-                />
-                <div className="flex items-center justify-between mt-10">
-                    <FormButton text="Submit" type="submit"/>
-                </div>
-                <div className="flex items-center mt-10">
-                    <p>Don't have an account yet? <Link className="text-blue-400" href="/auth/register">Register</Link></p>
-                </div>
-            </form>
+            {loading ? 
+                <Preview/> : 
+                <LoginForm onSubmit={handleSubmit} formData={formData} handleChange={handleChange}/>
+                }
         </div>
     );
 }
