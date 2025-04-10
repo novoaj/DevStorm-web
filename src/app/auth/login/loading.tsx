@@ -39,7 +39,7 @@ const Skeleton = ({ className }: SkeletonProps) => (
             <Skeleton className="w-full max-w-full rounded-full" />
           </div>
         </div>
-        <div className="flex items-center mt-10">
+        <div className="flex items-center mt-8">
           <Skeleton className="w-[280px] max-w-full" />
           <Skeleton className="w-[64px] max-w-full" />
         </div>
@@ -48,7 +48,7 @@ const Skeleton = ({ className }: SkeletonProps) => (
   );
   
   const Preview = () => (
-    <div className="flex justify-center items-center w-full min-h-[calc(100vh-96px)] p-10">
+    <div className="flex justify-center items-center min-h-[calc(100vh-96px)]">
       <LoadingSkeleton />
     </div>
   );
