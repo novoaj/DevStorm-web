@@ -39,7 +39,7 @@ const EditProfilePopup : React.FC<ProfileFormProps> = ({ formData, onChange, onS
                     </fieldset>
                     <fieldset className="items-center mb-2">
                         <FormInput 
-                            id="old-password"
+                            id="oldPassword"
                             label="Password"
                             type="password"
                             placeholder="Current Password"
@@ -49,7 +49,7 @@ const EditProfilePopup : React.FC<ProfileFormProps> = ({ formData, onChange, onS
                     </fieldset>
                     <fieldset className="items-center mb-2">
                         <FormInput 
-                            id="new-password1"
+                            id="newPassword"
                             label="New Password (Optional)"
                             type="password"
                             placeholder="New Password (Optional)"
@@ -59,7 +59,7 @@ const EditProfilePopup : React.FC<ProfileFormProps> = ({ formData, onChange, onS
                     </fieldset>
                     <fieldset className="items-center mb-2">
                         <FormInput 
-                            id="new-password2"
+                            id="newPassword2"
                             label="Re-enter New Password"
                             type="password"
                             placeholder="New Password"
