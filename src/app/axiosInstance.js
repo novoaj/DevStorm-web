@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { fetchCSRFAccess, fetchCSRFToken } from './actions/actions';
-
+// https://medium.com/@velja/token-refresh-with-axios-interceptors-for-a-seamless-authentication-experience-854b06064bde
 let isRefreshing = false;
 let refreshSubscribers = [];
 
@@ -22,7 +22,6 @@ axiosInstance.interceptors.request.use(async (request) => {
   if (csrfToken) {
     request.headers['X-CSRF-TOKEN'] = csrfToken;
   }
-  console.log(`request\n\n${csrfToken}`)
   return request;
 }, (error) => {
   return Promise.reject(error);
