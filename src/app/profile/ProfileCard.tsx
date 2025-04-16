@@ -49,22 +49,26 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ }) => {
     };
 
     const handleUpdateProfile = async() => {
-        // validate passwords match
-        try{
-            let url = process.env.NEXT_PUBLIC_API_URL + `/user/update-username`;
-            let response = await axiosInstance.put(url, {
-                new_username: formData.username,
-                current_password: formData.oldPassword
-            })
-            if (response.status === 200) {
-                toast.success("Reset password")
+        if (user && user.username !== formData.username){
+            // update username
+            if (formData.username.length < 5) {
+                toast.error("New username must be 5+ characters")
             }
-        }catch (err) {
-            console.error(err);
-            toast.error("Error resetting password.")
+            try{
+                let url = process.env.NEXT_PUBLIC_API_URL + `/user/update-username`;
+                let response = await axiosInstance.put(url, {
+                    new_username: formData.username,
+                    current_password: formData.oldPassword
+                })
+                if (response.status === 200) {
+                    toast.success("Reset Username")
+                }
+            }catch (err) {
+                console.error(err);
+                toast.error("Error resetting Username. This username might be taken. Make sure password is filled in correctly")
+            }
         }
         // TODO useState for password/username changes to form. hit update api endpoint
-
         return;
     }
 
