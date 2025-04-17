@@ -7,15 +7,8 @@ import {useRouter} from 'next/navigation';
 import Spinner from '../components/Spinner';
 import { toast } from 'sonner';
 import { UserContext } from '../context/UserContext';
-import EditProfilePopup from './EditProfilePopup';
-
-interface User {
-    username: string;
-    email: string;
-    dateJoined: string;
-    projects: number;
-    projectsCompleted: number;
-}
+import { User } from './edit/ProfileInterfaces';
+// import EditProfilePopup from './EditProfilePopup';
 
 interface ProfileCardProps {
     
@@ -48,23 +41,27 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ }) => {
         return date.toLocaleDateString(undefined, options);
     };
 
-    const handleUpdateProfile = async() => {
-        // validate passwords match
-        try{
-            let url = process.env.NEXT_PUBLIC_API_URL + `/user/update-username`;
-            let response = await axiosInstance.put(url, {
-                new_username: formData.username,
-                current_password: formData.oldPassword
-            })
-            if (response.status === 200) {
-                toast.success("Reset password")
+    const handleUpdateUsername = async() => {
+        if (user && user.username !== formData.username){
+            // update username
+            if (formData.username.length < 5) {
+                toast.error("New username must be 5+ characters")
             }
-        }catch (err) {
-            console.error(err);
-            toast.error("Error resetting password.")
+            try{
+                let url = process.env.NEXT_PUBLIC_API_URL + `/user/update-username`;
+                let response = await axiosInstance.put(url, {
+                    new_username: formData.username,
+                    current_password: formData.oldPassword
+                })
+                if (response.status === 200) {
+                    toast.success("Reset Username")
+                }
+            }catch (err) {
+                console.error(err);
+                toast.error("Error resetting Username. This username might be taken. Make sure password is filled in correctly")
+            }
         }
         // TODO useState for password/username changes to form. hit update api endpoint
-
         return;
     }
 
@@ -84,7 +81,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ }) => {
             router.replace("/auth/login");
         }
     }
-
+    const editProfilePage = () => {
+        router.push("/profile/edit")
+    }
     const deleteAccount = async() => {
         try{
             let url = process.env.NEXT_PUBLIC_API_URL + "/user/delete";
@@ -153,7 +152,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ }) => {
                     </div>
                     <p className="pl-3 mb-5">Date Joined: {user.dateJoined}</p>
                     <div className="flex justify-between items-center">
-                        <EditProfilePopup formData={formData} onChange={handleChange} onSave={handleUpdateProfile} onDelete={deleteAccount}/>
+                        <button className="w-1/2 py-2 px-4 mr-2 bg-secondary-100 hover:bg-secondary-200 text-slate-100 rounded-full transition duration-300" onClick={editProfilePage}>Edit Profile</button>
+                        {/* <EditProfilePopup formData={formData} onChange={handleChange} onSave={handleUpdateProfile} onDelete={deleteAccount}/> */}
                         <button 
                             className="w-1/2 py-2 px-4 ml-2 bg-gray hover:bg-secondary-200 text-primary-100 hover:text-slate-100 rounded-full transition duration-300"
                             onClick={handleLogout}
