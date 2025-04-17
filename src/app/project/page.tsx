@@ -31,7 +31,7 @@ interface Project {
   username: string;
 }
 const Project: React.FC = () => {
-    // TODO: fetch project details on component render (project info and tasks)
+    // fetch project details on component render (project info and tasks)
     const searchParams = useSearchParams();
     const pid = searchParams.get('pid');
     const router = useRouter();

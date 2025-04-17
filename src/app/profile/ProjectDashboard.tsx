@@ -1,7 +1,6 @@
 "use client"
 import React, {useEffect, useState} from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import Spinner from '../components/Spinner';
 import { toast } from 'sonner';
 import * as Dialog from "@radix-ui/react-dialog";
