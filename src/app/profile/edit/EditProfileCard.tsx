@@ -49,7 +49,7 @@ const EditProfileCard: React.FC<ProfileItem> = ({title, description, popup: Popu
         // TODO useState for password/username changes to form. hit update api endpoint
         return;
     }
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => { // TODO handlesubmit different depending on the popup
         e.preventDefault();
         const{ username, password } = formData;
         console.log("update username")

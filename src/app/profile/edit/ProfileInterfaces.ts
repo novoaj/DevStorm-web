@@ -16,3 +16,12 @@ export interface EditUsernameProps {
     formData: any;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
 }
+interface passwordForm {
+    password: string;
+    newPassword: string;
+    newPassword2: string;
+}
+export interface EditPasswordProps {
+    formData: passwordForm;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+}

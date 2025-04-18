@@ -19,7 +19,7 @@ const EditUsernamePopup : React.FC<EditUsernameProps> = ({formData, onChange }) 
                     id="password"
                     label="Password"
                     type="password"
-                    placeholder="Current Password"
+                    placeholder="Password"
                     value={formData.password}
                     onChange={onChange}
                 />

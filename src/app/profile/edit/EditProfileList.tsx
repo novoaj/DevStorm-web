@@ -1,4 +1,5 @@
 import EditProfileCard from "./EditProfileCard";
+import EditPasswordPopup from "./popups/EditPasswordPopup";
 import EditUsernamePopup from "./popups/EditUsernamePopup";
 import { ProfileItem, User } from "./ProfileInterfaces";
 
@@ -17,7 +18,7 @@ const EditProfileList: React.FC<EditProfileListProps> = ({user}) => {
         {
             title: "Change Password",
             description: "Change your password",
-            popup: EditUsernamePopup,
+            popup: EditPasswordPopup,
             user: user
         },
     ];
