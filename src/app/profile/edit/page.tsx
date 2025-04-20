@@ -53,10 +53,9 @@ const EditProfile = () => {
         let url = process.env.NEXT_PUBLIC_API_URL + "/user/info";
         fetchData(url);
     }, [])
-
     return (
         <>
-            <div className="flex flex-col sm:w-5/6 xs:w-5/6 md:w-3/4 lg:w-2/3 xl:w-1/2 h-full bg-primary-300 text-slate-200 justify-self-center justify-start mx-12">
+            <div className="flex flex-col sm:w-5/6 xs:w-5/6 md:w-3/4 lg:w-4/5 xl:w-4/5 2xl:w-4/5 min-h-screen bg-primary-300 text-slate-200 justify-self-center justify-start mx-auto">
                 <div>
                     <button
                         className="flex flex-row justify-self-start items-center bg-primary-300 hover:bg-primary-100 text-gray px-4 py-2 my-3 rounded-full mb-4 transition duration-300"
