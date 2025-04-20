@@ -11,8 +11,15 @@ Technologies Used:
 - Profile dashboard with user statistics and saved projects.
 - Project dashboard with concrete end-to-end deliverables/tasks for users to keep track of while completing project.
 
-## Demo
-https://github.com/user-attachments/assets/1a56368f-ad04-4731-ae6c-a1893ceee4b9
+## Demos
+https://github.com/user-attachments/assets/90c4b40f-7cc4-4a3b-ba61-805f981a02b4
 
+### Authentication
+https://github.com/user-attachments/assets/93d94641-f422-4729-aea5-0e329ad44f91
 
+### Generate a Project
+https://github.com/user-attachments/assets/f7cab022-56ee-4fd0-a774-890b63120466
+
+### Update a Project
+https://github.com/user-attachments/assets/db8229a1-61e8-486f-ad98-7931dc187b33
 
