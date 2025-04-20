@@ -19,12 +19,3 @@ export interface PopupComponentProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
     handleSetValid: (isValid: boolean) => void;
 }
-interface passwordForm {
-    password: string;
-    newPassword: string;
-    newPassword2: string;
-}
-export interface EditPasswordProps {
-    formData: passwordForm;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
-}
