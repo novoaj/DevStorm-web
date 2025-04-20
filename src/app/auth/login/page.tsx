@@ -39,7 +39,6 @@ export const handleLoginSubmit = async (
         
         setIsLoggedIn(true);
         notifications.success.login();
-        router.push("/profile");
         return { success: true };
     } catch (error) {
         console.log(error);
@@ -69,7 +68,10 @@ function LoginPage() {
         e.preventDefault();
         const{ username, password } = formData;
         setIsLoading(true);
-        await handleLoginSubmit(username, password, setIsLoggedIn, router);
+        let loginStatus = await handleLoginSubmit(username, password, setIsLoggedIn, router);
+        if (loginStatus.success) {
+            router.push("/profile");
+        }
         setIsLoading(false);
     };
 

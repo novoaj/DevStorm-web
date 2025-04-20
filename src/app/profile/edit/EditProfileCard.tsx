@@ -1,67 +1,27 @@
 "use client";
 import Image from "next/image";
 import gtIcon from "../../../../public/images/gt_Icon.png";
-import { useEffect, useState } from "react";
-import { ProfileItem, User } from "./ProfileInterfaces";
+import { useState } from "react";
+import { ProfileItem } from "./ProfileInterfaces";
 import { Close, Content, Description, Overlay, Portal, Root, Title, Trigger } from "@radix-ui/react-dialog";
-import axiosInstance from "@/app/axiosInstance";
-import { toast } from "sonner";
 import Cross from "@/app/components/Cross";
 
-const EditProfileCard: React.FC<ProfileItem> = ({title, description, popup: PopupComponent, user }) => {
+const EditProfileCard: React.FC<ProfileItem> = ({title, description, popup: PopupComponent, user, initialData, handleSubmit }) => {
     const [btnStyle, setBtnStyle] = useState("bg-primary-300 rounded-full px-3");
-    const [formData, setFormData] = useState({
-        username: user.username,
-        password: ""
-    });
-    
+    const [formData, setFormData] = useState(initialData);
+    const [valid, setValid] = useState(false);
 
-    const handleUpdateUsername = async(username : string, password : string) => {
-        if (user && user.username !== username){
-            // update username
-            if (formData.username.length < 5) {
-                toast.error("New username must be 5+ characters")
-            }
-            try{
-                let url = process.env.NEXT_PUBLIC_API_URL + `/user/update-username`;
-                let response = await axiosInstance.put(url, {
-                    new_username: username,
-                    current_password: password
-                })
-                if (response.status === 200) {
-                    setFormData({
-                        username: user.username,
-                        password: ""
-                    });
-                    toast.success("Reset Username")
-                }
-            }catch (err) {
-                console.error(err);
-                setFormData({
-                    username: user.username,
-                    password: ""
-                });
-                toast.error("Error resetting username. This username might be taken. Make sure password is filled in correctly")
-            }
-        }else{
-            toast.error("Failed to change username.")
-        }
-        // TODO useState for password/username changes to form. hit update api endpoint
-        return;
+    const handleSetValid = (valid : boolean) => {
+        setValid(valid);
     }
-    const handleSubmit = async (e: React.FormEvent) => { // TODO handlesubmit different depending on the popup
-        e.preventDefault();
-        const{ username, password } = formData;
-        console.log("update username")
-        await handleUpdateUsername(username, password);
-    };
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({
+        setFormData((prevData : any) => ({
             ...prevData,
             [name]: value,
         }));
     };
+
     return (
         <Root>
             <Trigger asChild>
@@ -93,12 +53,13 @@ const EditProfileCard: React.FC<ProfileItem> = ({title, description, popup: Popu
                     <Description className="mt-3 mb-6 text-md text-slate-300">
                         {description}
                     </Description>
-                    <PopupComponent formData={formData} onChange={handleChange}/>
+                    <PopupComponent formData={formData} onChange={handleChange} handleSetValid={handleSetValid}/>
                     <div className="flex flex-end justify-between mt-5">
                         <Close asChild>
                             <button
                                 className="w-fit py-2 px-4 ml-2 bg-gray hover:bg-secondary-200 text-primary-100 hover:text-slate-100 rounded-full transition duration-300"
-                                onClick={handleSubmit}
+                                onClick={() => handleSubmit(formData)}
+                                disabled={!valid}
                             >
                                 Save Changes
                             </button>

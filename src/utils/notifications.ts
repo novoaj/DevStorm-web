@@ -14,7 +14,7 @@ export const notifications = {
         // Add more success messages as needed
     },
     warning: {
-        loginFailed: () => toast.warning('Login failed. Make sure your username and password is correct.', { duration: DURATION.MEDIUM }),
+        loginFailed: () => toast.warning('Login failed. Make sure your username and password is correct.', { duration: DURATION.SHORT }),
         registerFailed: () => toast.warning('Register failed (This username might already exist). Try again!', { duration: DURATION.SHORT }),
         registerValidation: (message: string) => toast.warning(message, { duration: DURATION.SHORT }),
         // Add more warning messages as needed

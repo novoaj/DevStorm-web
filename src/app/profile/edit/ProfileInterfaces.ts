@@ -10,11 +10,14 @@ export interface ProfileItem {
     description: string;
     popup: React.ComponentType<any>;
     user: User;
+    initialData: any;
+    handleSubmit: (formData : any) => Promise<void>;
   }
 
-export interface EditUsernameProps {
+export interface PopupComponentProps {
     formData: any;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    handleSetValid: (isValid: boolean) => void;
 }
 interface passwordForm {
     password: string;
