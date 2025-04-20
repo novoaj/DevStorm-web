@@ -7,9 +7,10 @@ Technologies Used:
 - React
 - Nextjs
 - tailwindcss
+
 ## Features in progress
-- Profile dashboard with user statistics and saved projects.
-- Project dashboard with concrete end-to-end deliverables/tasks for users to keep track of while completing project.
+- Collaboration - Adding collaboraters to projects
+
 
 ## Demos
 https://github.com/user-attachments/assets/90c4b40f-7cc4-4a3b-ba61-805f981a02b4
