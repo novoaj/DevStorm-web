@@ -25,7 +25,7 @@ const EditProfilePopup : React.FC<ProfileFormProps> = ({ formData, onChange, onS
                 <Dialog.Content className="p-6 fixed bg-primary-400 border border-primary-200 rounded-md top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 max-w-450 max-h-4/5 text-slate-100">
                     <Dialog.Title className="m-0 font-semibold text-xl">Edit Profile</Dialog.Title>
                     <Dialog.Description className="mt-3 mb-6 text-md text-slate-300">
-                        Change your username or password here. Click save when you're done if you want changes to persist (to change username, enter your current password)
+                        Change your username or password here. Click save when you&#39;re done if you want changes to persist (to change username, enter your current password)
                     </Dialog.Description>
                     <fieldset className="items-center mb-2">
                         <FormInput 
