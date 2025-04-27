@@ -2,6 +2,7 @@
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { useRouter } from 'next/navigation';
+import Image from "next/image";
 import handImg from "../../../public/images/home/hands_clipart.webp";
 import codeImg from "../../../public/images/home/code_clipart_clean.webp";
 import collabImg from "../../../public//images/home/collab_whiteboard.webp";
@@ -39,8 +40,18 @@ export const ClientHome: React.FC<any> = ({}) => {
             </div>
             <div id="section-one" className="flex flex-col w-full">
                 <section className="flex flex-col md:flex-row bg-primary-200">
-                    <div id="section-image" className="w-full md:w-96 min-w-0">
-                        <img src={handImg.src} alt="ai hand clipart" className="w-full object-cover"/>
+                    <div id="section-image" className="relative w-full md:w-96 min-w-0 h-[400px]">
+                        {/* <img src={handImg.src} alt="ai hand clipart" className="w-full object-cover"/> */}
+                        <Image 
+                            src={handImg} 
+                            alt="AI hand clipart" 
+                            fill
+                            quality={100}
+                            priority
+                            // layout="aspect-square"
+                            className="object-cover"
+                            sizes="(max-width: 300px) w-full, 184px"
+                        />
                     </div>
                     <div id="section-content" className="px-12 py-8 md:p-8 flex-1 min-w-0 content-center">
                         <h2 className="text-4xl pb-4 text-slate-100">Project ideas that will stand out</h2>
@@ -48,8 +59,20 @@ export const ClientHome: React.FC<any> = ({}) => {
                     </div>
                 </section>
                 <section className="flex flex-col md:flex-row bg-primary-100">
-                    <div id="section-image" className="w-full md:w-96 min-w-0">
+                    {/* <div id="section-image" className="w-full md:w-96 min-w-0">
                         <img src={codeImg.src} alt="ai hand clipart" className="w-full object-cover"/>
+                    </div> */}
+                    <div id="section-image" className="relative w-full md:w-96 min-w-0 h-[400px]">
+                        <Image 
+                            src={codeImg} 
+                            alt="Code clipart" 
+                            fill
+                            quality={100}
+                            // layout="aspect-square"
+                            priority
+                            className="object-cover"
+                            sizes="(max-width: 300px) w-full, 184px"
+                        />
                     </div>
                     <div id="section-content" className="px-12 py-8 md:p-8 flex-1 min-w-0 content-center">
                         <h2 className="text-4xl pb-2 text-slate-100">Guidance Through Your Coding Journey</h2>
@@ -57,8 +80,19 @@ export const ClientHome: React.FC<any> = ({}) => {
                     </div>
                 </section>
                 <section className="flex flex-col md:flex-row bg-primary-300">
-                    <div id="section-image" className="w-full md:w-96 min-w-0">
+                    {/* <div id="section-image" className="w-full md:w-96 min-w-0">
                         <img src={collabImg.src} alt="ai hand clipart" className="w-full object-cover"/>
+                    </div> */}
+                    <div id="section-image" className="relative w-full md:w-96 min-w-0 h-[400px]">
+                        <Image 
+                            src={collabImg} 
+                            alt="Collaboration clipart" 
+                            fill
+                            quality={100}
+                            priority
+                            className="object-cover"
+                            sizes="(max-width: 300px) w-full, 184px"
+                        />
                     </div>
                     <div id="section-content" className="px-12 py-8 md:p-8 flex-1 min-w-0 content-center">
                         <h2 className="text-4xl pb-2 text-slate-300">Collaborate and Grow Together</h2>
@@ -77,7 +111,7 @@ export const ClientHome: React.FC<any> = ({}) => {
                             <div id="feature-1" className="border border-primary-200 p-5">
                                 <h2 className="text-2xl pb-2 text-slate-50">Personalized Project Generation</h2>
                                 <p className="text-slate-300">
-                                    Tell us about your career goals and interests, and we'll help you create projects that align with your path. 
+                                    Tell us about your career goals and interests, and we&#39;ll help you create projects that align with your path. 
                                     By understanding your target tech roles, programming experience, and industry interests, our AI generates 
                                     project ideas that are perfectly tailored to help you build relevant skills and explore your future career.
                                 </p>
@@ -86,14 +120,14 @@ export const ClientHome: React.FC<any> = ({}) => {
                                 <h2 className="text-2xl pb-2 text-slate-50">Step-by-Step Guidance</h2>
                                 <p className="text-slate-300">
                                     Never feel lost in your project journey. Each project comes with AI-generated, detailed instructions that 
-                                    break down complex tasks into clear, actionable steps. Whether you're building a web app or creating a data 
-                                    analysis tool, you'll always know what to do next.
+                                    break down complex tasks into clear, actionable steps. Whether you&#39;re building a web app or creating a data 
+                                    analysis tool, you&#39;ll always know what to do next.
                                 </p>
                             </div>
                             <div id="feature-3" className="border border-primary-200 p-5">
                                 <h2 className="text-2xl pb-2 text-slate-50">Progress Tracking</h2>
                                 <p className="text-slate-300">
-                                    Stay motivated with our intuitive progress tracking system. Mark tasks as complete, monitor your project's 
+                                    Stay motivated with our intuitive progress tracking system. Mark tasks as complete, monitor your project&#39;s 
                                     development, and maintain momentum throughout your learning journey. Our organized approach helps you 
                                     transform ambitious project ideas into completed portfolio pieces.
                                 </p>
@@ -102,8 +136,8 @@ export const ClientHome: React.FC<any> = ({}) => {
                                 <h2 className="text-2xl pb-2 text-slate-50">Project Portfolio</h2>
                                 <p className="text-slate-300">
                                     Build a compelling portfolio of projects that demonstrates your skills to potential employers. Each completed 
-                                    project serves as tangible proof of your abilities, showcasing not just what you've built, but the 
-                                    industry-relevant technologies and concepts you've mastered along the way.
+                                    project serves as tangible proof of your abilities, showcasing not just what you&#39;ve built, but the 
+                                    industry-relevant technologies and concepts you&#39;ve mastered along the way.
                                 </p>
                             </div>
                         </section>
@@ -118,7 +152,7 @@ export const ClientHome: React.FC<any> = ({}) => {
             </div>
             <div id="section-footer" className="flex flex-col w-full bg-primary-300 py-12 px-12">
                 <h2 className="text-4xl pb-4 text-slate-50">Contact Us</h2>
-                <p className="text-slate-300 mb-6">We'd love to hear your feedback!</p>
+                <p className="text-slate-300 mb-6">We&#39;d love to hear your feedback!</p>
                 
                 <form className="max-w-2xl">
                     {/* Row 1: Name and Email */}

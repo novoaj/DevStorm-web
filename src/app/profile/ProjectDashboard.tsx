@@ -55,6 +55,7 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ }) => {
     useEffect(() => {
         let url = process.env.NEXT_PUBLIC_API_URL + "/project/by-user";
         const getData = async() => {
+            console.log("fetch /project/by-user")
             try {
                 const response = await axiosInstance.get(url, {
                     withCredentials: true
@@ -107,7 +108,7 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ }) => {
                                                     <Dialog.Content className="p-6 fixed bg-primary-400 border border-primary-200 rounded-md top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 max-w-450 max-h-4/5 text-slate-100">
                                                         <Dialog.Title className="m-0 font-semibold text-xl">Delete Project</Dialog.Title>
                                                         <Dialog.Description className="mt-3 mb-6 text-md">
-                                                            Are you sure you want to delete the project "{project.title}"? This action cannot be undone.
+                                                            Are you sure you want to delete the project &quot;{project.title}&quot;? This action cannot be undone.
                                                         </Dialog.Description>
                                                         <div className="flex justify-end mt-5">
                                                             <Dialog.Close asChild>

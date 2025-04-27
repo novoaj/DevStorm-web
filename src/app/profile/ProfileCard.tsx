@@ -96,8 +96,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ }) => {
             toast.error("There was a problem deleting your account!");
         }
     }
-    function fetchData(url : string){
+    useEffect(() => {
+        let url = process.env.NEXT_PUBLIC_API_URL + "/user/info";
         const getData = async() => {
+            console.log("fetch /user/info");
             try {
                 const response = await axiosInstance.get(url);
                 //console.log(response);
@@ -123,10 +125,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ }) => {
                 }
         }  
         getData(); 
-    }
-    useEffect(() => {
-        let url = process.env.NEXT_PUBLIC_API_URL + "/user/info";
-        fetchData(url);
     }, [])
 
     return (

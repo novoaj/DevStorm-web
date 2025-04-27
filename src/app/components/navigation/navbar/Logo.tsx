@@ -3,8 +3,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import LoginButton from "./LoginButton";
-//import logo from "../../../../../public/images/logo_darkbg_rect.png"
-import logo from "../../../../../public/images/Logo_2.png"
+import logo from "../../../../../public/images/Logo_2.png";
+
 const Logo = () => {
   //update the size of the logo when the size of the screen changes
   const [width, setWidth] = useState(0);
@@ -17,6 +17,7 @@ const Logo = () => {
   useEffect(() => {
     window.addEventListener("resize", updateWidth);
     updateWidth();
+    return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
   // change between the logo and the button when the user scrolls
@@ -32,15 +33,20 @@ const Logo = () => {
 
   useEffect(() => {
     window.addEventListener("scroll", changeNavButton);
+    return () => window.removeEventListener("scroll", changeNavButton);
   }, []);
 
   return (
     <>
       <Link href="/" style={{ display: showButton ? "none" : "block" }}>
-        <img
-          src={logo.src}
+        <Image
+          src={logo}
           alt="Logo"
-          className="h-16 w-auto relative"
+          width={150}
+          height={64}
+          //className="h-16 w-auto"
+          style={{ height: '4rem', width: 'auto' }} 
+          priority
         />
       </Link>
       <div

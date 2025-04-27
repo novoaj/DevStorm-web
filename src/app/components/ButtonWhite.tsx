@@ -1,6 +1,4 @@
 
-import React from 'react';
-
 interface ButtonWhiteProps {
     value: string;
     onClick?: () => void;

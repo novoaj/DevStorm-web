@@ -1,5 +1,5 @@
 "use client";
-import React, {useState, useEffect } from 'react';
+import React, {useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import Lane from './Lane';
@@ -30,7 +30,7 @@ interface Project {
   summary: string;
   username: string;
 }
-const Project: React.FC = () => {
+function ProjectContent() {
     // fetch project details on component render (project info and tasks)
     const searchParams = useSearchParams();
     const pid = searchParams.get('pid');
@@ -133,4 +133,11 @@ const Project: React.FC = () => {
     );
 };
 
+const Project: React.FC = () => {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spinner /></div>}>
+      <ProjectContent />
+    </Suspense>
+  );
+};
 export default Project;

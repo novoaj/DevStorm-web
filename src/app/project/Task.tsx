@@ -102,7 +102,7 @@ const Task: React.FC<TaskProps> = ({ task, index }) => {
                             <Dialog.Content className="p-6 fixed bg-primary-400 border border-primary-200 rounded-md top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 max-w-450 max-h-4/5 text-slate-100">
                                 <Dialog.Title className="m-0 font-semibold text-xl text-slate-100">Edit Task</Dialog.Title>
                                 <Dialog.Description className="mt-3 mb-6 text-md text-slate-300">
-                                    Edit the task's content or delete the task. If you don't wish to make changes, close out of this popup by pressing cancel.
+                                    Edit the task&#39;s content or delete the task. If you don&#39;t wish to make changes, close out of this popup by pressing cancel.
                                 </Dialog.Description>
                                 <fieldset className="flex gap-4 items-center mb-2">
                                     <label className="text-md bg-primary-400 w-1/3 text-left text-slate-300" htmlFor="description">
