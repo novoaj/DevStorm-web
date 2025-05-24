@@ -3,8 +3,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { UserProvider } from "./context/UserContext";
-import { TaskProvider } from "./context/TaskContext";
+import { ClientProviders } from "./client-providers";
+import { checkAuthCookies } from "./actions/actions";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -12,22 +13,24 @@ export const metadata: Metadata = {
   description: "Project planning app for tech students to explore careers and industries",
 };
 
-export default function RootLayout({
+// This is a SERVER component
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-//rgba(33,42,49,1)
+  // This runs on the server
+  const initialLoggedIn = await checkAuthCookies();
+  
   return (
     <html lang="en">
       <body className="bg-primary-300">
-        <UserProvider> 
+        {/* Pass server-rendered data to client providers */}
+        <ClientProviders initialLoggedIn={initialLoggedIn}>
           <Navigation/>
-          <TaskProvider>
-            {children}
-          </TaskProvider>
+          {children} {/* children can still be server components! */}
           <Toaster position="top-right" richColors expand={false} theme={"dark"}/>
-        </UserProvider>
+        </ClientProviders>
       </body>
     </html>
   );

@@ -3,47 +3,69 @@ import { createContext, useState, useContext, useEffect, Dispatch, SetStateActio
 
 // ts interfaces
 interface UserContextType {
-    isLoggedIn: boolean; // Boolean state for login status
-    setIsLoggedIn: Dispatch<SetStateAction<boolean>>; // Function to mutate userstate
+    isLoggedIn: boolean;
+    setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+    isLoading: boolean;
 }
 interface UserProviderProps {
-    children: any; // ReactNode is the type for children in React
+    children: React.ReactNode;
+    initialLoggedIn?: boolean;
 }
 
 // Create the context
 export const UserContext = createContext<UserContextType>({
     isLoggedIn: false,
-    setIsLoggedIn: () => {}
+    setIsLoggedIn: () => {},
+    isLoading: true
 });
 
 // Create a provider component
-export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false) 
-    const [isInitialized, setIsInitialized] = useState<boolean>(false); // Tracks if localStorage has been read
+export const UserProvider: React.FC<UserProviderProps> = ({ 
+    children,
+    initialLoggedIn = false
+}) => {
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(initialLoggedIn);
+    const [isLoading, setIsLoading] = useState<boolean>(!initialLoggedIn); // Only loading if no initial state
     
-    // Retrieve the stored value during initialization
     useEffect(() => {
-        // Only run this effect on initial mount to read from localStorage
-        const storedValue = localStorage.getItem("isLoggedIn");
-        if (storedValue !== null) {
+        // If we have initial state from server, trust it and don't verify again immediately
+        if (initialLoggedIn) {
+            setIsLoading(false);
+            return;
+        }
+        
+        // Only verify if we don't have initial state
+        const verifyAuthStatus = async () => {
             try {
-                const parsedValue = JSON.parse(storedValue);
-                setIsLoggedIn(parsedValue);
+                const response = await fetch('/api/auth/status', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const { isLoggedIn: authStatus } = await response.json();
+                    setIsLoggedIn(authStatus);
+                } else {
+                    console.warn(`Auth status API returned: ${response.status}`)
+                    setIsLoggedIn(false);
+                }
             } catch (error) {
-                // If parsing fails, default to false
+                console.error("Error verifying authentication:", error);
                 setIsLoggedIn(false);
+            } finally {
+                setIsLoading(false);
             }
-        }
-        setIsInitialized(true)
-    }, [])
-
-    useEffect(() => {
-        if (isInitialized) {
-            localStorage.setItem('isLoggedIn', JSON.stringify(isLoggedIn));
-        }
-    }, [isLoggedIn, isInitialized]);
-
-    const value: UserContextType = { isLoggedIn, setIsLoggedIn }
+        };
+        
+        verifyAuthStatus();
+    }, [initialLoggedIn]);
+    
+    const value: UserContextType = { 
+        isLoggedIn, 
+        setIsLoggedIn,
+        isLoading
+    };
+    
     return (
         <UserContext.Provider value={value}>
             {children}

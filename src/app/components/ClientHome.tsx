@@ -1,41 +1,18 @@
-"use client";
-import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
-import { useRouter } from 'next/navigation';
 import Image from "next/image";
+import { ClientHomeActions } from "./ClientHomeActions";
 import handImg from "../../../public/images/home/hands_clipart.webp";
 import codeImg from "../../../public/images/home/code_clipart_clean.webp";
-import collabImg from "../../../public//images/home/collab_whiteboard.webp";
+import collabImg from "../../../public/images/home/collab_whiteboard.webp";
 
 // https://medium.com/@velja/token-refresh-with-axios-interceptors-for-a-seamless-authentication-experience-854b06064bde
 export const ClientHome: React.FC<any> = ({}) => {
-    const { isLoggedIn, setIsLoggedIn} = useContext(UserContext);
-
-    const router = useRouter();
-    const handleCTA = () => {
-        if (isLoggedIn) {
-          router.push('/create-project');
-        } else {
-          router.push('/auth/register');
-        }
-      };
     return (
         <div id="wrapper" className="w-full overflow-x-hidden">
             <div id="section-intro" className="text-center min-h-[calc(100vh-96px)] content-center">
                 <div id="intro-content" className="w-full min-w-min md:px-64 px-12 text-left">
                     <h1 className="text-5xl text-slate-100 font-bold mb-4">Code, Learn, and Grow with AI-Guided Projects</h1>
                     <p className="text-lg text-slate-300 mb-8">Join now to start exploring tech careers through project-based learning.</p>
-                    <button 
-                        onClick={handleCTA} 
-                        className="bg-primary-300 border border-primary-200 hover:bg-primary-100 text-slate-300 text-sm font-bold py-2 px-4 rounded-full transition duration-300"
-                    >
-                        {isLoggedIn ? 'Create a Project' : 'Create an Account'}
-                    </button>
-                    {!isLoggedIn && (
-                        <p className="mt-4 text-slate-300">
-                            Already have an account? <a href="/auth/login" className="text-blue-400 hover:underline">Login</a>
-                        </p>
-                    )}
+                    <ClientHomeActions />
                 </div>
             </div>
             <div id="section-one" className="flex flex-col w-full">
@@ -141,12 +118,7 @@ export const ClientHome: React.FC<any> = ({}) => {
                                 </p>
                             </div>
                         </section>
-                        <button 
-                            onClick={handleCTA} 
-                            className="bg-secondary-100 border border-secondary-200 hover:bg-secondary-200 text-slate-200 text-sm font-bold py-2 px-4 mb-3 rounded-full transition duration-300"
-                        >
-                            {isLoggedIn ? 'Create a Project' : 'Create an Account'}
-                        </button>
+                        <ClientHomeActions />
                     </div>
                 </div>
             </div>
@@ -161,12 +133,16 @@ export const ClientHome: React.FC<any> = ({}) => {
                             <input 
                                 type="text" 
                                 placeholder="Name" 
+                                id="name"
+                                autoComplete="on"
                                 className="w-full p-2 rounded-md bg-primary-200 border border-primary-300 text-slate-200 placeholder-slate-400 focus:outline-none focus:border-primary-100"
                             />
                         </div>
                         <div className="flex-1">
                             <input 
-                                type="email" 
+                                type="email"
+                                id="email" 
+                                autoComplete="on"
                                 placeholder="Email" 
                                 className="w-full p-2 rounded-md bg-primary-200 border border-primary-300 text-slate-200 placeholder-slate-400 focus:outline-none focus:border-primary-100"
                             />
@@ -176,6 +152,7 @@ export const ClientHome: React.FC<any> = ({}) => {
                     {/* Row 2: Message */}
                     <div className="mb-4">
                         <textarea 
+                            id="message"
                             placeholder="Your message" 
                             rows={4}
                             className="w-full p-2 rounded-md bg-primary-200 border border-primary-300 text-slate-200 placeholder-slate-400 focus:outline-none focus:border-primary-100"
@@ -187,7 +164,6 @@ export const ClientHome: React.FC<any> = ({}) => {
                         <button 
                             type="submit"
                             className="bg-primary-200 border border-primary-300 hover:bg-primary-100 text-slate-200 text-sm font-bold py-2 px-4 rounded-full transition duration-300"
-                            disabled={!isLoggedIn}
                         >
                             Send Message
                         </button>
