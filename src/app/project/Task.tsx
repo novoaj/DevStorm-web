@@ -6,7 +6,6 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import * as Dialog from "@radix-ui/react-dialog";
 import Cross from '../components/Cross';
 import { toast } from 'sonner';
-import { useTasks } from '../context/TaskContext';
 import { MoreHoriz } from '@mui/icons-material';
 import Select from "react-select";
 
@@ -19,12 +18,13 @@ interface TaskProps {
         status: number; // 1->Todo, 2: In Progress, 3: Complete
     };
     index: number;
+    onUpdate: (taskId: number, description: string) => Promise<void>;
+    onDelete: (taskId: number) => Promise<void>;
 }
 
-const Task: React.FC<TaskProps> = ({ task, index }) => {
+const Task: React.FC<TaskProps> = ({ task, index, onUpdate, onDelete }) => {
     const [content, setContent] = useState(task.description);
     const [isEdited, setIsEdited] = useState(false);
-    const { updateTaskContent, deleteTask } = useTasks();
     const taskStatus : any  = {1 : "Todo", 2: "In Progress", 3 : "Complete"};
     // edit task popup - select task status
     const [userChoice, setUserChoice] = useState({}); // 
@@ -65,7 +65,7 @@ const Task: React.FC<TaskProps> = ({ task, index }) => {
 
     const handleSubmit = async () => {
         try {
-            await updateTaskContent(task.id, content);
+            await onUpdate(task.id, content);
             toast.success("Task updated successfully");
         } catch (error) {
             console.error(error);
@@ -75,7 +75,7 @@ const Task: React.FC<TaskProps> = ({ task, index }) => {
 
     const handleDelete = async () => {
         try {
-            await deleteTask(task.id);
+            await onDelete(task.id);
             toast.success("Task deleted successfully");
         } catch (error) {
             console.error(error);
@@ -83,7 +83,7 @@ const Task: React.FC<TaskProps> = ({ task, index }) => {
         }
     }
     return (
-        <Draggable key={task.id} draggableId={task.description} index={index}>
+        <Draggable draggableId={task.id.toString()} index={index}>
             {(provided) => (
                 <div className="flex flex-row justify-between mb-2 p-2 border border-primary-200 rounded text-slate-300 hover:text-slate-100 bg-primary-400">
                     <li
@@ -102,7 +102,7 @@ const Task: React.FC<TaskProps> = ({ task, index }) => {
                             <Dialog.Content className="p-6 fixed bg-primary-400 border border-primary-200 rounded-md top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 max-w-450 max-h-4/5 text-slate-100">
                                 <Dialog.Title className="m-0 font-semibold text-xl text-slate-100">Edit Task</Dialog.Title>
                                 <Dialog.Description className="mt-3 mb-6 text-md text-slate-300">
-                                    Edit the task's content or delete the task. If you don't wish to make changes, close out of this popup by pressing cancel.
+                                    Edit the task&#39;s content or delete the task. If you don&#39;t wish to make changes, close out of this popup by pressing cancel.
                                 </Dialog.Description>
                                 <fieldset className="flex gap-4 items-center mb-2">
                                     <label className="text-md bg-primary-400 w-1/3 text-left text-slate-300" htmlFor="description">

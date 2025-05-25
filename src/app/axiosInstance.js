@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { fetchCSRFAccess, fetchCSRFToken } from './actions/actions';
-// https://medium.com/@velja/token-refresh-with-axios-interceptors-for-a-seamless-authentication-experience-854b06064bde
+
 let isRefreshing = false;
 let refreshSubscribers = [];
 
@@ -11,12 +11,14 @@ const axiosInstance = axios.create({
   },
   withCredentials: true,
 });
+
 const subscribeTokenRefresh = (cb) => refreshSubscribers.push(cb);
 
 const onTokenRefreshed = (token) => {
   refreshSubscribers.map(cb => cb(token));
   refreshSubscribers = [];
 };
+
 axiosInstance.interceptors.request.use(async (request) => {
   const csrfToken = await fetchCSRFAccess();
   if (csrfToken) {
@@ -53,7 +55,7 @@ axiosInstance.interceptors.response.use(
                     await refreshInstance.post("/token/refresh", {});
                 } catch (refreshError) {
                     if (refreshError.response?.status === 401) {
-                      localStorage.clear();
+                      // Removed localStorage.clear() - cookies handle auth state now
                       window.location.href = "/auth/login";
                       return Promise.reject(new Error("Session expired. Please login again."))
                     }
@@ -67,7 +69,7 @@ axiosInstance.interceptors.response.use(
                 originalRequest.headers['X-CSRF-TOKEN'] = newCsrfAccess;
                 return axiosInstance(originalRequest);
             } catch (error) {
-                localStorage.removeItem("isLoggedIn");
+                // Removed localStorage.removeItem("isLoggedIn") - cookies handle auth state now
                 window.location.href = "/auth/login";
                 return Promise.reject(error);
             } finally {

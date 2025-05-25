@@ -3,6 +3,7 @@ import img1 from "../../../public/images/about_content_1.webp";
 import img2 from "../../../public/images/about_content_2.webp";
 import img3 from "../../../public/images/about_content_3.webp";
 import Card from "./Card";
+import Image from "next/image";
 
 interface Image {
     src: string;
@@ -17,8 +18,15 @@ const images: Image[] = [
 const About: React.FC = () => {
     return (
         <div className="min-h-screen container mx-auto text-slate-200 justify-items-center lg:w-4/5 xl:w-4/5 2xl:w-4/5 z-0">
-            <div className="relative w-full h-min-content xl:w-4/5 2xl:w-4/5 mx-auto justify-self-center bg-blend-color-burn">
-                <img src={header.src} alt="About Us Header Image" className="w-full object-cover" />
+            <div className="relative w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] xl:w-4/5 2xl:w-4/5 mx-auto justify-self-center">
+                <Image 
+                    src={header} 
+                    alt="About Us Header Image" 
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 75vw"
+                    className="object-cover"
+                    priority
+                    />
                 <div className="absolute inset-0 bg-black bg-opacity-65 flex items-center justify-center">
                     <h1 className="text-4xl font-bold text-slate-200">About DevStorm</h1>
                 </div>
@@ -44,7 +52,7 @@ const About: React.FC = () => {
                     </div>
                 </div>
             </div>
-            <div className="grid items-center align-center grid-cols-1 md:grid-cols-3 gap-4 mt-12 xl:w-4/5 2xl:w-4/5 mx-auto">
+            <div className="flex flex-row items-center align-center grid-cols-1 md:grid-cols-3 gap-4 mt-12 xl:w-4/5 2xl:w-4/5 mx-auto">
                 {images.map((img, index) => (
                     <Card key={index} imgSrc={img.src} title={img.title} />
                 ))}

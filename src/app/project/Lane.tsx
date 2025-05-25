@@ -3,41 +3,38 @@ import React, { useState } from 'react';
 import { Droppable } from "@hello-pangea/dnd";
 import Task from './Task';
 import AddIcon from '@mui/icons-material/Add';
-import { useRouter } from 'next/navigation';
 import * as Dialog from "@radix-ui/react-dialog";
-import Cross from '../components/Cross';
-import { useTasks } from '../context/TaskContext';
 
 interface Task {
     id: number;
     pid: number;
     description: string;
     priority: number;
-    status: number; // 1->Todo, 2: In Progress, 3: Complete
-}
-interface TaskLanes {
-    "Todo": Task[];
-    "In Progress": Task[];
-    "Completed": Task[];
+    status: number;
 }
 
 interface LaneProps {
     title: string;
-    project: string;
+    pid: string;
+    tasks: Task[];
+    onAddTask: (description: string, status: number) => Promise<void>;
+    onUpdateTask: (taskId: number, description: string) => Promise<void>;
+    onDeleteTask: (taskId: number) => Promise<void>;
 }
 
-const Lane: React.FC<LaneProps> = ({ title, project }) => {
-    const rows = ["Todo", "In Progress", "Completed"]
+const Lane: React.FC<LaneProps> = ({ 
+    title, 
+    pid, 
+    tasks, 
+    onAddTask, 
+    onUpdateTask, 
+    onDeleteTask 
+}) => {
     const [taskDescription, setTaskDescription] = useState("");
-    const { tasks, addTask } = useTasks();
-    const laneTasks = tasks[title as keyof typeof tasks];
-
-
-    const router = useRouter();
 
     const handleAddTask = async () => {
         const status = ["Todo", "In Progress", "Completed"].indexOf(title) + 1;
-        await addTask(project, taskDescription, status);
+        await onAddTask(taskDescription, status);
         setTaskDescription("");
     }
 
@@ -46,7 +43,7 @@ const Lane: React.FC<LaneProps> = ({ title, project }) => {
             <div className="flex flex-row justify-between mb-2">
                 <div className="flex flex-row text-center items-center">
                     <h2 className="text-xl font-semibold text-slate-200 w-fit pr-5">{title}</h2>
-                    <p className="text-slate-400">{laneTasks.length}</p>
+                    <p className="text-slate-400">{tasks.length}</p>
                 </div>
                 <Dialog.Root>
                     <Dialog.Trigger asChild>
@@ -85,17 +82,11 @@ const Lane: React.FC<LaneProps> = ({ title, project }) => {
                                             Submit
                                         </button>
                                     </Dialog.Close>
-                                    <Dialog.Close asChild>
-                                        <button className="h-5 w-5 inline-flex items-center justify-center absolute top-5 right-5 hover:border border-primary-200 rounded" aria-label="Close">
-                                            <Cross />
-                                        </button>
-                                    </Dialog.Close>
                                 </div>
                             </Dialog.Content>
                         </div>
                     </Dialog.Portal>
                 </Dialog.Root>
-                
             </div>       
             <Droppable droppableId={title}>
                 {(provided) => (
@@ -105,8 +96,14 @@ const Lane: React.FC<LaneProps> = ({ title, project }) => {
                             ref={provided.innerRef}
                             className="min-h-full"
                         >
-                            {laneTasks.map((task, index) => (
-                                <Task key={index} task={task} index={index}/>
+                            {tasks.map((task, index) => (
+                                <Task 
+                                    key={task.id} 
+                                    task={task} 
+                                    index={index}
+                                    onUpdate={onUpdateTask}
+                                    onDelete={onDeleteTask}
+                                />
                             ))}
                             {provided.placeholder}
                         </ul>
