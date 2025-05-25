@@ -6,7 +6,6 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import * as Dialog from "@radix-ui/react-dialog";
 import Cross from '../components/Cross';
 import { toast } from 'sonner';
-import { useTasks } from '../context/TaskContext';
 import { MoreHoriz } from '@mui/icons-material';
 import Select from "react-select";
 
@@ -19,12 +18,13 @@ interface TaskProps {
         status: number; // 1->Todo, 2: In Progress, 3: Complete
     };
     index: number;
+    onUpdate: (taskId: number, description: string) => Promise<void>;
+    onDelete: (taskId: number) => Promise<void>;
 }
 
-const Task: React.FC<TaskProps> = ({ task, index }) => {
+const Task: React.FC<TaskProps> = ({ task, index, onUpdate, onDelete }) => {
     const [content, setContent] = useState(task.description);
     const [isEdited, setIsEdited] = useState(false);
-    const { updateTaskContent, deleteTask } = useTasks();
     const taskStatus : any  = {1 : "Todo", 2: "In Progress", 3 : "Complete"};
     // edit task popup - select task status
     const [userChoice, setUserChoice] = useState({}); // 
@@ -65,7 +65,7 @@ const Task: React.FC<TaskProps> = ({ task, index }) => {
 
     const handleSubmit = async () => {
         try {
-            await updateTaskContent(task.id, content);
+            await onUpdate(task.id, content);
             toast.success("Task updated successfully");
         } catch (error) {
             console.error(error);
@@ -75,7 +75,7 @@ const Task: React.FC<TaskProps> = ({ task, index }) => {
 
     const handleDelete = async () => {
         try {
-            await deleteTask(task.id);
+            await onDelete(task.id);
             toast.success("Task deleted successfully");
         } catch (error) {
             console.error(error);
@@ -83,7 +83,7 @@ const Task: React.FC<TaskProps> = ({ task, index }) => {
         }
     }
     return (
-        <Draggable key={task.id} draggableId={task.description} index={index}>
+        <Draggable draggableId={task.id.toString()} index={index}>
             {(provided) => (
                 <div className="flex flex-row justify-between mb-2 p-2 border border-primary-200 rounded text-slate-300 hover:text-slate-100 bg-primary-400">
                     <li
