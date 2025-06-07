@@ -60,20 +60,53 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
     } catch (err) {
       console.error("Error adding task", err);
       notifications.error.taskAddFailed();
-      throw err; // Re-throw so component can handle it
+      throw err;
     }
   };
 
   const updateTaskStatus = async (taskId: number, newStatus: number, pid: string) => {
-    // 🔥 FIX: Just do the API call - optimistic update handled in component
-    await axiosInstance.put(`/task/${taskId}/update-status`, {
-      status: newStatus,
-    });
-    await invalidateTasks(pid);
+    const originalTasks = tasks;
+    
+    try {
+      setTasks((prevTasks) => {
+        const updatedTasks = { ...prevTasks };
+        let taskToMove: Task | null = null;
+        
+        // remove task from current lane
+        for (const lane of Object.keys(updatedTasks) as (keyof TaskLanes)[]) {
+          const taskIndex = updatedTasks[lane].findIndex(task => task.id === taskId);
+          if (taskIndex !== -1) {
+            taskToMove = { ...updatedTasks[lane][taskIndex], status: newStatus };
+            updatedTasks[lane] = updatedTasks[lane].filter(task => task.id !== taskId);
+            break;
+          }
+        }
+        
+        // Add task to new lane
+        if (taskToMove) {
+          const newLane = newStatus === 1 ? "Todo" : newStatus === 2 ? "In Progress" : "Completed";
+          updatedTasks[newLane] = [...updatedTasks[newLane], taskToMove]
+            .sort((a, b) => a.priority - b.priority);
+        }
+        
+        return updatedTasks;
+      });
+
+      await axiosInstance.put(`/task/${taskId}/update-status`, {
+        status: newStatus,
+      });
+      
+      await invalidateTasks(pid);
+    } catch (err) {
+      // Revert on failure
+      setTasks(originalTasks);
+      console.error("Error updating task status", err);
+      notifications.error.taskUpdateFailed();
+      throw err;
+    }
   };
 
   const deleteTask = async (taskId: number, pid: string) => {
-    // Store original state for reversion
     const originalTasks = tasks;
     
     try {
@@ -101,7 +134,6 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
   };
 
   const updateTaskContent = async (taskId: number, newDescription: string) => {
-    // Store original state for reversion
     const originalTasks = tasks;
     
     try {

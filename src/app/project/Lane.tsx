@@ -100,6 +100,7 @@ const Lane: React.FC<LaneProps> = ({ title, pid }) => {
                                 <Task 
                                     key={task.id} 
                                     task={task} 
+                                    pid={pid}
                                     index={index}
                                 />
                             ))}
