@@ -24,7 +24,7 @@ export function middleware(request: NextRequest) {
   const refreshToken = request.cookies.get('csrf_refresh_token');
   const hasAuthCookies = !!accessToken || !!refreshToken;
   
-  console.log(`Middleware: ${pathname}, hasAuthCookies: ${hasAuthCookies}`);
+  // console.log(`Middleware: ${pathname}, hasAuthCookies: ${hasAuthCookies}`);
   
   // Protect routes that require authentication
   if (protectedPaths.some(path => pathname.startsWith(path))) {

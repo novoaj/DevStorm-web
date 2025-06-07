@@ -12,7 +12,7 @@ const Sidebar = ({ isOpen, toggle, } : { isOpen: boolean; toggle: () => void; })
 
   const handleLogout = async() => {
     try{
-        await axiosInstance.post(process.env.NEXT_PUBLIC_API_URL + "/logout", {}, 
+        await axiosInstance.post(process.env.NEXT_PUBLIC_API_URL + "/logout", {},  // TODO use Node server as proxy
         {
             withCredentials: true,
         })

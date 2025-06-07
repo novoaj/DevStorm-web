@@ -71,7 +71,7 @@ const CreateProject : React.FC<any>  = () => {
             });
             return;
         }
-        let url = process.env.NEXT_PUBLIC_API_URL + "/api/prompt";
+        let url = process.env.NEXT_PUBLIC_API_URL + "/api/prompt"; // TODO use Node server as proxy
         try{
             const response = await axiosInstance.post(url, {
                 role: userSelections.roles.map(role => role.value),
@@ -107,7 +107,7 @@ const CreateProject : React.FC<any>  = () => {
     }
 
     const handleSaveProject = async () => {
-        let url = process.env.NEXT_PUBLIC_API_URL + "/project/create";
+        let url = process.env.NEXT_PUBLIC_API_URL + "/project/create"; // TODO use Node server as proxy
         console.log(url);
         try {
             const response = await axiosInstance.post(url, {

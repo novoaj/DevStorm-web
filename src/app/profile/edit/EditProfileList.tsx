@@ -3,64 +3,65 @@ import EditProfileCard from "./EditProfileCard";
 import EditPasswordPopup from "./popups/EditPasswordPopup";
 import EditUsernamePopup from "./popups/EditUsernamePopup";
 import { ProfileItem, User } from "./ProfileInterfaces";
-import axiosInstance from "@/app/axiosInstance";
+import { updateUsername, updatePassword } from "../../actions/profile-actions";
 
 interface EditProfileListProps {
     user: User;
 }
+
 const EditProfileList: React.FC<EditProfileListProps> = ({user}) => {
     // update username on the backend
     const handleUpdateUsername = async(formData: any) => {
         if (user && user.username !== formData.username){
-            // update username
             if (formData.username.length < 5) {
                 toast.error("New username must be 5+ characters")
+                return;
             }
-            try{
-                let url = process.env.NEXT_PUBLIC_API_URL + `/user/update-username`;
-                let response = await axiosInstance.put(url, {
-                    new_username: formData.username,
-                    current_password: formData.password
-                })
-                if (response.status === 200) {
-                    toast.success("Changed Username")
+            
+            try {
+                const result = await updateUsername(formData.username, formData.password);
+                
+                if (result.success) {
+                    toast.success("Changed Username");
+                } else {
+                    toast.error(result.message || "Failed to change username");
                 }
-            }catch (err) {
+            } catch (err) {
                 console.error(err);
-                toast.error("Error resetting username. This username might be taken. Make sure password is filled in correctly")
+                toast.error("Error resetting username. This username might be taken. Make sure password is filled in correctly");
             }
-        }else{
-            toast.error("Failed to change username.")
+        } else {
+            toast.error("Failed to change username.");
         }
     }
 
-    // update password on the backend
+    // server action for password update
     const handleUpdatePassword = async(formData: any) => {
-        // validate password inputs
         const { password, newPassword, newPassword2 } = formData;
+        
         if (newPassword != newPassword2) {
-            toast.error("Error updating password. New passwords must match!")
+            toast.error("Error updating password. New passwords must match!");
             return;
-        }else if (newPassword.length < 6) {
-            toast.error("Error updating password. New password must be at least 6 characters!")
+        } else if (newPassword.length < 6) {
+            toast.error("Error updating password. New password must be at least 6 characters!");
             return;
         }  
         
-        try{
-            let url = process.env.NEXT_PUBLIC_API_URL + `/user/update-password`;
-            let response = await axiosInstance.put(url, {
-                current_password: password,
-                new_password: newPassword,
-            })
-            if (response.status === 200) {
-                toast.success("Changed Password")
+        try {
+            const result = await updatePassword(password, newPassword);
+            
+            if (result.success) {
+                toast.success("Changed Password");
+            } else {
+                toast.error(result.message || "Failed to change password");
             }
-        }catch (err) {
+        } catch (err) {
             console.error(err);
-            toast.error("Error resetting password. Make sure password is filled in correctly")
+            toast.error("Error resetting password. Make sure password is filled in correctly");
         }
     }
-    // Define an array of profile items with the above interface
+
+    // Define an array of profile items
     const profileItems: ProfileItem[] = [
         {
             title: "Edit Username",
@@ -86,6 +87,7 @@ const EditProfileList: React.FC<EditProfileListProps> = ({user}) => {
             handleSubmit: handleUpdatePassword,
         },
     ];
+
     return (
         <>
             {profileItems.map((item, index) => (

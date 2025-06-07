@@ -3,9 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 async function handler(req: NextRequest) {
     const path = req.nextUrl.pathname.replace("/api", "");
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     
-    // 🔥 FIX: Handle auth endpoints differently
     const isAuthEndpoint = path === '/login' || path === '/register' || path === '/confirm';
     
     const accessToken = cookieStore.get("access_token_cookie")?.value;
@@ -26,7 +25,6 @@ async function handler(req: NextRequest) {
         }
     }
 
-    // 🔥 FIX: Different headers for auth vs authenticated endpoints
     const headers: Record<string, string> = {
         "Content-Type": "application/json",
     };
@@ -37,13 +35,12 @@ async function handler(req: NextRequest) {
         headers["X-CSRF-TOKEN"] = csrfAccessToken || "";
     }
 
-    const apiRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`, {
+    const apiRes = await fetch(`${process.env.FLASK_API_URL}${path}`, {
         method: req.method,
         headers,
         body: bodyContent,
     });
 
-    // 🔥 FIX: Only handle token refresh for non-auth endpoints
     if (apiRes.status === 401 && !isAuthEndpoint) {
         const refreshToken = cookieStore.get("refresh_token_cookie")?.value;
         const csrfRefreshToken = cookieStore.get("csrf_refresh_token")?.value;
@@ -53,7 +50,7 @@ async function handler(req: NextRequest) {
         }
 
         const refreshRes = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/token/refresh`,
+            `${process.env.FLASK_API_URL}/token/refresh`,
             {
                 method: "POST",
                 headers: {
@@ -81,7 +78,7 @@ async function handler(req: NextRequest) {
             return new NextResponse("Token refresh failed", { status: 500 });
         }
 
-        const retryRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`, {
+        const retryRes = await fetch(`${process.env.FLASK_API_URL}${path}`, {
             method: req.method,
             headers: {
                 "Content-Type": "application/json",
@@ -104,14 +101,13 @@ async function handler(req: NextRequest) {
         return finalResponse;
     }
 
-    // 🔥 FIX: For login/register, properly forward the Set-Cookie headers
     const response = new NextResponse(apiRes.body, {
         status: apiRes.status,
         statusText: apiRes.statusText,
         headers: apiRes.headers,
     });
 
-    // Forward any Set-Cookie headers from Flask (for login success)
+    // Forward any Set-Cookie headers from Flask
     if (isAuthEndpoint) {
         const setCookieHeaders = apiRes.headers.getSetCookie();
         setCookieHeaders.forEach((cookie) => {

@@ -24,33 +24,7 @@ interface ProjectDashboardProps {
 const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ initialProjects = [] }) => {
     const router = useRouter();
     // Use initial data from server
-    const [projects, setProjects] = useState<Project[]>(initialProjects);
-
-    const handleSeeMore = (projectId : string) => {
-        router.push(`/project?pid=${projectId}`)
-    }
-
-    const handleAddProject = () => {
-        if (projects && projects.length > 0) {
-            toast.warning("You can only have one project in progress at a time.");
-        } else {
-            router.push("/create-project");
-        }
-    }
-
-    const handleDelete = (pid: string) => {
-        axiosInstance.delete(`${process.env.NEXT_PUBLIC_API_URL}/project/${pid}/delete`, {
-            withCredentials: true
-        })
-        .then(response => {
-            toast.success("Successfully deleted project.");
-            setProjects(prevProjects => prevProjects.filter(project => project.id !== pid));
-        })
-        .catch(error => {
-            toast.error("Error deleting project.");
-            console.error("Error deleting project:", error);
-        });
-    }
+    const [projects, setProjects] = useState<Project[]>(initialProjects); // TODO look at how this is working
 
     return (
         <div className="flex-1 mt-5 bg-primary-300 h-96 w-full border border-primary-200 p-5 rounded-md">
