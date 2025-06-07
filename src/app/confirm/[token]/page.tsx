@@ -16,7 +16,7 @@ const ConfirmEmailPage: React.FC = () => {
             const confirmEmail = async () => {
                 try {
                     // Replace with your actual API call
-                    const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + `/confirm/${token}`);
+                    const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + `/confirm/${token}`); // TODO use Node server as proxy
                     if (response) {
                         setConfirmationStatus('Email confirmed successfully!');
                         toast.success("Email confirmed!");

@@ -16,81 +16,13 @@ interface ProfileCardProps {
 const ProfileCard: React.FC<ProfileCardProps> = ({ initialUser }) => {
     // Use initial data from server, fallback to empty state
     const [user, setUser] = useState<User | null>(initialUser || null);
-    const {isLoggedIn, setIsLoggedIn} = useContext(UserContext);
+    const {isLoggedIn, setIsLoggedIn} = useContext(UserContext); // TODO update use of context
     const [formData, setFormData] = useState({
         username: '',
         oldPassword: '',
         newPassword: '',
         newPassword2: '',
     });
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-
-    const router = useRouter();
-
-    const handleUpdateUsername = async() => {
-        if (user && user.username !== formData.username){
-            if (formData.username.length < 5) {
-                toast.error("New username must be 5+ characters")
-                return;
-            }
-            try{
-                let url = process.env.NEXT_PUBLIC_API_URL + `/user/update-username`;
-                let response = await axiosInstance.put(url, {
-                    new_username: formData.username,
-                    current_password: formData.oldPassword
-                })
-                if (response.status === 200) {
-                    toast.success("Reset Username");
-                    // Update local state
-                    setUser(prev => prev ? {...prev, username: formData.username} : null);
-                }
-            }catch (err) {
-                console.error(err);
-                toast.error("Error resetting Username. This username might be taken. Make sure password is filled in correctly")
-            }
-        }
-    }
-
-    const handleLogout = async() => {
-        try{
-            await axiosInstance.post(process.env.NEXT_PUBLIC_API_URL + "/logout", {}, 
-            {
-                withCredentials: true,
-            })
-        
-            setIsLoggedIn(false);
-            toast.success('Logged out');
-            router.replace("/auth/login");
-        }catch (err) {
-            toast.success('Logged out');
-            setIsLoggedIn(false);
-            router.replace("/auth/login");
-        }
-    }
-
-    const editProfilePage = () => {
-        router.push("/profile/edit")
-    }
-
-    const deleteAccount = async() => {
-        try{
-            let url = process.env.NEXT_PUBLIC_API_URL + "/user/delete";
-            await axiosInstance.delete(url);
-            setIsLoggedIn(false);
-            router.replace("/");
-            toast.info("Account deleted!");
-        }catch (error){
-            console.error(error);
-            toast.error("There was a problem deleting your account!");
-        }
-    }
 
     if (!user) {
         return (

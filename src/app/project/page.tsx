@@ -1,8 +1,8 @@
 import React from "react";
 import { redirect } from "next/navigation";
 import { ProjectView } from "./ProjectView";
-import { TaskProvider } from "../context/TaskContext"; // Import the provider
-import { getInitialProjectData, getInitialTasks } from "../actions/data-fetchers"; // Assume you moved fetch logic here
+import { TaskProvider } from "../context/TaskContext";
+import { getInitialProjectData, getInitialTasks } from "../actions/data-fetchers";
 
 interface Task {
     id: number;
@@ -12,12 +12,11 @@ interface Task {
     status: number;
 }
 
-// Organize tasks by status
 function organizeTasks(tasks: Task[]) {
     const organized = {
-        "Todo": [],
-        "In Progress": [],
-        "Completed": []
+        "Todo": [] as Task[],
+        "In Progress": [] as Task[],
+        "Completed": [] as Task[]
     };
     
     tasks.forEach(task => {
@@ -37,29 +36,46 @@ function organizeTasks(tasks: Task[]) {
     return organized;
 }
 
-export default async function ProjectPage({
-  searchParams,
-}: {
-  searchParams: { pid?: string };
-}) {
-  const pid = searchParams.pid;
-  if (!pid) redirect("/profile");
+interface PageProps {
+  searchParams: Promise<{ pid?: string }>
+}
 
-  // Fetch data in parallel on the server (This part was already great!)
-  const [project, tasks] = await Promise.all([
-    getInitialProjectData(pid),
-    getInitialTasks(pid),
-  ]);
+export default async function ProjectPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const pid = params.pid;
 
-  if (!project) redirect("/profile");
+  // validation for missing/invalid PID
+  if (!pid || pid.trim() === '' || isNaN(Number(pid))) {
+    console.log("Invalid or missing PID, redirecting to profile");
+    redirect("/profile");
+  }
 
-  const organizedTasks = organizeTasks(tasks);
+  try {
+    console.log(`Fetching data for project ${pid}...`);
+    
+    const [project, tasks] = await Promise.all([
+      getInitialProjectData(pid),
+      getInitialTasks(pid),
+    ]);
 
-  return (
-    // 1. Wrap the client component in the provider
-    // 2. Pass the server-fetched data as the initial state
-    <TaskProvider initialTasks={organizedTasks}>
-      <ProjectView project={project} pid={pid} />
-    </TaskProvider>
-  );
+    console.log("Project data received:", !!project);
+    console.log("Tasks data received:", tasks?.length || 0);
+
+    if (!project) {
+      console.log("Project not found or access denied, redirecting to profile");
+      redirect("/profile");
+    }
+
+    const organizedTasks = organizeTasks(tasks || []);
+
+    return (
+      <TaskProvider initialTasks={organizedTasks}>
+        <ProjectView project={project} pid={pid} />
+      </TaskProvider>
+    );
+
+  } catch (error) {
+    console.error("Error fetching project data:", error);
+    redirect("/profile");
+  }
 }

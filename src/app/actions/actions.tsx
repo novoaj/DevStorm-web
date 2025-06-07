@@ -4,23 +4,23 @@ import axios from 'axios';
 
 // Your existing actions
 export const fetchCSRFToken = async () => {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     return cookieStore.get("csrf_refresh_token")?.value || "";
 };
 
 export const fetchCSRFAccess = async () => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   return cookieStore.get("csrf_access_token")?.value || "";
 }
 
 export const setToken = async (token : string) => {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     return cookieStore.set("csrf_access_token", token);
 }
 
 // New server actions for authentication checking
 export const checkAuthCookies = async () => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const hasAccessToken = cookieStore.has('csrf_access_token');
   const hasRefreshToken = cookieStore.has('csrf_refresh_token');
   
@@ -29,7 +29,7 @@ export const checkAuthCookies = async () => {
 
 export const getAuthStatus = async () => {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const csrfAccessToken = cookieStore.get("csrf_access_token")?.value;
     const csrfRefreshToken = cookieStore.get("csrf_refresh_token")?.value;
     
@@ -42,7 +42,7 @@ export const getAuthStatus = async () => {
     if (csrfAccessToken) {
       try {
         const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/verify-token`,
+          `${process.env.FLASK_API_URL}/verify-token`,
           {},
           {
             headers: {
@@ -67,7 +67,7 @@ export const getAuthStatus = async () => {
     if (csrfRefreshToken) {
       try {
         const refreshResponse = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/token/refresh`,
+          `${process.env.FLASK_API_URL}/token/refresh`,
           {},
           {
             headers: {
@@ -97,7 +97,7 @@ export const getAuthStatus = async () => {
 
 // Lightweight version that just checks for cookie presence (faster)
 export const hasAuthTokens = async () => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   return {
     hasAccess: cookieStore.has('csrf_access_token'),
     hasRefresh: cookieStore.has('csrf_refresh_token'),

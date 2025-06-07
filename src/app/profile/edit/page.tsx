@@ -3,56 +3,32 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import ltIcon from "../../../../public/images/lt_Icon.png";
 import EditProfileList from "./EditProfileList";
-import { useEffect, useState } from "react";
-import { User } from "./ProfileInterfaces";
-import axiosInstance from "@/app/axiosInstance";
-import { toast } from "sonner";
+import { useUserData } from "../../context/UserDataContext";
 
 const EditProfile = () => {
     const router = useRouter();
+    const { user, loading } = useUserData();
 
     const goBack = () => {
         router.back();
     }
-    const [user, setUser] = useState<User>()
-    // TODO: these are called twice, once in profile, once in this component
-    const formatDate = (dateString: string): string => {
-        const date = new Date(dateString);
-        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: '2-digit' };
-        return date.toLocaleDateString(undefined, options);
-    };
-    function fetchData(url : string){
-        const getData = async() => {
-            try {
-                const response = await axiosInstance.get(url);
-                //console.log(response);
-                if (response){
-                    setUser({
-                        username: response.data.username,
-                        email: response.data.email,
-                        dateJoined: formatDate(response.data.date_joined),
-                        projects: response.data.projects,
-                        projectsCompleted: response.data.projects_completed,
-                    });
-                }
-            }catch (e){
-                setUser({
-                    username: "",
-                    email: "",
-                    dateJoined: "",
-                    projects: 0,
-                    projectsCompleted:0,
-                });
-                // router.replace("/");
-                toast.info("Error loading profile details");
-                }
-        }  
-        getData(); 
+
+    if (loading) {
+        return (
+            <div className="flex flex-col min-h-screen bg-primary-300 text-slate-200 justify-center items-center">
+                <div className="animate-pulse">Loading profile...</div>
+            </div>
+        );
     }
-    useEffect(() => {
-        let url = process.env.NEXT_PUBLIC_API_URL + "/user/info";
-        fetchData(url);
-    }, [])
+
+    if (!user) {
+        return (
+            <div className="flex flex-col min-h-screen bg-primary-300 text-slate-200 justify-center items-center">
+                <div>Failed to load profile data</div>
+            </div>
+        );
+    }
+
     return (
         <>
             <div className="flex flex-col sm:w-5/6 xs:w-5/6 md:w-3/4 lg:w-4/5 xl:w-4/5 2xl:w-4/5 min-h-screen bg-primary-300 text-slate-200 justify-self-center justify-start mx-auto">
@@ -72,10 +48,9 @@ const EditProfile = () => {
                 </div>
                 <div className="ml-3">
                     <p className="text-3xl mb-5">Edit Profile</p>
-                    {user && <EditProfileList user={user} />}
+                    <EditProfileList user={user} />
                 </div>
             </div>
-           
         </>
     );
 }

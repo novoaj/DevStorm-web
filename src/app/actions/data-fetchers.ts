@@ -1,23 +1,20 @@
-import { cookies } from "next/headers";
+"use server"
+import { cookies, headers } from "next/headers";
 
-const getCookieString = () => {
-  const cookieStore = cookies();
+const getCookieString = async() => {
+  const cookieStore = await cookies();
   let cookieString = "";
   cookieStore.getAll().forEach((cookie) => {
     cookieString += `${cookie.name}=${cookie.value}; `;
   });
-  return cookieString;
+  return cookieString.trim();
 };
 
 async function getUserData() {
-  try {
-    const cookie = getCookieString();
-    
+  try {    
     const response = await fetch(`${process.env.NODE_SERVER_URL}/api/user/info`, {
       method: 'GET',
-      headers: {
-        Cookie: cookie,
-      },
+      headers: await headers(),
       next: {
         revalidate: 120, // revalidate every 30 seconds
         tags: ["user-data"]
@@ -53,14 +50,10 @@ async function getUserData() {
 }
 
 async function getUserProjects() {
-  try {
-    const cookie = getCookieString();
-    
+  try {    
     const response = await fetch(`${process.env.NODE_SERVER_URL}/api/project/by-user`, {
       method: 'GET',
-      headers: {
-        Cookie: cookie,
-      },
+      headers: await headers(),
       next: {
         revalidate: 120,
         tags: ["user-projects"]
@@ -80,15 +73,17 @@ async function getUserProjects() {
   }
 }
 
-// Fix the other functions too
 async function getInitialProjectData(pid: string) {
     try {
-        const cookie = getCookieString();
+        const cookie = await getCookieString();
+        
+        console.log(`Making request to /api/project/${pid}`);
         
         const response = await fetch(`${process.env.NODE_SERVER_URL}/api/project/${pid}`, {
             method: 'GET',
             headers: {
-                Cookie: cookie,
+                'Cookie': cookie,
+                'Content-Type': 'application/json',
             },
             next: {
               revalidate: 300,
@@ -96,44 +91,70 @@ async function getInitialProjectData(pid: string) {
             }
         });
 
-        if (!response.ok) {
-            console.error(`Error fetching project data: ${response.status} - ${response.statusText}`);
+        console.log(`Project API response status: ${response.status}`);
+
+        if (response.status === 404) {
+            console.log("Project not found (404)");
+            return null; 
+        }
+        
+        if (response.status === 403) {
+            console.log("Access denied to project (403)");
             return null;
+        }
+        
+        if (!response.ok) {
+            console.error(`Unexpected error: ${response.status} - ${response.statusText}`);
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
 
         const data = await response.json();
+        console.log("Project data successfully fetched");
         return data;
+        
     } catch (error) {
         console.error('Failed to fetch project data:', error);
-        return null;
+        throw error;
     }
 }
 
 async function getInitialTasks(pid: string) {
     try {
-        const cookie = getCookieString();
+        const cookie = await getCookieString();
+        
+        console.log(`Making request to /api/task/${pid}`);
         
         const response = await fetch(`${process.env.NODE_SERVER_URL}/api/task/${pid}`, {
             method: 'GET',
             headers: {
-                Cookie: cookie,
+                'Cookie': cookie,
+                'Content-Type': 'application/json',
             },
             next: { 
-                revalidate: 60, // 1 minute
+                revalidate: 60,
                 tags: [`tasks-${pid}`]
             }
         });
 
+        console.log(`Tasks API response status: ${response.status}`);
+
+        if (response.status === 404) {
+            console.log("Tasks not found, returning empty array");
+            return []; // No tasks yet, that's okay
+        }
+
         if (!response.ok) {
             console.error(`Error fetching tasks: ${response.status} - ${response.statusText}`);
-            return [];
+            return []; // Return empty array for tasks, don't fail the whole page
         }
 
         const data = await response.json();
+        console.log(`Successfully fetched ${data?.length || 0} tasks`);
         return data || [];
+        
     } catch (error) {
         console.error('Failed to fetch tasks:', error);
-        return [];
+        return []; // Return empty array, don't fail the whole page for tasks
     }
 }
 

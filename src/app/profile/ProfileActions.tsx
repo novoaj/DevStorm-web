@@ -1,17 +1,18 @@
 "use client"
-import React, { useContext } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { UserContext } from '../context/UserContext';
+import { useUser } from '../context/UserContext';
 import axiosInstance from "../axiosInstance";
+import { deleteAccount } from '../actions/profile-actions';
 
 export const ProfileActions: React.FC = () => {
-    const { setIsLoggedIn } = useContext(UserContext);
+    const { setIsLoggedIn } = useUser();
     const router = useRouter();
 
     const handleLogout = async() => {
         try {
-            await axiosInstance.post(process.env.NEXT_PUBLIC_API_URL + "/logout", {}, {
+            await axiosInstance.post("/logout", {}, {
                 withCredentials: true,
             });
         
@@ -29,13 +30,18 @@ export const ProfileActions: React.FC = () => {
         router.push("/profile/edit");
     }
 
-    const deleteAccount = async() => {
+    // server action for account deletion
+    const handleDeleteAccount = async() => {
         try {
-            let url = process.env.NEXT_PUBLIC_API_URL + "/user/delete";
-            await axiosInstance.delete(url);
-            setIsLoggedIn(false);
-            router.replace("/");
-            toast.info("Account deleted!");
+            const result = await deleteAccount();
+            
+            if (result.success) {
+                setIsLoggedIn(false);
+                router.replace("/");
+                toast.info("Account deleted!");
+            } else {
+                toast.error(result.message || "There was a problem deleting your account!");
+            }
         } catch (error) {
             console.error(error);
             toast.error("There was a problem deleting your account!");

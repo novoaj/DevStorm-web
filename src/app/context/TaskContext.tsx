@@ -11,6 +11,7 @@ interface Task {
   priority: number;
   status: number;
 }
+
 interface TaskLanes {
   "Todo": Task[];
   "In Progress": Task[];
@@ -68,11 +69,12 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({
     const originalTasks = tasks;
     
     try {
+      // Optimistic update
       setTasks((prevTasks) => {
         const updatedTasks = { ...prevTasks };
         let taskToMove: Task | null = null;
         
-        // remove task from current lane
+        // Remove task from current lane
         for (const lane of Object.keys(updatedTasks) as (keyof TaskLanes)[]) {
           const taskIndex = updatedTasks[lane].findIndex(task => task.id === taskId);
           if (taskIndex !== -1) {
