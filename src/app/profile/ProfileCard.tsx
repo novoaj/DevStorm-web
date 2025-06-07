@@ -103,7 +103,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ initialUser }) => {
     }
 
     return (
-        <div className="container h-96 mt-5 w-full bg-primary-300 border border-primary-200 text-slate-100 shadow-md rounded-md p-5">
+        <div className="flex flex-col h-96 mt-5 w-full bg-primary-300 border border-primary-200 text-slate-100 shadow-md rounded-md p-5">
             <div className="text-center mx-auto mb-5">
                 <div className="flex justify-center">
                     <Image 

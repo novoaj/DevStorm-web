@@ -3,41 +3,7 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import ProfileCard from './ProfileCard';
 import ProjectDashboard from './ProjectDashboard';
-import { serverFetchWithRefresh } from '../actions/actions';
-
-// Helper functions for server-side data fetching
-async function getUserData() {
-  try {
-    const response = await serverFetchWithRefresh(`${process.env.NEXT_PUBLIC_API_URL}/user/info`, 'GET');
-
-    const formatDate = (dateString: string): string => {
-      const date = new Date(dateString);
-      const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: '2-digit' };
-      return date.toLocaleDateString(undefined, options);
-    };
-
-    return {
-      username: response.data.username,
-      email: response.data.email,
-      dateJoined: formatDate(response.data.date_joined),
-      projects: response.data.projects,
-      projectsCompleted: response.data.projects_completed,
-    };
-  } catch (error) {
-    console.error('Failed to fetch user data:', error);
-    return null;
-  }
-}
-
-async function getUserProjects() {
-  try {
-    const response = await serverFetchWithRefresh(`${process.env.NEXT_PUBLIC_API_URL}/project/by-user`, 'GET');
-    return response.data || [];
-  } catch (error) {
-    console.error('Failed to fetch projects:', error);
-    return [];
-  }
-}
+import { getUserData, getUserProjects } from '../actions/data-fetchers';
 
 // Server Component
 const ProfilePage: React.FC = async () => {
@@ -52,7 +18,7 @@ const ProfilePage: React.FC = async () => {
     // Fetch data in parallel on the server
     const [userData, projectsData] = await Promise.allSettled([
         getUserData(),
-        getUserProjects()
+        getUserProjects() 
     ]);
 
     const user = userData.status === 'fulfilled' ? userData.value : null;

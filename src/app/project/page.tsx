@@ -1,8 +1,8 @@
-import React from 'react';
-import { redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
-import { ProjectView } from './ProjectView';
-import { serverFetchWithRefresh } from '../actions/actions';
+import React from "react";
+import { redirect } from "next/navigation";
+import { ProjectView } from "./ProjectView";
+import { TaskProvider } from "../context/TaskContext"; // Import the provider
+import { getInitialProjectData, getInitialTasks } from "../actions/data-fetchers"; // Assume you moved fetch logic here
 
 interface Task {
     id: number;
@@ -10,36 +10,6 @@ interface Task {
     description: string;
     priority: number;
     status: number;
-}
-
-interface Project {
-    id: string;
-    languages: string[];
-    title: string;
-    steps: string[];
-    summary: string;
-    username: string;
-}
-
-// Server functions for parallel data fetching
-async function getProjectData(pid: string) {
-    try {
-        const response = await serverFetchWithRefresh(`${process.env.NEXT_PUBLIC_API_URL}/project/${pid}`, 'GET');
-        return response.data;
-    } catch (error) {
-        console.error('Failed to fetch project data:', error);
-        return null;
-    }
-}
-
-async function getProjectTasks(pid: string) {
-    try {
-        const response = await serverFetchWithRefresh(`${process.env.NEXT_PUBLIC_API_URL}/task/${pid}`, 'GET');
-        return response.data || [];
-    } catch (error) {
-        console.error('Failed to fetch tasks:', error);
-        return [];
-    }
 }
 
 // Organize tasks by status
@@ -67,46 +37,29 @@ function organizeTasks(tasks: Task[]) {
     return organized;
 }
 
-// Server Component
-export default async function ProjectPage({ 
-    searchParams 
-}: { 
-    searchParams: { pid?: string } 
+export default async function ProjectPage({
+  searchParams,
+}: {
+  searchParams: { pid?: string };
 }) {
-    const pid = searchParams.pid;
-    
-    if (!pid) {
-        redirect('/profile');
-    }
+  const pid = searchParams.pid;
+  if (!pid) redirect("/profile");
 
-    // Check auth
-    const cookieStore = cookies();
-    const hasAuthCookies = cookieStore.has('csrf_access_token') || cookieStore.has('csrf_refresh_token');
-    
-    if (!hasAuthCookies) {
-        redirect('/auth/login');
-    }
+  // Fetch data in parallel on the server (This part was already great!)
+  const [project, tasks] = await Promise.all([
+    getInitialProjectData(pid),
+    getInitialTasks(pid),
+  ]);
 
-    // Fetch data in parallel on the server
-    const [projectResult, tasksResult] = await Promise.allSettled([
-        getProjectData(pid),
-        getProjectTasks(pid)
-    ]);
+  if (!project) redirect("/profile");
 
-    const project = projectResult.status === 'fulfilled' ? projectResult.value : null;
-    const tasks = tasksResult.status === 'fulfilled' ? tasksResult.value : [];
-    const organizedTasks = organizeTasks(tasks);
+  const organizedTasks = organizeTasks(tasks);
 
-    // If project not found, redirect
-    if (!project) {
-        redirect('/profile');
-    }
-
-    return (
-        <ProjectView 
-            project={project}
-            initialTasks={organizedTasks}
-            pid={pid}
-        />
-    );
+  return (
+    // 1. Wrap the client component in the provider
+    // 2. Pass the server-fetched data as the initial state
+    <TaskProvider initialTasks={organizedTasks}>
+      <ProjectView project={project} pid={pid} />
+    </TaskProvider>
+  );
 }

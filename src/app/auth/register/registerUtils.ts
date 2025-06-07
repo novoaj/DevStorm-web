@@ -41,9 +41,8 @@ export const handleRegisterSubmit = async (
 ) => {
     const result = validateInputs(username, password, password2);
     if (result.valid) {
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/register`;
         try {
-            await axios.post(url, {
+            await axios.post("api/register", {
                 email: email,
                 username: username,
                 password: password,

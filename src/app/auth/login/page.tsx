@@ -1,9 +1,7 @@
 'use client'
 import React, { useState, useContext } from 'react';
-import axios from "axios";
 import { useRouter } from 'next/navigation';
 import { UserContext } from '../../context/UserContext';
-import { notifications } from '../../../utils/notifications';
 import { handleLoginSubmit } from './loginUtils';
 import Preview from './loading';
 import LoginForm from './LoginForm';
@@ -29,11 +27,17 @@ function LoginPage() {
         e.preventDefault();
         const{ username, password } = formData;
         setIsLoading(true);
-        let loginStatus = await handleLoginSubmit(username, password, setIsLoggedIn, router);
-        if (loginStatus.success) {
-            router.push("/profile");
+        try {
+            const loginStatus = await handleLoginSubmit(username, password, setIsLoggedIn, router);
+            if (loginStatus.success) {
+                router.push("/profile");
+            }else {
+                setIsLoading(false);
+            }
+            
+        }catch (error){
+            setIsLoading(false);
         }
-        setIsLoading(false);
     };
 
     return (

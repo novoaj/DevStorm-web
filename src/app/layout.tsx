@@ -6,7 +6,7 @@ import { Toaster } from "sonner";
 import { ClientProviders } from "./client-providers";
 import { checkAuthCookies } from "./actions/actions";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], preload: false });
 
 export const metadata: Metadata = {
   title: "DevStorm - Brainstorming platform for tech projects for students",
