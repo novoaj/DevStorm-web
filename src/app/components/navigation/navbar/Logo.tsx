@@ -43,7 +43,7 @@ const Logo = () => {
           src={logo}
           alt="Logo"
           width={150}
-          height={64}
+          //height={64}
           //className="h-16 w-auto"
           style={{ height: '4rem', width: 'auto' }} 
           priority

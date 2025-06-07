@@ -1,164 +1,155 @@
-"use client"
-import React, { createContext, useContext, useState } from 'react';
-import axiosInstance from '../axiosInstance';
+"use client";
+import React, { createContext, useContext, useState } from "react";
+import axiosInstance from "../axiosInstance";
 
 interface Task {
-    id: number;
-    pid: number;
-    description: string;
-    priority: number;
-    status: number;
+  id: number;
+  pid: number;
+  description: string;
+  priority: number;
+  status: number;
 }
-
 interface TaskLanes {
-    "Todo": Task[];
-    "In Progress": Task[];
-    "Completed": Task[];
+  "Todo": Task[];
+  "In Progress": Task[];
+  "Completed": Task[];
 }
-
 interface TaskContextType {
-    tasks: TaskLanes;
-    fetchTasks: (pid: string) => Promise<void>;
-    addTask: (projectId: string, description: string, status: number) => Promise<void>;
-    updateTaskStatus: (taskId: number, newStatus: number) => Promise<void>;
-    deleteTask: (taskId: number) => Promise<void>;
-    updateTaskContent: (taskId: number, newDescription: string) => Promise<void>;
+  tasks: TaskLanes;
+  setTasks: React.Dispatch<React.SetStateAction<TaskLanes>>; // Expose setTasks for dnd
+  addTask: (
+    projectId: string,
+    description: string,
+    status: number,
+  ) => Promise<void>;
+  updateTaskStatus: (taskId: number, newStatus: number) => Promise<void>;
+  deleteTask: (taskId: number) => Promise<void>;
+  updateTaskContent: (
+    taskId: number,
+    newDescription: string,
+  ) => Promise<void>;
 }
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
-export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [tasks, setTasks] = useState<TaskLanes>({
-        "Todo": [],
-        "In Progress": [],
-        "Completed": []
-    });
+// Define the props for the provider
+interface TaskProviderProps {
+  children: React.ReactNode;
+  initialTasks: TaskLanes;
+}
 
-    const fetchTasks = async (pid: string) => {
-        try {
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/task/${pid}`;
-            const response = await axiosInstance.get(url, { withCredentials: true });
-            const fetchedTasks: Task[] = response.data;
+export const TaskProvider: React.FC<TaskProviderProps> = ({
+  children,
+  initialTasks,
+}) => {
+  // 1. Initialize state with data from the server
+  const [tasks, setTasks] = useState<TaskLanes>(initialTasks);
 
-            const newTasks: TaskLanes = {
-                "Todo": [],
-                "In Progress": [],
-                "Completed": []
-            };
+  // 3. All functions now use the simplified proxy URL via axiosInstance
+  const addTask = async (
+    projectId: string,
+    description: string,
+    status: number,
+  ) => {
+    try {
+      // The URL is now just the path, e.g., '/task/123/create'
+      const response = await axiosInstance.post(`/task/${projectId}/create`, {
+        description,
+        priority: 1,
+        status,
+      });
+      const newTask: Task = response.data.task;
+      const lane =
+        status === 1 ? "Todo" : status === 2 ? "In Progress" : "Completed";
+      setTasks((prevTasks) => ({
+        ...prevTasks,
+        [lane]: [...prevTasks[lane], newTask].sort(
+          (a, b) => a.priority - b.priority,
+        ),
+      }));
+    } catch (err) {
+      console.error("Error adding task", err);
+    }
+  };
 
-            fetchedTasks.forEach((task: Task) => {
-                if (task.status === 1) newTasks["Todo"].push(task);
-                else if (task.status === 2) newTasks["In Progress"].push(task);
-                else if (task.status === 3) newTasks["Completed"].push(task);
-            });
+  const updateTaskStatus = async (taskId: number, newStatus: number) => {
+    try {
+      // Optimistic update happens in the component, this is the API call
+      await axiosInstance.put(`/task/${taskId}/update-status`, {
+        status: newStatus,
+      });
+    } catch (err) {
+      console.error("Error updating task status", err);
+      // Here you could add logic to revert the optimistic update on failure
+    }
+  };
 
-            Object.keys(newTasks).forEach(key => {
-                newTasks[key as keyof TaskLanes].sort((a, b) => a.priority - b.priority);
-            });
-
-            setTasks(newTasks);
-        } catch (err) {
-            console.error("Error fetching tasks", err);
+  const deleteTask = async (taskId: number) => {
+    try {
+      // Optimistic update: remove from state first
+      setTasks((prevTasks) => {
+        const updatedTasks = { ...prevTasks };
+        for (const lane of Object.keys(updatedTasks) as (keyof TaskLanes)[]) {
+          updatedTasks[lane] = updatedTasks[lane].filter(
+            (task) => task.id !== taskId,
+          );
         }
-    };
-    const addTask = async (projectId: string, description: string, status: number) => {
-        try {
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/task/${projectId}/create`;
-            const response = await axiosInstance.post(url, 
-                { description, priority: 1, status },
-                { withCredentials: true }
-            );
-            const newTask: Task = response.data.task;
-            const lane = status === 1 ? "Todo" : status === 2 ? "In Progress" : "Completed";
-            setTasks(prevTasks => ({
-                ...prevTasks,
-                [lane]: [...prevTasks[lane], newTask].sort((a, b) => a.priority - b.priority)
-            }));
-        } catch (err) {
-            console.error("Error adding task", err);
+        return updatedTasks;
+      });
+      // Then call the API
+      await axiosInstance.delete(`/task/${taskId}/delete`);
+    } catch (err) {
+      console.error("Error deleting task", err);
+      // Revert state on error if needed
+    }
+  };
+
+  const updateTaskContent = async (
+    taskId: number,
+    newDescription: string,
+  ) => {
+    try {
+      // Optimistic update
+      setTasks((prevTasks) => {
+        const updatedTasks = { ...prevTasks };
+        for (const lane of Object.keys(updatedTasks) as (keyof TaskLanes)[]) {
+          updatedTasks[lane] = updatedTasks[lane].map((task) =>
+            task.id === taskId ? { ...task, description: newDescription } : task,
+          );
         }
-    };
+        return updatedTasks;
+      });
+      // API call
+      await axiosInstance.put(`/task/${taskId}/update-description`, {
+        description: newDescription,
+      });
+    } catch (err) {
+      console.error("Error updating task content", err);
+      throw err; // Re-throw to be caught in the component for toast notifications
+    }
+  };
 
-    const updateTaskStatus = async (taskId: number, newStatus: number) => {
-        try {
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/task/${taskId}/update-status`;
-            await axiosInstance.put(url, { status: newStatus }, { withCredentials: true });
-
-            setTasks(prevTasks => {
-                const updatedTasks = { ...prevTasks };
-                let movedTask: Task | undefined;
-
-                // Find and remove the task from its current lane
-                for (const lane of Object.keys(updatedTasks) as (keyof TaskLanes)[]) {
-                    const taskIndex = updatedTasks[lane].findIndex(task => task.id === taskId);
-                    if (taskIndex !== -1) {
-                        [movedTask] = updatedTasks[lane].splice(taskIndex, 1);
-                        break;
-                    }
-                }
-
-                // Add the task to its new lane
-                if (movedTask) {
-                    movedTask.status = newStatus;
-                    const newLane = newStatus === 1 ? "Todo" : newStatus === 2 ? "In Progress" : "Completed";
-                    updatedTasks[newLane].push(movedTask);
-                    updatedTasks[newLane].sort((a, b) => a.priority - b.priority);
-                }
-
-                return updatedTasks;
-            });
-        } catch (err) {
-            console.error("Error updating task status", err);
-        }
-    };
-
-    const deleteTask = async (taskId: number) => {
-        try {
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/task/${taskId}/delete`;
-            await axiosInstance.delete(url, { withCredentials: true });
-
-            setTasks(prevTasks => {
-                const updatedTasks = { ...prevTasks };
-                for (const lane of Object.keys(updatedTasks) as (keyof TaskLanes)[]) {
-                    updatedTasks[lane] = updatedTasks[lane].filter(task => task.id !== taskId);
-                }
-                return updatedTasks;
-            });
-        } catch (err) {
-            console.error("Error deleting task", err);
-        }
-    };
-
-    const updateTaskContent = async (taskId: number, newDescription: string) => {
-        try {
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/task/${taskId}/update-description`;
-            await axiosInstance.put(url, { description: newDescription }, { withCredentials: true });
-
-            setTasks(prevTasks => {
-                const updatedTasks = { ...prevTasks };
-                for (const lane of Object.keys(updatedTasks) as (keyof TaskLanes)[]) {
-                    updatedTasks[lane] = updatedTasks[lane].map(task => 
-                        task.id === taskId ? { ...task, description: newDescription } : task
-                    );
-                }
-                return updatedTasks;
-            });
-        } catch (err) {
-            console.error("Error updating task content", err);
-        }
-    };
-
-    return (
-        <TaskContext.Provider value={{ tasks, fetchTasks, addTask, updateTaskStatus, deleteTask, updateTaskContent }}>
-            {children}
-        </TaskContext.Provider>
-    );
+  return (
+    <TaskContext.Provider
+      value={{
+        tasks,
+        setTasks,
+        addTask,
+        updateTaskStatus,
+        deleteTask,
+        updateTaskContent,
+      }}
+    >
+      {children}
+    </TaskContext.Provider>
+  );
 };
 
+// The hook remains the same
 export const useTasks = () => {
-    const context = useContext(TaskContext);
-    if (context === undefined) {
-        throw new Error('useTasks must be used within a TaskProvider');
-    }
-    return context;
+  const context = useContext(TaskContext);
+  if (context === undefined) {
+    throw new Error("useTasks must be used within a TaskProvider");
+  }
+  return context;
 };

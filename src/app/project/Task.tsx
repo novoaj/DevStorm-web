@@ -8,6 +8,7 @@ import Cross from '../components/Cross';
 import { toast } from 'sonner';
 import { MoreHoriz } from '@mui/icons-material';
 import Select from "react-select";
+import { useTasks } from "../context/TaskContext"; // Import the hook
 
 interface TaskProps {
     task: {
@@ -18,13 +19,14 @@ interface TaskProps {
         status: number; // 1->Todo, 2: In Progress, 3: Complete
     };
     index: number;
-    onUpdate: (taskId: number, description: string) => Promise<void>;
-    onDelete: (taskId: number) => Promise<void>;
+    // onUpdate: (taskId: number, description: string) => Promise<void>;
+    // onDelete: (taskId: number) => Promise<void>;
 }
 
-const Task: React.FC<TaskProps> = ({ task, index, onUpdate, onDelete }) => {
+const Task: React.FC<TaskProps> = ({ task, index }) => {
     const [content, setContent] = useState(task.description);
-    const [isEdited, setIsEdited] = useState(false);
+    // Get functions from context
+    const { updateTaskContent, deleteTask } = useTasks();
     const taskStatus : any  = {1 : "Todo", 2: "In Progress", 3 : "Complete"};
     // edit task popup - select task status
     const [userChoice, setUserChoice] = useState({}); // 
@@ -60,28 +62,24 @@ const Task: React.FC<TaskProps> = ({ task, index, onUpdate, onDelete }) => {
 
     const handleChangeContent = (e: React.ChangeEvent<HTMLInputElement>) => {
         setContent(e.target.value);
-        setIsEdited(true);
+        // setIsEdited(true);
     }
 
-    const handleSubmit = async () => {
-        try {
-            await onUpdate(task.id, content);
-            toast.success("Task updated successfully");
-        } catch (error) {
-            console.error(error);
-            toast.error("An error occurred updating this task's content.");
-        }
+  const handleSubmit = async () => {
+    try {
+      // Call context function
+      await updateTaskContent(task.id, content);
+      toast.success("Task updated successfully");
+    } catch (error) {
+      // ...
     }
+  };
 
-    const handleDelete = async () => {
-        try {
-            await onDelete(task.id);
-            toast.success("Task deleted successfully");
-        } catch (error) {
-            console.error(error);
-            toast.error("Error deleting task");
-        }
-    }
+  const handleDelete = async () => {
+    // Call context function
+    await deleteTask(task.id);
+    toast.success("Task deleted successfully");
+  };
     return (
         <Draggable draggableId={task.id.toString()} index={index}>
             {(provided) => (
@@ -146,7 +144,7 @@ const Task: React.FC<TaskProps> = ({ task, index, onUpdate, onDelete }) => {
                                             <button 
                                                 className="py-2 px-4 bg-secondary-100 hover:bg-secondary-200 text-slate-100 rounded-lg transition duration-300"
                                                 onClick={handleSubmit}
-                                                disabled={!isEdited}
+                                                // disabled={!isEdited}
                                             >
                                                 Confirm
                                             </button>
