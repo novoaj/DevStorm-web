@@ -2,9 +2,10 @@
 import React, { useState } from "react";
 import { Droppable } from "@hello-pangea/dnd";
 import Task from "./Task";
-import { useTasks } from "../context/TaskContext"; // Import the hook
+import { useTasks } from "../context/TaskContext";
 import AddIcon from '@mui/icons-material/Add';
 import * as Dialog from "@radix-ui/react-dialog";
+import { notifications } from "@/utils/notifications";
 
 interface Task {
     id: number;
@@ -13,7 +14,7 @@ interface Task {
     priority: number;
     status: number; // 1->Todo, 2: In Progress, 3: Complete
 }
-// Props are much simpler now
+
 interface LaneProps {
   title: string;
   pid: string;
@@ -26,27 +27,18 @@ const Lane: React.FC<LaneProps> = ({ title, pid }) => {
 
   const handleAddTask = async () => {
     const status = ["Todo", "In Progress", "Completed"].indexOf(title) + 1;
-    await addTask(pid, taskDescription, status); // Use the context function
-    setTaskDescription("");
+    try{
+        await addTask(pid, taskDescription, status); // Use the context function
+        setTaskDescription("");
+    }catch(error){
+        notifications.error.taskAddFailed();
+    }
+
   };
 
   const taskList = tasks[title as keyof typeof tasks] || [];
 
   return (
-    // ... your JSX ...
-    // <Droppable droppableId={title}>
-    //   {(provided) => (
-    //     // ...
-    //     <ul>
-    //       {taskList.map((task, index) => (
-    //         // Task component also no longer needs function props
-    //         <Task key={task.id} task={task} index={index} />
-    //       ))}
-    //       {provided.placeholder}
-    //     </ul>
-    //     // ...
-    //   )}
-    // </Droppable>
     <div className="flex flex-col w-full p-3 h-full mx-2 bg-primary-300 border border-primary-200 rounded-md overflow-y-scroll">
             <div className="flex flex-row justify-between mb-2">
                 <div className="flex flex-row text-center items-center">

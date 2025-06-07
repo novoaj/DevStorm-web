@@ -13,12 +13,15 @@ async function getUserData() {
   try {
     const cookie = getCookieString();
     
-    // 🔥 FIX: Call your Next.js API route consistently
-    const response = await fetch(`http://localhost:3000/api/user/info`, {
+    const response = await fetch(`${process.env.NODE_SERVER_URL}/api/user/info`, {
       method: 'GET',
       headers: {
         Cookie: cookie,
       },
+      next: {
+        revalidate: 120, // revalidate every 30 seconds
+        tags: ["user-data"]
+      }
     });
 
     if (!response.ok) {
@@ -53,11 +56,14 @@ async function getUserProjects() {
   try {
     const cookie = getCookieString();
     
-    // 🔥 FIX: Call your Next.js API route, not Flask directly
-    const response = await fetch(`http://localhost:3000/api/project/by-user`, {
+    const response = await fetch(`${process.env.NODE_SERVER_URL}/api/project/by-user`, {
       method: 'GET',
       headers: {
         Cookie: cookie,
+      },
+      next: {
+        revalidate: 120,
+        tags: ["user-projects"]
       }
     });
 
@@ -79,11 +85,15 @@ async function getInitialProjectData(pid: string) {
     try {
         const cookie = getCookieString();
         
-        const response = await fetch(`http://localhost:3000/api/project/${pid}`, {
+        const response = await fetch(`${process.env.NODE_SERVER_URL}/api/project/${pid}`, {
             method: 'GET',
             headers: {
                 Cookie: cookie,
             },
+            next: {
+              revalidate: 300,
+              tags: [`project-${pid}`]
+            }
         });
 
         if (!response.ok) {
@@ -103,11 +113,15 @@ async function getInitialTasks(pid: string) {
     try {
         const cookie = getCookieString();
         
-        const response = await fetch(`http://localhost:3000/api/task/${pid}`, {
+        const response = await fetch(`${process.env.NODE_SERVER_URL}/api/task/${pid}`, {
             method: 'GET',
             headers: {
                 Cookie: cookie,
             },
+            next: { 
+                revalidate: 60, // 1 minute
+                tags: [`tasks-${pid}`]
+            }
         });
 
         if (!response.ok) {
