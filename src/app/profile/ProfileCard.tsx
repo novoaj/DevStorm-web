@@ -1,33 +1,29 @@
 "use client"
-import React, {useContext, useState} from 'react';
+import React from 'react';
 import Image from "next/image";
 import AvatarIcon from "../../../public/images/avatar-default.svg";
-import axiosInstance from "../axiosInstance";
-import {useRouter} from 'next/navigation';
-import { toast } from 'sonner';
-import { UserContext } from '../context/UserContext';
-import { User } from './edit/ProfileInterfaces';
+import { useUser } from '../context/UserContext'; // Auth context
+import { useUserData } from '../context/UserDataContext'; // Profile data context
 import { ProfileActions } from './ProfileActions';
 
-interface ProfileCardProps {
-    initialUser?: User | null;
-}
+const ProfileCard: React.FC = () => {
+    const { isLoggedIn } = useUser(); // Auth state
+    const { user, loading } = useUserData(); // Profile data
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ initialUser }) => {
-    // Use initial data from server, fallback to empty state
-    const [user, setUser] = useState<User | null>(initialUser || null);
-    const {isLoggedIn, setIsLoggedIn} = useContext(UserContext); // TODO update use of context
-    const [formData, setFormData] = useState({
-        username: '',
-        oldPassword: '',
-        newPassword: '',
-        newPassword2: '',
-    });
+    if (loading) {
+        return (
+            <div className="container h-96 mt-5 w-full bg-primary-300 border border-primary-200 text-slate-100 shadow-md rounded-md p-5">
+                <div className="flex justify-center items-center h-full">
+                    <div className="animate-pulse">Loading profile...</div>
+                </div>
+            </div>
+        );
+    }
 
     if (!user) {
         return (
             <div className="container h-96 mt-5 w-full bg-primary-300 border border-primary-200 text-slate-100 shadow-md rounded-md p-5">
-                <div className="flex justify-center items-center">
+                <div className="flex justify-center items-center h-full">
                     <p className="text-gray">Failed to load profile data</p>
                 </div>
             </div>
@@ -57,7 +53,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ initialUser }) => {
             
             <p className="pl-3 mb-5">Date Joined: {user.dateJoined}</p>
             
-            {/* Client component for interactive buttons */}
             <ProfileActions />
         </div>
     );

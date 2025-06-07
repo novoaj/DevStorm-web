@@ -28,12 +28,14 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
+  const [hasAttemptedFetch, setHasAttemptedFetch] = useState(false);
 
-  // Auto-fetch user data if not already loaded (for direct navigation to /profile/edit)
+  // Only auto-fetch if we haven't tried yet and don't have user data
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!user && !loading) {
+      if (!user && !loading && !hasAttemptedFetch) {
         setLoading(true);
+        setHasAttemptedFetch(true);
         try {
           const response = await axiosInstance.get('/user/info');
           setUser(response.data);
@@ -46,7 +48,7 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({
     };
 
     fetchUserData();
-  }, [user, loading]);
+  }, [user, loading, hasAttemptedFetch]);
 
   return (
     <UserDataContext.Provider
