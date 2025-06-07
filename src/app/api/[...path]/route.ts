@@ -5,17 +5,19 @@ async function handler(req: NextRequest) {
     const path = req.nextUrl.pathname.replace("/api", "");
     const cookieStore = cookies();
     
+    // 🔥 FIX: Handle auth endpoints differently
+    const isAuthEndpoint = path === '/login' || path === '/register' || path === '/confirm';
+    
     const accessToken = cookieStore.get("access_token_cookie")?.value;
     const csrfAccessToken = cookieStore.get("csrf_access_token")?.value;
 
-    // convert body to string if it doesn't exist
+    // Convert body to string if it exists
     let bodyContent = null;
     if (req.body) {
         try {
             const body = await req.json();
             bodyContent = JSON.stringify(body);
         } catch (error) {
-            // If it's not JSON, try to get it as text
             try {
                 bodyContent = await req.text();
             } catch (e) {
@@ -24,22 +26,29 @@ async function handler(req: NextRequest) {
         }
     }
 
+    // 🔥 FIX: Different headers for auth vs authenticated endpoints
+    const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+    };
+
+    // Only add auth headers for non-auth endpoints
+    if (!isAuthEndpoint) {
+        headers.Cookie = `access_token_cookie=${accessToken}`;
+        headers["X-CSRF-TOKEN"] = csrfAccessToken || "";
+    }
+
     const apiRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`, {
         method: req.method,
-        headers: {
-            "Content-Type": "application/json",
-            Cookie: `access_token_cookie=${accessToken}`,
-            "X-CSRF-TOKEN": csrfAccessToken || "",
-        },
+        headers,
         body: bodyContent,
     });
 
-    if (apiRes.status === 401) {
+    // 🔥 FIX: Only handle token refresh for non-auth endpoints
+    if (apiRes.status === 401 && !isAuthEndpoint) {
         const refreshToken = cookieStore.get("refresh_token_cookie")?.value;
         const csrfRefreshToken = cookieStore.get("csrf_refresh_token")?.value;
 
         if (!refreshToken || !csrfRefreshToken) {
-            console.log("❌ No refresh tokens available");
             return new NextResponse("Authentication required", { status: 401 });
         }
 
@@ -53,8 +62,6 @@ async function handler(req: NextRequest) {
                 },
             },
         );
-
-        console.log(`Refresh response status: ${refreshRes.status}`);
 
         if (!refreshRes.ok) {
             return new NextResponse("Session expired", { status: 401 });
@@ -97,11 +104,22 @@ async function handler(req: NextRequest) {
         return finalResponse;
     }
 
-    return new NextResponse(apiRes.body, {
+    // 🔥 FIX: For login/register, properly forward the Set-Cookie headers
+    const response = new NextResponse(apiRes.body, {
         status: apiRes.status,
         statusText: apiRes.statusText,
         headers: apiRes.headers,
     });
+
+    // Forward any Set-Cookie headers from Flask (for login success)
+    if (isAuthEndpoint) {
+        const setCookieHeaders = apiRes.headers.getSetCookie();
+        setCookieHeaders.forEach((cookie) => {
+            response.headers.append("Set-Cookie", cookie);
+        });
+    }
+
+    return response;
 }
 
 export { handler as GET, handler as POST, handler as PUT, handler as DELETE };

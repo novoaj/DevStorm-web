@@ -19,9 +19,8 @@ export const handleLoginSubmit = async (
         return { success: false };
     }
     
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/login`;
     try {
-        const response = await axios.post(url, {
+        const response = await axios.post("/api/login", {
             username: username,
             password: password
         }, {
