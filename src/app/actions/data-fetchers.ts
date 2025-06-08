@@ -1,6 +1,6 @@
 "use server"
 import { cookies } from "next/headers";
-
+// TODO - should these be serverless actions? Or just server components
 const getCookieString = async() => {
   const cookieStore = await cookies();
   let cookieString = "";

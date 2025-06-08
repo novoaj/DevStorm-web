@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description: "Project planning app for tech students to explore careers and industries",
 };
 
-// This is a SERVER component
+// SERVER component
 export default async function RootLayout({
   children,
 }: Readonly<{

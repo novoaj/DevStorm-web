@@ -18,8 +18,8 @@ const config: Config = {
           400: "#1a2227", // 10% lighter than main
         },
         secondary: {
-          100: "#124E66", // blue
-          200: "#295f75" // lighter blue
+          100: "#124E66", // blue #124E66
+          200: "#295f75" // lighter blue #295f75
         },
         bluegray: {
           100: "#5d7175", // #748D92
