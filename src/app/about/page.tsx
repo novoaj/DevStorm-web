@@ -4,6 +4,7 @@ import img2 from "../../../public/images/about_content_2.webp";
 import img3 from "../../../public/images/about_content_3.webp";
 import Card from "./Card";
 import Image from "next/image";
+import FadeIn from "../components/FadeIn";
 
 interface ImageData {
     src: string;
@@ -37,7 +38,7 @@ const About: React.FC = () => {
             </div>
 
             {/* Content Section */}
-            <div className="animate-slideUp my-4 xl:w-4/5 2xl:w-4/5 mx-auto">
+            <FadeIn className="my-4 xl:w-4/5 2xl:w-4/5 mx-auto">
                 <div className="border border-slate-500 bg-primary-400 rounded p-3">
                     <p className="text-lg mb-4 text-slate-300">
                         We are a group of Computer Science Graduates who are passionate about helping tech students come up with innovative project ideas. Our platform is designed to inspire and guide students as they explore various careers and industries.
@@ -58,14 +59,14 @@ const About: React.FC = () => {
                         </p>
                     </div>
                 </div>
-            </div>
+            </FadeIn>
 
             {/* Cards Section - Fixed layout */}
-            <div className="flex flex-row justify-center items-center gap-4 mt-12 xl:w-4/5 2xl:w-4/5 mx-auto"> {/* 🔥 FIX: Removed conflicting grid classes */}
+            <FadeIn className="flex flex-row justify-center items-center gap-4 mt-12 xl:w-4/5 2xl:w-4/5 mx-auto">
                 {images.map((img, index) => (
                     <Card key={index} imgSrc={img.src} title={img.title} />
                 ))}
-            </div>
+            </FadeIn>
             
             <div className="h-16"></div>
         </div>
