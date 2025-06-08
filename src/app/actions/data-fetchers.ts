@@ -1,5 +1,5 @@
 "use server"
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 
 const getCookieString = async() => {
   const cookieStore = await cookies();
@@ -11,12 +11,17 @@ const getCookieString = async() => {
 };
 
 async function getUserData() {
-  try {    
+  try {
+    const cookie = await getCookieString();
+    
     const response = await fetch(`${process.env.NODE_SERVER_URL}/api/user/info`, {
       method: 'GET',
-      headers: await headers(),
+      headers: {
+        'Cookie': cookie,
+        'Content-Type': 'application/json',
+      },
       next: {
-        revalidate: 120, // revalidate every 30 seconds
+        revalidate: 300, // 5 minutes cache
         tags: ["user-data"]
       }
     });
@@ -50,12 +55,17 @@ async function getUserData() {
 }
 
 async function getUserProjects() {
-  try {    
+  try {
+    const cookie = await getCookieString();
+    
     const response = await fetch(`${process.env.NODE_SERVER_URL}/api/project/by-user`, {
       method: 'GET',
-      headers: await headers(),
+      headers: {
+        'Cookie': cookie,
+        'Content-Type': 'application/json',
+      },
       next: {
-        revalidate: 120,
+        revalidate: 180, // 3 minutes cache for more dynamic data
         tags: ["user-projects"]
       }
     });
@@ -86,7 +96,7 @@ async function getInitialProjectData(pid: string) {
                 'Content-Type': 'application/json',
             },
             next: {
-              revalidate: 300,
+              revalidate: 600, // 10 minutes for project details
               tags: [`project-${pid}`]
             }
         });
@@ -131,7 +141,7 @@ async function getInitialTasks(pid: string) {
                 'Content-Type': 'application/json',
             },
             next: { 
-                revalidate: 60,
+                revalidate: 30, // 30 seconds for tasks (more dynamic)
                 tags: [`tasks-${pid}`]
             }
         });
@@ -140,12 +150,12 @@ async function getInitialTasks(pid: string) {
 
         if (response.status === 404) {
             console.log("Tasks not found, returning empty array");
-            return []; // No tasks yet, that's okay
+            return [];
         }
 
         if (!response.ok) {
             console.error(`Error fetching tasks: ${response.status} - ${response.statusText}`);
-            return []; // Return empty array for tasks, don't fail the whole page
+            return [];
         }
 
         const data = await response.json();
@@ -154,7 +164,7 @@ async function getInitialTasks(pid: string) {
         
     } catch (error) {
         console.error('Failed to fetch tasks:', error);
-        return []; // Return empty array, don't fail the whole page for tasks
+        return [];
     }
 }
 
