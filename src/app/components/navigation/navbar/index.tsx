@@ -5,12 +5,11 @@ import Logo from "./Logo";
 import LoginButton from "./LoginButton";
 import { toast } from 'sonner';
 import {useRouter, usePathname} from "next/navigation";
-import { UserContext } from '../../../context/UserContext';
-import { useContext } from "react";
+import { useUser } from '../../../context/UserContext';
 import axiosInstance from '@/app/axiosInstance';
 
 const Navbar = ({ toggle }: { toggle: () => void }) => {
-    const {isLoggedIn, setIsLoggedIn} = useContext(UserContext);
+    const {isLoggedIn, setIsLoggedIn} = useUser();
     const router = useRouter();
     const pathname = usePathname(); // Hook to get the current path
 

@@ -1,10 +1,10 @@
 'use client'
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { UserContext } from '../../context/UserContext';
 import { handleLoginSubmit } from './loginUtils';
 import Preview from './loading';
 import LoginForm from './LoginForm';
+import { useUser } from '../../context/UserContext';
 
 function LoginPage() {
     const [loading, setIsLoading] = useState(false);
@@ -12,7 +12,7 @@ function LoginPage() {
         username: '',
         password: '',
     });
-    const { isLoggedIn, setIsLoggedIn} = useContext(UserContext);
+    const { isLoggedIn, setIsLoggedIn} = useUser();
     const router = useRouter();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
