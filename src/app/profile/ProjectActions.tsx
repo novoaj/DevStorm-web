@@ -11,8 +11,8 @@ export const ProjectActions: React.FC<ProjectActionsProps> = ({ projectCount }) 
     const router = useRouter();
 
     const handleAddProject = () => {
-        if (projectCount > 0) {
-            toast.warning("You can only have one project in progress at a time.");
+        if (projectCount > 4) {
+            toast.warning("You can only have up to 5 projects in progress at a time.");
         } else {
             router.push("/create-project");
         }

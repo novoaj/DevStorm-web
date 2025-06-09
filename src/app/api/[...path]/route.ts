@@ -10,17 +10,19 @@ async function handler(req: NextRequest) {
     const accessToken = cookieStore.get("access_token_cookie")?.value;
     const csrfAccessToken = cookieStore.get("csrf_access_token")?.value;
 
-    // Convert body to string if it exists
     let bodyContent = null;
-    if (req.body) {
+    if (req.body && ['POST', 'PUT', 'PATCH'].includes(req.method)) {
         try {
             const body = await req.json();
             bodyContent = JSON.stringify(body);
         } catch (error) {
             try {
-                bodyContent = await req.text();
+                // Clone the request to avoid "body already consumed" error
+                const clonedReq = req.clone();
+                bodyContent = await clonedReq.text();
             } catch (e) {
                 console.warn("Could not parse request body:", e);
+                bodyContent = null; // Explicitly set to null for safety
             }
         }
     }
@@ -38,7 +40,7 @@ async function handler(req: NextRequest) {
     const apiRes = await fetch(`${process.env.FLASK_API_URL}${path}`, {
         method: req.method,
         headers,
-        body: bodyContent,
+        body: bodyContent, // This will be null for GET/DELETE requests
     });
 
     if (apiRes.status === 401 && !isAuthEndpoint) {
@@ -85,7 +87,7 @@ async function handler(req: NextRequest) {
                 Cookie: `access_token_cookie=${newAccessToken}`,
                 "X-CSRF-TOKEN": newCsrfAccessToken,
             },
-            body: bodyContent,
+            body: bodyContent, // Same body content for retry
         });
 
         const finalResponse = new NextResponse(retryRes.body, {

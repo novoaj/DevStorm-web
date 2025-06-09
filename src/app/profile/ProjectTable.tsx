@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import * as Dialog from "@radix-ui/react-dialog";
 import DeleteIcon from '@mui/icons-material/Delete';
-import axiosInstance from '../axiosInstance';
 
 interface Project {
     id: string;
@@ -18,6 +17,7 @@ interface Project {
 interface ProjectTableProps {
     projects: Project[];
 }
+
 export const ProjectTable: React.FC<ProjectTableProps> = function ProjectTableComponent({ projects: initialProjects }) {
     const router = useRouter();
     const [projects, setProjects] = useState<Project[]>(initialProjects);
@@ -28,12 +28,21 @@ export const ProjectTable: React.FC<ProjectTableProps> = function ProjectTableCo
 
     const handleDelete = async (pid: string) => {
         try {
-            await axiosInstance.delete(`/project/${pid}/delete`, {
-                withCredentials: true
+            const response = await fetch(`/api/project/${pid}/delete`, {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             });
-            
-            toast.success("Successfully deleted project.");
-            setProjects(prevProjects => prevProjects.filter(project => project.id !== pid));
+
+            if (response.ok) {
+                toast.success("Successfully deleted project.");
+                setProjects(prevProjects => prevProjects.filter(project => project.id !== pid));
+            } else {
+                const errorData = await response.json();
+                toast.error(errorData.message || "Error deleting project.");
+            }
         } catch (error) {
             toast.error("Error deleting project.");
             console.error("Error deleting project:", error);
@@ -67,7 +76,7 @@ export const ProjectTable: React.FC<ProjectTableProps> = function ProjectTableCo
                                     <Dialog.Content className="p-6 fixed bg-primary-400 border border-primary-200 rounded-md top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 max-w-450 max-h-4/5 text-slate-100">
                                         <Dialog.Title className="m-0 font-semibold text-xl">Delete Project</Dialog.Title>
                                         <Dialog.Description className="mt-3 mb-6 text-md">
-                                            Are you sure you want to delete the project &quot;{project.title}&quot;? This action cannot be undone.
+                                            Are you sure you want to delete the project ’{project.title}’? This action cannot be undone.
                                         </Dialog.Description>
                                         <div className="flex justify-end mt-5">
                                             <Dialog.Close asChild>

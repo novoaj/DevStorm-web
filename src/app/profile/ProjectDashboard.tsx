@@ -20,7 +20,7 @@ interface ProjectDashboardProps {
 const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ initialProjects = [] }) => {
     const router = useRouter();
     // Use initial data from server
-    const [projects, setProjects] = useState<Project[]>(initialProjects); // TODO look at how this is working
+    const [projects, setProjects] = useState<Project[]>(initialProjects);
 
     return (
         <div className="flex-1 mt-5 bg-primary-300 h-96 w-full border border-primary-200 p-5 rounded-md">
