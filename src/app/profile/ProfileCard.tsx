@@ -1,7 +1,7 @@
 "use client"
 import React from 'react';
 import Image from "next/image";
-import AvatarIcon from "../../../public/images/avatar-default.svg";
+import AvatarIcon from "../../../public/images/avatar-default.svg"; // TODO webp maybe
 import { useUser } from '../context/UserContext'; // Auth context
 import { useUserData } from '../context/UserDataContext'; // Profile data context
 import { ProfileActions } from './ProfileActions';
@@ -58,4 +58,4 @@ const ProfileCard: React.FC = () => {
     );
 };
 
-export default ProfileCard;
+export default React.memo(ProfileCard);

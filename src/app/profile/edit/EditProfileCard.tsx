@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import gtIcon from "../../../../public/images/gt_Icon.png";
+import gtIcon from "../../../../public/images/gt_Icon.png"; // TODO webp maybe
 import { useState } from "react";
 import { ProfileItem } from "./ProfileInterfaces";
 import { Close, Content, Description, Overlay, Portal, Root, Title, Trigger } from "@radix-ui/react-dialog";

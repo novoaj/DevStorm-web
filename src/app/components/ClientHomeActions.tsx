@@ -1,45 +1,46 @@
 "use client";
 
-import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
+import { useUser } from "../context/UserContext";
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { memo, useCallback } from 'react';
 
-export const ClientHomeActions = () => {
-    const { isLoggedIn, isLoading } = useContext(UserContext);
+const ClientHomeActions = () => {
+    const { isLoggedIn } = useUser();
     const router = useRouter();
 
-    const handleCTA = () => {
+    const handleCTA = useCallback(() => {
         if (isLoggedIn) {
             router.push('/create-project');
         } else {
             router.push('/auth/register');
         }
-        setTimeout(() => console.log("HadnelCTA"), 2000)
-    };
-    
-    if (isLoading) {
-        return (
-            <button
-                disabled
-                className="bg-primary-300 border border-primary-200 text-slate-300 text-sm font-bold py-2 px-4 rounded-full opacity-75"
-            >
-                Loading...
-            </button>
-        );
-    }
+    }, [isLoggedIn, router]);
+
     return (
-        <>
+        <div className="flex flex-col items-start">
             <button
                 onClick={handleCTA}
-                className="bg-primary-300 border border-primary-200 hover:bg-primary-100 text-slate-300 text-sm font-bold py-2 px-4 rounded-full transition duration-300"
+                aria-label={isLoggedIn ? 'Create a new project' : 'Create an account to get started'}
+                className="bg-primary-300 border border-primary-200 hover:bg-primary-100 text-slate-300 text-sm font-bold py-2 px-4 rounded-full transition duration-300 focus:outline-none focus:ring-2 focus:ring-primary-100"
             >
                 {isLoggedIn ? 'Create a Project' : 'Create an Account'}
             </button>
             {!isLoggedIn && (
                 <p className="mt-4 text-slate-300">
-                    Already have an account? <a href="/auth/login" className="text-blue-400 hover:underline">Login</a>
+                    Already have an account?{' '}
+                    <Link 
+                        href="/auth/login" 
+                        className="text-blue-400 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-400 rounded"
+                        prefetch={false}
+                    >
+                        Login
+                    </Link>
                 </p>
             )}
-        </>
+        </div>
     );
 };
+
+// Memoize component to prevent unnecessary re-renders
+export default memo(ClientHomeActions);

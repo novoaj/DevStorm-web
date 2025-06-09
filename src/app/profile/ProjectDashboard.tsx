@@ -1,10 +1,6 @@
 "use client"
 import React, {useState} from 'react';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
-import * as Dialog from "@radix-ui/react-dialog";
-import DeleteIcon from '@mui/icons-material/Delete';
-import axiosInstance from '../axiosInstance';
 import { ProjectActions } from './ProjectActions';
 import { ProjectTable } from './ProjectTable';
 

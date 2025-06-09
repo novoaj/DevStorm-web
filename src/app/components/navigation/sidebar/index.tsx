@@ -1,13 +1,12 @@
 "use client"
 import Link from "next/link";
-import { UserContext } from '../../../context/UserContext';
-import { useContext } from "react";
 import {toast} from "sonner";
 import { useRouter} from "next/navigation";
 import axiosInstance from "@/app/axiosInstance";
+import { useUser } from "../../../context/UserContext";
 
 const Sidebar = ({ isOpen, toggle, } : { isOpen: boolean; toggle: () => void; }): JSX.Element => {
-  const {isLoggedIn, setIsLoggedIn} = useContext(UserContext);
+  const {isLoggedIn, setIsLoggedIn} = useUser();
   const router = useRouter();
 
   const handleLogout = async() => {
